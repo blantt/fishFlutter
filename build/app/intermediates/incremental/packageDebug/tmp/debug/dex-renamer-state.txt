@@ -1,4 +1,4 @@
-#Sun Jul 24 13:55:42 CST 2022
-base.0=D\:\\FlutterProject\\Blantt_love_test\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+#Sat Jul 30 16:15:42 CST 2022
+base.0=D\:\\FlutterProject\\LoveTest\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
 renamed.0=classes.dex
 path.0=classes.dex
