@@ -19,16 +19,35 @@ import 'package:flutter/material.dart';
 // /// <summary>
 // /// para: /BatchID
 // /// </summary>
-// public static string m_url請假單Sch = "http://clockappservice.english4u.com.tw/api/SelectAmcJobLeave";
+// public static string m_url請假單Sch = "http://clockappservice.english4u.com.tw/api/SelectAmcJobLeave/all";
 // public static string m_url請假單Detail = "http://clockappservice.english4u.com.tw/api/SelectAmcJobLeaveDetail";
 
 //假別
 String m_url_ClocjClass =
     "http://clockappservice.english4u.com.tw/api/func假別/admin";
+//請假單查詢 ,/all 是查全部
+String m_url_LeaveSch =
+    "http://clockappservice.english4u.com.tw/api/SelectAmcJobLeave/all";
+
+enum CostType {
+  /// 按平方
+  BySquare,
+
+  /// 按長度
+  ByLength,
+
+  /// 按重量
+  ByWeight,
+
+  /// 按數量
+  ByNum,
+}
 
 @JsonSerializable()
 class User {
   User(this.name, this.assetName);
+
+  //CostType.ByLength
 
   String name;
   String assetName;
@@ -77,12 +96,11 @@ Widget _menu_conn(BuildContext context) {
     ),
     OutlinedButton(
       child: Text(
-        'no',
+        'test2',
         style: TextStyle(color: Colors.deepOrange),
       ),
       onPressed: () {
-        // Navigator.push(
-        //     context, MaterialPageRoute(builder: (context) => barview()));
+        getHttp2();
       },
     ),
   ])));
@@ -93,6 +111,30 @@ List<Nametry> nametryFromJson(String str) =>
 
 String nametryToJson(List<Nametry> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+class Modal_LeaveSch {
+  Modal_LeaveSch({
+    required this.BatchID,
+  });
+
+  String BatchID;
+
+  factory Modal_LeaveSch.fromJson(Map<String, dynamic> json) => Modal_LeaveSch(
+        BatchID: json["BatchID"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "BatchID": BatchID,
+        // "UserName": UserName,
+        // "UserNameN": UserNameN,
+        // "LeaveTypeN": LeaveTypeN,
+        // "DeptID": DeptID,
+        // "LeaveType": LeaveType,
+        // "ClassType": ClassType,
+        // "Reason": Reason,
+        //  "ReturnReason": ReturnReason,
+      };
+}
 
 //網頁幫忙產生model  https://app.quicktype.io/
 class Nametry {
@@ -119,6 +161,29 @@ class testname {
   final String name1;
   final String name2;
   const testname({required this.name1, required this.name2});
+}
+
+void getHttp2() async {
+  Response response = await Dio().get(m_url_LeaveSch);
+  String sss = "";
+  try {
+    Response response = await Dio().get(m_url_LeaveSch);
+    String sss = "";
+    if (response.statusCode == HttpStatus.ok) {
+      // var teststr = '{"name1":"0","name2":"特休"}';
+      // var data2 = jsonDecode(teststr);
+      // var aa = User2.fromJson(data2);
+      // print(aa.name2);
+
+      // String ttt = '[{"name1":"0","name2":"特休"},{"name1":"1","name2":"特休2"}]';
+      List<Modal_LeaveSch> list = (response.data as List<dynamic>)
+          .map((e) => Modal_LeaveSch.fromJson((e as Map<String, dynamic>)))
+          .toList();
+      print(list[0].BatchID);
+    }
+  } catch (e) {
+    print(e);
+  }
 }
 
 void getHttp() async {
