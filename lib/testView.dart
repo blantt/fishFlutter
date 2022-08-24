@@ -27,12 +27,15 @@ class _testview2 extends State<testview> {
   }
 
   //表單測試
-  //TODO form test
+  //TODO 表單測試
   Widget _tetform() {
     return Form(
         child: Column(children: <Widget>[
       // TextFormField(initialValue: "I am smart"),
       //Text('$textHolder'),
+
+      Text('dddd'),
+
       TextFormField(
         //'$textHolder'
         //initialValue: '$textHolder',
@@ -45,18 +48,45 @@ class _testview2 extends State<testview> {
         decoration: InputDecoration(icon: Icon(Icons.lock), labelText: "密碼"),
       ),
       Container(
-          margin: EdgeInsets.fromLTRB(150, 80, 0, 0),
-          child: OutlinedButton(
-            child: Text(
-              '登入',
-              style: TextStyle(color: Colors.deepOrange),
+        margin: EdgeInsets.fromLTRB(80, 80, 0, 0),
+        child: Row(
+          children: <Widget>[
+            OutlinedButton(
+              child: Text(
+                '登入',
+                style: TextStyle(color: Colors.deepOrange),
+              ),
+              onPressed: () {
+                //changeText();
+                emailController.text = 'bbbb';
+                print(emailController.text);
+              },
             ),
-            onPressed: () {
-              //changeText();
-              emailController.text = 'bbbb';
-              print(emailController.text);
-            },
-          ))
+            OutlinedButton(
+              child: Text(
+                '忘記密碼',
+                style: TextStyle(color: Colors.deepOrange),
+              ),
+              onPressed: () {
+                //changeText();
+                emailController.text = 'bbbb';
+                print(emailController.text);
+              },
+            ),
+          ],
+        ),
+        // child: OutlinedButton(
+        //   child: Text(
+        //     '登入',
+        //     style: TextStyle(color: Colors.deepOrange),
+        //   ),
+        //   onPressed: () {
+        //     //changeText();
+        //     emailController.text = 'bbbb';
+        //     print(emailController.text);
+        //   },
+        // )
+      )
     ]));
   }
 
@@ -86,7 +116,7 @@ class _testview2 extends State<testview> {
     );
   }
 
-  //TODO form 設計2(是否可以Container重複?)
+  //TODO form 設計2(Container 去包 form )
   Widget _testobj3() {
     return Scaffold(
         body: Center(

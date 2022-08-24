@@ -8,8 +8,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:blantt_love_test/myConn.dart';
 
+//我喜歡這種表單樣式,先紀錄起來
+//https://www.kindacode.com/article/adding-borders-to-cards-in-flutter/
 //不錯的做法! https://www.youtube.com/watch?v=4tG8M4wK4F0
-
 void main() {
   runApp(MyListView());
 }
@@ -217,6 +218,109 @@ Widget buildLivtView_basic(BuildContext context) {
       });
 }
 
+//TODO form測試
+Widget _listCard_title(BuildContext context, String BatchID) {
+  return Column(children: <Widget>[
+    Container(
+        padding: EdgeInsets.fromLTRB(8, 4, 8, 4),
+        //margin: EdgeInsets.fromLTRB(0, 120, 0, 0),
+        height: 50,
+        width: double.infinity,
+        decoration: new BoxDecoration(
+          border: Border(
+              // left: BorderSide(width: 16.0, color: Colors.lightBlue.shade600),
+              // bottom: BorderSide(width: 16.0, color: Colors.lightBlue.shade900),
+              ),
+          color: Colors.cyan,
+        ),
+        child: Row(children: <Widget>[
+          // SizedBox(
+          //   width: 135,
+          //   child: Text(
+          //     '請假單號',
+          //     style: TextStyle(
+          //         color: Colors.white,
+          //         fontWeight: FontWeight.w500,
+          //         fontSize: 20),
+          //   ),
+          // ),
+          Container(
+            height: 50,
+            alignment: Alignment.centerLeft,
+            // padding: const EdgeInsets.only(
+            //     top: 20, bottom: 20, left: 30, right: 70),
+            decoration: const BoxDecoration(
+              //borderRadius: BorderRadius.all(Radius.circular(2)),
+              border: Border(
+                left: BorderSide(color: Colors.amber, width: 8),
+              ),
+            ),
+            child: const Text(
+              'Left Border',
+              style: TextStyle(fontSize: 30),
+            ),
+          ),
+          Card(
+            elevation: 4,
+            color: Colors.cyan,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(2)),
+            ),
+            child: ClipPath(
+              clipper: ShapeBorderClipper(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(2))),
+              child: Container(
+                height: 50,
+                alignment: Alignment.centerLeft,
+                // padding: const EdgeInsets.only(
+                //     top: 20, bottom: 20, left: 30, right: 70),
+                decoration: const BoxDecoration(
+                  border: Border(
+                    left: BorderSide(color: Colors.amber, width: 8),
+                  ),
+                ),
+                child: const Text(
+                  'Left Border',
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+            ),
+          ),
+          Expanded(child: FlutterLogo()),
+        ])),
+
+    // Card(
+    //   child: Form(child: Row(children: <Widget>[Text('ddd333')])),
+    //
+    // ),
+
+    // child: Row(children: <Widget>[
+    //   Text('單據號碼'),
+    // ]),
+    // child: ListTile(
+    //   title: Text('單據號碼'),
+    //
+    // ),
+    //),
+    _listCard(context, BatchID),
+  ]);
+}
+
+Widget _listCard(BuildContext context, String BatchID) {
+  return Card(
+    child: ListTile(
+      title: Text(BatchID),
+      trailing: const Icon(Icons.arrow_forward),
+      onTap: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => testview()));
+      },
+    ),
+  );
+}
+
+//TODO now listview
 Widget buildLivtView_LeaveSch(BuildContext context) {
   return FutureBuilder<String>(
     future: GetDateLeaveSch(),
@@ -233,16 +337,13 @@ Widget buildLivtView_LeaveSch(BuildContext context) {
               itemCount: list_Modal_LeaveSch.length,
               itemBuilder: (context, index) {
                 final user = list_Modal_LeaveSch[index];
-                return Card(
-                  child: ListTile(
-                    title: Text(user.BatchID),
-                    trailing: const Icon(Icons.arrow_forward),
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => testview()));
-                    },
-                  ),
-                );
+
+                if (index == 0) {
+                  var row = list_Modal_LeaveSch[index];
+                  return _listCard_title(context, row.BatchID);
+                } else {
+                  return _listCard(context, user.BatchID);
+                }
               });
         }
       } else {
@@ -311,7 +412,6 @@ void getHttp() async {
   }
 }
 
-//TODO listview TEST
 class _MyHomePageState2 extends State<MyHomePage2> {
   @override
   Widget build(BuildContext context) {
@@ -329,7 +429,6 @@ class _MyHomePageState2 extends State<MyHomePage2> {
   }
 }
 
-//TODO listview basic
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
