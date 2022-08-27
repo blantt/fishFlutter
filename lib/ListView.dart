@@ -61,16 +61,16 @@ List<Modal_Kind> list_Modal_Kind = [Modal_Kind(name1: 'aaa', name2: 'aaa')];
 //假單查詢
 List<Modal_LeaveSch> list_Modal_LeaveSch = [
   Modal_LeaveSch(
-    BatchID: '',
-    UserName: '',
-    UserNameN: '',
-    LeaveTypeN: '',
-    DeptID: '',
-    LeaveType: '',
-    ClassType: '',
-    Reason: '',
-    ReturnReason: '',
-  )
+      BatchID: '',
+      UserName: '',
+      UserNameN: '',
+      LeaveTypeN: '',
+      DeptID: '',
+      LeaveType: '',
+      ClassType: '',
+      Reason: '',
+      ReturnReason: '',
+      MStatusN: '')
 ];
 
 //TODO Modal_LeaveSch
@@ -86,6 +86,7 @@ class Modal_LeaveSch {
     required this.ClassType,
     required this.Reason,
     required this.ReturnReason,
+    required this.MStatusN,
   });
 
   String BatchID;
@@ -97,6 +98,7 @@ class Modal_LeaveSch {
   String ClassType;
   String Reason;
   String ReturnReason;
+  String MStatusN;
 
   factory Modal_LeaveSch.fromJson(Map<String, dynamic> json) => Modal_LeaveSch(
         BatchID: json["BatchID"] ?? '',
@@ -108,6 +110,7 @@ class Modal_LeaveSch {
         ClassType: json["ClassType"] ?? '',
         Reason: json["Reason"] ?? '',
         ReturnReason: json["ReturnReason"] ?? '',
+        MStatusN: json["MStatusN"] ?? '',
       );
 
   Map<String, dynamic> toJson() => {
@@ -120,6 +123,7 @@ class Modal_LeaveSch {
         "ClassType": ClassType,
         "Reason": Reason,
         "ReturnReason": ReturnReason,
+        "MStatusN": MStatusN,
       };
 }
 
@@ -211,7 +215,7 @@ Widget buildCell(
     _textColor = Colors.white;
     _fontSize = 16;
   } else {
-    _borderColor = Colors.white;
+    _borderColor = Colors.black12;
     _textColor = Colors.black;
     _fontSize = 16;
   }
@@ -220,6 +224,7 @@ Widget buildCell(
     height: ww,
     width: hh,
     padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
+
     alignment: Alignment.centerRight,
     // padding: const EdgeInsets.only(
     //     top: 20, bottom: 20, left: 30, right: 70),
@@ -257,13 +262,13 @@ Widget buildLivtView_basic(BuildContext context) {
 }
 
 //TODO form測試
-Widget _listCard_title(
-    BuildContext context, String BatchID, String LeaveTypeN, String UserNameN) {
+Widget _listCard_title(BuildContext context, String BatchID, String LeaveTypeN,
+    String UserNameN, String MStatusN) {
   return Column(children: <Widget>[
     Container(
         padding: EdgeInsets.fromLTRB(8, 4, 8, 4),
         //margin: EdgeInsets.fromLTRB(0, 120, 0, 0),
-        height: 40,
+        height: 70,
         width: double.infinity,
         decoration: new BoxDecoration(
           // borderRadius: BorderRadius.circular(10.0),
@@ -277,50 +282,87 @@ Widget _listCard_title(
               ),
           color: Colors.cyan,
         ),
-        child: Row(children: <Widget>[
-          buildCell(0, 50, 136, '單據號碼', 2),
-          buildCell(0, 50, 100, '人員', 2),
-          Expanded(child: buildCell(0, 50, 100, '假別', 0)),
-          // Expanded(child: FlutterLogo()),
-        ])),
-    _listCard_row(context, BatchID, LeaveTypeN, UserNameN)
+        child: Column(children: <Widget>[
+          Row(children: <Widget>[
+            buildCell(0, 30, 136, '單據號碼', 2),
+            buildCell(0, 30, 85, '人員', 2),
+            buildCell(0, 30, 70, '假別', 2),
+            Expanded(child: buildCell(0, 30, 100, '單況', 0)),
+            // Expanded(child: FlutterLogo()),
+          ]),
+          Row(children: <Widget>[
+            buildCell(0, 30, 95, '傳送日期', 2),
+            buildCell(0, 30, 95, '審核日期', 2),
+            Expanded(child: buildCell(0, 30, 100, '請假日期', 0)),
+            // Expanded(child: FlutterLogo()),
+          ]),
+        ])
+
+        // child: Row(children: <Widget>[
+        //   buildCell(0, 50, 136, '單據號碼', 2),
+        //   buildCell(0, 50, 85, '人員', 2),
+        //   buildCell(0, 50, 70, '假別', 2),
+        //   Expanded(child: buildCell(0, 50, 100, '單況', 0)),
+        //   // Expanded(child: FlutterLogo()),
+        // ])
+        ),
+    _listCard_row(context, BatchID, LeaveTypeN, UserNameN, MStatusN)
     // _listCard(context, BatchID),
   ]);
 }
 
 //TODO list row
-Widget _listCard_row(
-    BuildContext context, String BatchID, String LeaveTypeN, String UserNameN) {
+Widget _listCard_row(BuildContext context, String BatchID, String LeaveTypeN,
+    String UserNameN, String MStatusN) {
   return Column(children: <Widget>[
     InkWell(
       child: Container(
-          width: double.infinity,
-          //padding: EdgeInsets.all(10.0),
-          margin: EdgeInsets.fromLTRB(0, 2, 0, 6),
-          decoration: new BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            border: new Border.all(
-              width: 1,
-              color: Colors.green,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                offset: Offset(0, 6), // changes position of shadow
-                spreadRadius: -3,
-                blurRadius: 7,
-              )
-            ],
+        width: double.infinity,
+        height: 70,
+        alignment: Alignment.center,
+        //padding: EdgeInsets.all(10.0),
+        margin: EdgeInsets.fromLTRB(0, 2, 0, 6),
+        decoration: new BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          border: new Border.all(
+            width: 1,
+            color: Colors.green,
           ),
-          child: Row(children: <Widget>[
-            buildCell(1, 50, 136, BatchID, 0),
-            buildCell(1, 50, 100, UserNameN, 0),
-            Expanded(child: buildCell(1, 50, 100, LeaveTypeN, 0)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              offset: Offset(0, 6), // changes position of shadow
+              spreadRadius: -3,
+              blurRadius: 7,
+            )
+          ],
+        ),
+
+        child: Column(children: <Widget>[
+          Row(children: <Widget>[
+            buildCell(1, 30, 136, BatchID, 1),
+            buildCell(1, 30, 85, UserNameN, 1),
+            buildCell(1, 30, 70, LeaveTypeN, 1),
+            Expanded(child: buildCell(1, 30, 100, MStatusN, 0)),
             // Expanded(child: FlutterLogo()),
-          ])
-          //child: Text("BoxShadow(繪製陰影)+Container+BoxDecoration"),
-          ),
+          ]),
+          Row(children: <Widget>[
+            buildCell(1, 30, 95, '2022/01/01', 1),
+            buildCell(1, 30, 95, '2022/03/01', 1),
+            Expanded(child: buildCell(1, 30, 100, '2022/01/01~2022/05/05', 0)),
+            // Expanded(child: FlutterLogo()),
+          ]),
+        ]),
+
+        // child: Row(children: <Widget>[
+        //   buildCell(1, 50, 136, BatchID, 0),
+        //   buildCell(1, 50, 85, UserNameN, 0),
+        //   buildCell(1, 50, 70, LeaveTypeN, 0),
+        //   Expanded(child: buildCell(1, 50, 100, MStatusN, 0)),
+        //   // Expanded(child: FlutterLogo()),
+        // ])
+      ),
       onTap: () {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => testview()));
@@ -363,11 +405,11 @@ Widget buildLivtView_LeaveSch(BuildContext context) {
                 final user = list_Modal_LeaveSch[index];
                 var row = list_Modal_LeaveSch[index];
                 if (index == 0) {
-                  return _listCard_title(
-                      context, row.BatchID, row.LeaveTypeN, row.UserNameN);
+                  return _listCard_title(context, row.BatchID, row.LeaveTypeN,
+                      row.UserNameN, row.MStatusN);
                 } else {
-                  return _listCard_row(
-                      context, row.BatchID, row.LeaveTypeN, row.UserNameN);
+                  return _listCard_row(context, row.BatchID, row.LeaveTypeN,
+                      row.UserNameN, row.MStatusN);
                 }
               });
         }

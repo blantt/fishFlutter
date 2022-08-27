@@ -1,4 +1,4 @@
-#Sat Aug 27 14:36:20 CST 2022
+#Sat Aug 27 16:00:39 CST 2022
 base.0=D\:\\FlutterProject\\LoveTest\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
 renamed.0=classes.dex
 path.0=classes.dex
