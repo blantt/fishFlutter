@@ -209,7 +209,7 @@ Widget buildCell(
   if (itype == 0) {
     _borderColor = Colors.amber;
     _textColor = Colors.white;
-    _fontSize = 22;
+    _fontSize = 16;
   } else {
     _borderColor = Colors.white;
     _textColor = Colors.black;
@@ -219,7 +219,7 @@ Widget buildCell(
   return Container(
     height: ww,
     width: hh,
-    padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
+    padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
     alignment: Alignment.centerRight,
     // padding: const EdgeInsets.only(
     //     top: 20, bottom: 20, left: 30, right: 70),
@@ -266,6 +266,11 @@ Widget _listCard_title(
         height: 40,
         width: double.infinity,
         decoration: new BoxDecoration(
+          // borderRadius: BorderRadius.circular(10.0),
+          borderRadius: new BorderRadius.only(
+            bottomRight: const Radius.circular(10.0),
+            bottomLeft: const Radius.circular(10.0),
+          ),
           border: Border(
               // left: BorderSide(width: 16.0, color: Colors.lightBlue.shade600),
               // bottom: BorderSide(width: 16.0, color: Colors.lightBlue.shade900),
@@ -273,9 +278,9 @@ Widget _listCard_title(
           color: Colors.cyan,
         ),
         child: Row(children: <Widget>[
-          buildCell(0, 50, 136, '單據號碼', 4),
-          buildCell(0, 50, 100, '人員', 4),
-          Expanded(child: buildCell(0, 50, 100, '單據狀態', 0)),
+          buildCell(0, 50, 136, '單據號碼', 2),
+          buildCell(0, 50, 100, '人員', 2),
+          Expanded(child: buildCell(0, 50, 100, '假別', 0)),
           // Expanded(child: FlutterLogo()),
         ])),
     _listCard_row(context, BatchID, LeaveTypeN, UserNameN)
@@ -289,34 +294,33 @@ Widget _listCard_row(
   return Column(children: <Widget>[
     InkWell(
       child: Container(
-        padding: EdgeInsets.fromLTRB(8, 4, 2, 4),
-        margin: EdgeInsets.fromLTRB(0, 0, 0, 6),
-        height: 40,
-        width: double.infinity,
-        //margin: EdgeInsets.all(20.0),
-        decoration: new BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-          border: Border(
-            bottom: BorderSide(color: Colors.cyan, width: 4),
+          width: double.infinity,
+          //padding: EdgeInsets.all(10.0),
+          margin: EdgeInsets.fromLTRB(0, 2, 0, 6),
+          decoration: new BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            border: new Border.all(
+              width: 1,
+              color: Colors.green,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                offset: Offset(0, 6), // changes position of shadow
+                spreadRadius: -3,
+                blurRadius: 7,
+              )
+            ],
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              offset: Offset(0, 6), // changes position of shadow
-              spreadRadius: -3,
-              blurRadius: 7,
-            )
-          ],
-        ),
-        // child: Row(children: <Widget>[
-        //   buildCell(1, 50, 136, BatchID, 0),
-        //   buildCell(1, 50, 100, UserNameN, 0),
-        //   Expanded(child: buildCell(1, 50, 100, LeaveTypeN, 0)),
-        //   // Expanded(child: FlutterLogo()),
-        // ])
-        child: Text("BoxShadow(繪製陰影)+Container+BoxDecoration"),
-      ),
+          child: Row(children: <Widget>[
+            buildCell(1, 50, 136, BatchID, 0),
+            buildCell(1, 50, 100, UserNameN, 0),
+            Expanded(child: buildCell(1, 50, 100, LeaveTypeN, 0)),
+            // Expanded(child: FlutterLogo()),
+          ])
+          //child: Text("BoxShadow(繪製陰影)+Container+BoxDecoration"),
+          ),
       onTap: () {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => testview()));
