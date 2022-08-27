@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:blantt_love_test/ListView.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -199,6 +201,42 @@ Widget build2(BuildContext context) {
   );
 }
 
+Widget buildCell(
+    int itype, double ww, double hh, String _value, double borderWidth) {
+  Color _borderColor;
+  Color _textColor;
+  double _fontSize;
+  if (itype == 0) {
+    _borderColor = Colors.amber;
+    _textColor = Colors.white;
+    _fontSize = 22;
+  } else {
+    _borderColor = Colors.white;
+    _textColor = Colors.black;
+    _fontSize = 16;
+  }
+
+  return Container(
+    height: ww,
+    width: hh,
+    padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
+    alignment: Alignment.centerRight,
+    // padding: const EdgeInsets.only(
+    //     top: 20, bottom: 20, left: 30, right: 70),
+    decoration: BoxDecoration(
+      //borderRadius: BorderRadius.all(Radius.circular(2)),
+      border: Border(
+        right: BorderSide(color: _borderColor, width: borderWidth),
+      ),
+    ),
+    child: Text(
+      _value,
+      style: TextStyle(
+          fontSize: _fontSize, color: _textColor, fontWeight: FontWeight.w500),
+    ),
+  );
+}
+
 //TODO 測試將listview拉出來
 Widget buildLivtView_basic(BuildContext context) {
   return ListView.builder(
@@ -219,12 +257,13 @@ Widget buildLivtView_basic(BuildContext context) {
 }
 
 //TODO form測試
-Widget _listCard_title(BuildContext context, String BatchID) {
+Widget _listCard_title(
+    BuildContext context, String BatchID, String LeaveTypeN, String UserNameN) {
   return Column(children: <Widget>[
     Container(
         padding: EdgeInsets.fromLTRB(8, 4, 8, 4),
         //margin: EdgeInsets.fromLTRB(0, 120, 0, 0),
-        height: 50,
+        height: 40,
         width: double.infinity,
         decoration: new BoxDecoration(
           border: Border(
@@ -234,76 +273,57 @@ Widget _listCard_title(BuildContext context, String BatchID) {
           color: Colors.cyan,
         ),
         child: Row(children: <Widget>[
-          // SizedBox(
-          //   width: 135,
-          //   child: Text(
-          //     '請假單號',
-          //     style: TextStyle(
-          //         color: Colors.white,
-          //         fontWeight: FontWeight.w500,
-          //         fontSize: 20),
-          //   ),
-          // ),
-          Container(
-            height: 50,
-            alignment: Alignment.centerLeft,
-            // padding: const EdgeInsets.only(
-            //     top: 20, bottom: 20, left: 30, right: 70),
-            decoration: const BoxDecoration(
-              //borderRadius: BorderRadius.all(Radius.circular(2)),
-              border: Border(
-                left: BorderSide(color: Colors.amber, width: 8),
-              ),
-            ),
-            child: const Text(
-              'Left Border',
-              style: TextStyle(fontSize: 30),
-            ),
-          ),
-          Card(
-            elevation: 4,
-            color: Colors.cyan,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(2)),
-            ),
-            child: ClipPath(
-              clipper: ShapeBorderClipper(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(2))),
-              child: Container(
-                height: 50,
-                alignment: Alignment.centerLeft,
-                // padding: const EdgeInsets.only(
-                //     top: 20, bottom: 20, left: 30, right: 70),
-                decoration: const BoxDecoration(
-                  border: Border(
-                    left: BorderSide(color: Colors.amber, width: 8),
-                  ),
-                ),
-                child: const Text(
-                  'Left Border',
-                  style: TextStyle(fontSize: 20),
-                ),
-              ),
-            ),
-          ),
-          Expanded(child: FlutterLogo()),
+          buildCell(0, 50, 136, '單據號碼', 4),
+          buildCell(0, 50, 100, '人員', 4),
+          Expanded(child: buildCell(0, 50, 100, '單據狀態', 0)),
+          // Expanded(child: FlutterLogo()),
         ])),
+    _listCard_row(context, BatchID, LeaveTypeN, UserNameN)
+    // _listCard(context, BatchID),
+  ]);
+}
 
-    // Card(
-    //   child: Form(child: Row(children: <Widget>[Text('ddd333')])),
-    //
-    // ),
+//TODO list row
+Widget _listCard_row(
+    BuildContext context, String BatchID, String LeaveTypeN, String UserNameN) {
+  return Column(children: <Widget>[
+    InkWell(
+      child: Container(
+        padding: EdgeInsets.fromLTRB(8, 4, 2, 4),
+        margin: EdgeInsets.fromLTRB(0, 0, 0, 6),
+        height: 40,
+        width: double.infinity,
+        //margin: EdgeInsets.all(20.0),
+        decoration: new BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          border: Border(
+            bottom: BorderSide(color: Colors.cyan, width: 4),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              offset: Offset(0, 6), // changes position of shadow
+              spreadRadius: -3,
+              blurRadius: 7,
+            )
+          ],
+        ),
+        // child: Row(children: <Widget>[
+        //   buildCell(1, 50, 136, BatchID, 0),
+        //   buildCell(1, 50, 100, UserNameN, 0),
+        //   Expanded(child: buildCell(1, 50, 100, LeaveTypeN, 0)),
+        //   // Expanded(child: FlutterLogo()),
+        // ])
+        child: Text("BoxShadow(繪製陰影)+Container+BoxDecoration"),
+      ),
+      onTap: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => testview()));
+      },
+    )
 
-    // child: Row(children: <Widget>[
-    //   Text('單據號碼'),
-    // ]),
-    // child: ListTile(
-    //   title: Text('單據號碼'),
-    //
-    // ),
-    //),
-    _listCard(context, BatchID),
+    // _listCard(context, BatchID),
   ]);
 }
 
@@ -337,12 +357,13 @@ Widget buildLivtView_LeaveSch(BuildContext context) {
               itemCount: list_Modal_LeaveSch.length,
               itemBuilder: (context, index) {
                 final user = list_Modal_LeaveSch[index];
-
+                var row = list_Modal_LeaveSch[index];
                 if (index == 0) {
-                  var row = list_Modal_LeaveSch[index];
-                  return _listCard_title(context, row.BatchID);
+                  return _listCard_title(
+                      context, row.BatchID, row.LeaveTypeN, row.UserNameN);
                 } else {
-                  return _listCard(context, user.BatchID);
+                  return _listCard_row(
+                      context, row.BatchID, row.LeaveTypeN, row.UserNameN);
                 }
               });
         }
