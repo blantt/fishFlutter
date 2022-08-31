@@ -73,7 +73,6 @@ List<Modal_LeaveSch> list_Modal_LeaveSch = [
       MStatusN: '')
 ];
 
-//TODO Modal_LeaveSch
 //Modal_LeaveSch 假單查詢
 class Modal_LeaveSch {
   Modal_LeaveSch({
@@ -148,7 +147,6 @@ class Modal_Kind {
       };
 }
 
-//TODO 假單查詢
 Future<String> GetDateLeaveSch() async {
   // return Future.delayed(Duration(seconds: 2), () => "我是从互联网上获取的数据");
   // getHttp();
@@ -181,7 +179,6 @@ Future<String> GetDataKind() async {
   return "";
 }
 
-//TODO 測試FutureBuilder 讀取資料
 Widget build2(BuildContext context) {
   return Center(
     child: FutureBuilder<String>(
@@ -242,7 +239,6 @@ Widget buildCell(
   );
 }
 
-//TODO 測試將listview拉出來
 Widget buildLivtView_basic(BuildContext context) {
   return ListView.builder(
       itemCount: users.length,
@@ -261,7 +257,6 @@ Widget buildLivtView_basic(BuildContext context) {
       });
 }
 
-//TODO form測試
 Widget _listCard_title(BuildContext context, String BatchID, String LeaveTypeN,
     String UserNameN, String MStatusN) {
   return Column(children: <Widget>[
@@ -311,7 +306,6 @@ Widget _listCard_title(BuildContext context, String BatchID, String LeaveTypeN,
   ]);
 }
 
-//TODO list row
 Widget _listCard_row(BuildContext context, String BatchID, String LeaveTypeN,
     String UserNameN, String MStatusN) {
   return Column(children: <Widget>[

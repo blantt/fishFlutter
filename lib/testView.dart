@@ -26,8 +26,6 @@ class _testview2 extends State<testview> {
     });
   }
 
-  //表單測試
-  //TODO 表單測試
   Widget _tetform() {
     return Form(
         child: Column(children: <Widget>[
@@ -116,7 +114,6 @@ class _testview2 extends State<testview> {
     );
   }
 
-  //TODO form 設計2(Container 去包 form )
   Widget _testobj3() {
     return Scaffold(
         body: Center(
