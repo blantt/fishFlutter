@@ -207,14 +207,17 @@ Widget buildCell(
   Color _borderColor;
   Color _textColor;
   double _fontSize;
+  FontWeight _fontweight;
   if (itype == 0) {
     _borderColor = Colors.amber;
     _textColor = Colors.white;
     _fontSize = 16;
+    _fontweight = FontWeight.w600;
   } else {
     _borderColor = Colors.black12;
     _textColor = Colors.black;
     _fontSize = 16;
+    _fontweight = FontWeight.w500;
   }
 
   return Container(
@@ -234,7 +237,7 @@ Widget buildCell(
     child: Text(
       _value,
       style: TextStyle(
-          fontSize: _fontSize, color: _textColor, fontWeight: FontWeight.w500),
+          fontSize: _fontSize, color: _textColor, fontWeight: _fontweight),
     ),
   );
 }
@@ -279,15 +282,15 @@ Widget _listCard_title(BuildContext context, String BatchID, String LeaveTypeN,
         ),
         child: Column(children: <Widget>[
           Row(children: <Widget>[
-            buildCell(0, 30, 136, '單據號碼', 2),
-            buildCell(0, 30, 85, '人員', 2),
-            buildCell(0, 30, 70, '假別', 2),
+            buildCell(0, 30, 136, '單據號碼', 4),
+            buildCell(0, 30, 85, '人員', 4),
+            buildCell(0, 30, 70, '假別', 4),
             Expanded(child: buildCell(0, 30, 100, '單況', 0)),
             // Expanded(child: FlutterLogo()),
           ]),
           Row(children: <Widget>[
-            buildCell(0, 30, 95, '傳送日期', 2),
-            buildCell(0, 30, 95, '審核日期', 2),
+            buildCell(0, 30, 95, '傳送日期', 4),
+            buildCell(0, 30, 95, '審核日期', 4),
             Expanded(child: buildCell(0, 30, 100, '請假日期', 0)),
             // Expanded(child: FlutterLogo()),
           ]),
@@ -306,6 +309,7 @@ Widget _listCard_title(BuildContext context, String BatchID, String LeaveTypeN,
   ]);
 }
 
+//TODO cardrow
 Widget _listCard_row(BuildContext context, String BatchID, String LeaveTypeN,
     String UserNameN, String MStatusN) {
   return Column(children: <Widget>[
@@ -317,7 +321,15 @@ Widget _listCard_row(BuildContext context, String BatchID, String LeaveTypeN,
         //padding: EdgeInsets.all(10.0),
         margin: EdgeInsets.fromLTRB(0, 2, 0, 6),
         decoration: new BoxDecoration(
-          color: Colors.white,
+          //color: Colors.white,
+          gradient: LinearGradient(
+              colors: [Colors.white, Color.fromRGBO(197, 241, 248, 1)],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: [
+                0.8,
+                1,
+              ]),
           borderRadius: BorderRadius.all(Radius.circular(10.0)),
           border: new Border.all(
             width: 1,

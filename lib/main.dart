@@ -5,10 +5,31 @@ import 'package:blantt_love_test/testView.dart';
 import 'package:blantt_love_test/textFormField.dart';
 import 'package:blantt_love_test/TryMenu.dart';
 import 'package:blantt_love_test/BarView.dart';
+import 'package:blantt_love_test/dt_home.dart';
 
 //3333
 void main() {
-  runApp(const MyApp());
+  runApp(const MyApp2());
+}
+
+class MyApp2 extends StatelessWidget {
+  const MyApp2({Key? key}) : super(key: key);
+
+  // This widget is the root of your application.ffff
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      //home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      //home: const TextExample(),
+      //home: const TextExample2(),
+      home: classhome(),
+      //home: testview()
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
