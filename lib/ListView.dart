@@ -3,12 +3,16 @@ import 'dart:ffi';
 import 'package:blantt_love_test/ListView.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:blantt_love_test/testView.dart';
 import 'dart:convert';
 import 'dart:io';
+import 'package:blantt_love_test/testView.dart';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:blantt_love_test/myConn.dart';
+import 'package:blantt_love_test/testButton.dart';
+import 'package:blantt_love_test/routesPage.dart';
+import 'Model/Model1.dart';
 
 //我喜歡這種表單樣式,先紀錄起來
 //https://www.kindacode.com/article/adding-borders-to-cards-in-flutter/
@@ -25,6 +29,7 @@ class MyListView extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.green,
         ),
+        routes: RoutePath,
         home: MyHomePage2());
   }
 }
@@ -58,73 +63,73 @@ List<User> users = [
 //Modal_Kind 假別
 List<Modal_Kind> list_Modal_Kind = [Modal_Kind(name1: 'aaa', name2: 'aaa')];
 
-//假單查詢
-List<Modal_LeaveSch> list_Modal_LeaveSch = [
-  Modal_LeaveSch(
-      BatchID: '',
-      UserName: '',
-      UserNameN: '',
-      LeaveTypeN: '',
-      DeptID: '',
-      LeaveType: '',
-      ClassType: '',
-      Reason: '',
-      ReturnReason: '',
-      MStatusN: '')
-];
-
-//Modal_LeaveSch 假單查詢
-class Modal_LeaveSch {
-  Modal_LeaveSch({
-    required this.BatchID,
-    required this.UserName,
-    required this.UserNameN,
-    required this.LeaveTypeN,
-    required this.DeptID,
-    required this.LeaveType,
-    required this.ClassType,
-    required this.Reason,
-    required this.ReturnReason,
-    required this.MStatusN,
-  });
-
-  String BatchID;
-  String UserName;
-  String UserNameN;
-  String LeaveTypeN;
-  String DeptID;
-  String LeaveType;
-  String ClassType;
-  String Reason;
-  String ReturnReason;
-  String MStatusN;
-
-  factory Modal_LeaveSch.fromJson(Map<String, dynamic> json) => Modal_LeaveSch(
-        BatchID: json["BatchID"] ?? '',
-        UserName: json["UserName"] ?? '',
-        UserNameN: json["UserNameN"] ?? '',
-        LeaveTypeN: json["LeaveTypeN"] ?? '',
-        DeptID: json["DeptID"] ?? '',
-        LeaveType: json["LeaveType"] ?? '',
-        ClassType: json["ClassType"] ?? '',
-        Reason: json["Reason"] ?? '',
-        ReturnReason: json["ReturnReason"] ?? '',
-        MStatusN: json["MStatusN"] ?? '',
-      );
-
-  Map<String, dynamic> toJson() => {
-        "BatchID": BatchID,
-        "UserName": UserName,
-        "UserNameN": UserNameN,
-        "LeaveTypeN": LeaveTypeN,
-        "DeptID": DeptID,
-        "LeaveType": LeaveType,
-        "ClassType": ClassType,
-        "Reason": Reason,
-        "ReturnReason": ReturnReason,
-        "MStatusN": MStatusN,
-      };
-}
+// //假單查詢
+// List<Modal_LeaveSch> list_Modal_LeaveSch = [
+//   Modal_LeaveSch(
+//       BatchID: '',
+//       UserName: '',
+//       UserNameN: '',
+//       LeaveTypeN: '',
+//       DeptID: '',
+//       LeaveType: '',
+//       ClassType: '',
+//       Reason: '',
+//       ReturnReason: '',
+//       MStatusN: '')
+// ];
+//
+// //Modal_LeaveSch 假單查詢
+// class Modal_LeaveSch {
+//   Modal_LeaveSch({
+//     required this.BatchID,
+//     required this.UserName,
+//     required this.UserNameN,
+//     required this.LeaveTypeN,
+//     required this.DeptID,
+//     required this.LeaveType,
+//     required this.ClassType,
+//     required this.Reason,
+//     required this.ReturnReason,
+//     required this.MStatusN,
+//   });
+//
+//   String BatchID;
+//   String UserName;
+//   String UserNameN;
+//   String LeaveTypeN;
+//   String DeptID;
+//   String LeaveType;
+//   String ClassType;
+//   String Reason;
+//   String ReturnReason;
+//   String MStatusN;
+//
+//   factory Modal_LeaveSch.fromJson(Map<String, dynamic> json) => Modal_LeaveSch(
+//         BatchID: json["BatchID"] ?? '',
+//         UserName: json["UserName"] ?? '',
+//         UserNameN: json["UserNameN"] ?? '',
+//         LeaveTypeN: json["LeaveTypeN"] ?? '',
+//         DeptID: json["DeptID"] ?? '',
+//         LeaveType: json["LeaveType"] ?? '',
+//         ClassType: json["ClassType"] ?? '',
+//         Reason: json["Reason"] ?? '',
+//         ReturnReason: json["ReturnReason"] ?? '',
+//         MStatusN: json["MStatusN"] ?? '',
+//       );
+//
+//   Map<String, dynamic> toJson() => {
+//         "BatchID": BatchID,
+//         "UserName": UserName,
+//         "UserNameN": UserNameN,
+//         "LeaveTypeN": LeaveTypeN,
+//         "DeptID": DeptID,
+//         "LeaveType": LeaveType,
+//         "ClassType": ClassType,
+//         "Reason": Reason,
+//         "ReturnReason": ReturnReason,
+//         "MStatusN": MStatusN,
+//       };
+// }
 
 //Modal_Kind 假別
 class Modal_Kind {
@@ -151,12 +156,13 @@ Future<String> GetDateLeaveSch() async {
   // return Future.delayed(Duration(seconds: 2), () => "我是从互联网上获取的数据");
   // getHttp();
   //return Future.delayed(Duration(seconds: 5), () => "我是从互联网上获取的数据");
-  final response = await Dio().get(m_url_LeaveSch);
+  final response = await Dio().get(m_url_LeaveSch + '/all');
   String sss = "";
   //if (response.statusCode == HttpStatus.ok) {
-  list_Modal_LeaveSch = (response.data as List<dynamic>)
-      .map((e) => Modal_LeaveSch.fromJson((e as Map<String, dynamic>)))
+  list_Modal_LeaveSch2 = (response.data as List<dynamic>)
+      .map((e) => Modal_LeaveSch2.fromJson((e as Map<String, dynamic>)))
       .toList();
+
   //print(list[1].name2);
   //  return "";
   //}
@@ -215,7 +221,7 @@ Widget buildCell(
     _fontweight = FontWeight.w600;
   } else {
     _borderColor = Colors.black12;
-    _textColor = Colors.black;
+    _textColor = Color.fromRGBO(35, 86, 105, 1.0);
     _fontSize = 16;
     _fontweight = FontWeight.w500;
   }
@@ -234,10 +240,20 @@ Widget buildCell(
         right: BorderSide(color: _borderColor, width: borderWidth),
       ),
     ),
-    child: Text(
-      _value,
-      style: TextStyle(
-          fontSize: _fontSize, color: _textColor, fontWeight: _fontweight),
+    // child: Text(
+    //   _value,
+    //   style: TextStyle(
+    //       fontSize: _fontSize, color: _textColor, fontWeight: _fontweight),
+    // ),
+    child: RichText(
+      text: TextSpan(
+        //outer span
+        style: TextStyle(
+            fontWeight: FontWeight.w400,
+            color: _textColor,
+            fontSize: _fontSize),
+        text: _value,
+      ),
     ),
   );
 }
@@ -330,7 +346,7 @@ Widget _listCard_row(BuildContext context, String BatchID, String LeaveTypeN,
                 0.8,
                 1,
               ]),
-          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          //borderRadius: BorderRadius.all(Radius.circular(10.0)),
           border: new Border.all(
             width: 1,
             color: Colors.green,
@@ -360,23 +376,22 @@ Widget _listCard_row(BuildContext context, String BatchID, String LeaveTypeN,
             // Expanded(child: FlutterLogo()),
           ]),
         ]),
-
-        // child: Row(children: <Widget>[
-        //   buildCell(1, 50, 136, BatchID, 0),
-        //   buildCell(1, 50, 85, UserNameN, 0),
-        //   buildCell(1, 50, 70, LeaveTypeN, 0),
-        //   Expanded(child: buildCell(1, 50, 100, MStatusN, 0)),
-        //   // Expanded(child: FlutterLogo()),
-        // ])
       ),
+      //TODO row點選時
       onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => testview()));
+        // Navigator.push(
+        //     context, MaterialPageRoute(builder: (context) => testButton()));
+        Navigator.pushNamed(context, page3, arguments: PageSend(BatchID));
       },
     )
 
     // _listCard(context, BatchID),
   ]);
+}
+
+class PageSend {
+  String BatchID;
+  PageSend(this.BatchID);
 }
 
 Widget _listCard(BuildContext context, String BatchID) {
@@ -406,10 +421,10 @@ Widget buildLivtView_LeaveSch(BuildContext context) {
         } else {
           // 请求成功，显示数据
           return ListView.builder(
-              itemCount: list_Modal_LeaveSch.length,
+              itemCount: list_Modal_LeaveSch2.length,
               itemBuilder: (context, index) {
-                final user = list_Modal_LeaveSch[index];
-                var row = list_Modal_LeaveSch[index];
+                final user = list_Modal_LeaveSch2[index];
+                var row = list_Modal_LeaveSch2[index];
                 if (index == 0) {
                   return _listCard_title(context, row.BatchID, row.LeaveTypeN,
                       row.UserNameN, row.MStatusN);
@@ -429,11 +444,6 @@ Widget buildLivtView_LeaveSch(BuildContext context) {
 }
 
 Widget buildLivtView_Kind(BuildContext context) {
-  // String ttt = '[{"name1":"0","name2":"特休"},{"name1":"1","name2":"特休2"}]';
-  // List<Nametry> list = (ttt as List<dynamic>)
-  //     .map((e) => Nametry.fromJson((e as Map<String, dynamic>)))
-  //     .toList();
-
   return FutureBuilder<String>(
     future: GetDataKind(),
     builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -495,7 +505,15 @@ class _MyHomePageState2 extends State<MyHomePage2> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text("Flutter GridView build new"),
+          //leading: Icon(Icons.arrow_back),
+          backgroundColor: Color.fromRGBO(56, 163, 210, 1.0),
+          title: Text(
+            "請假單",
+            style: TextStyle(
+                fontWeight: FontWeight.w400,
+                // color: Colors.black54,
+                fontSize: 18),
+          ),
         ),
         // body: buildLivtView_Kind(context));
         body: buildLivtView_LeaveSch(context));

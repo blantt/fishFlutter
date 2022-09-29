@@ -8,6 +8,10 @@ import 'package:blantt_love_test/myConn.dart';
 import 'package:blantt_love_test/dt_Dialog.dart';
 import 'package:blantt_love_test/selectTime.dart';
 import 'package:blantt_love_test/selectDate.dart';
+import 'package:blantt_love_test/testButton.dart';
+import 'package:blantt_love_test/dt_layout.dart';
+import 'package:blantt_love_test/textForm.dart';
+import 'package:blantt_love_test/testconn.dart';
 
 class testmenu extends StatelessWidget {
   const testmenu({Key? key}) : super(key: key);
@@ -152,6 +156,36 @@ Widget _menu(BuildContext context) {
       onPressed: () {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => selectDate()));
+      },
+    ),
+    OutlinedButton(
+      child: Text(
+        'testbutton',
+        style: TextStyle(color: Colors.deepOrange),
+      ),
+      onPressed: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => testButton()));
+      },
+    ),
+    OutlinedButton(
+      child: Text(
+        'layout',
+        style: TextStyle(color: Colors.deepOrange),
+      ),
+      onPressed: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => templayout()));
+      },
+    ),
+    OutlinedButton(
+      child: Text(
+        'testconn',
+        style: TextStyle(color: Colors.deepOrange),
+      ),
+      onPressed: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => RandomArticle()));
       },
     ),
   ])));

@@ -1,16 +1,31 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
+import 'TryMenu.dart';
+import 'package:blantt_love_test/testButton.dart';
+import 'ListView.dart';
 
 class classhome extends StatelessWidget {
   const classhome({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return _menu(context);
+    return _homemenu2(context);
   }
 }
 
-Widget _menu(BuildContext context) {
+enum btnType {
+  //請假單
+  type1,
+  //加班單
+  type2,
+  //補休單
+  type3,
+  //公出單
+  type4,
+}
+
+//TODO home
+Widget _homemenu2(BuildContext context) {
   List spans = [];
   spans.add(TextSpan(text: 'dddd2'));
 
@@ -38,48 +53,146 @@ Widget _menu(BuildContext context) {
       text: "well com AMC FaceBook",
     ),
   );
-
-  return Column(children: <Widget>[
-    Container(
-      padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
-      width: double.infinity,
-      height: 280,
-      decoration: new BoxDecoration(color: Colors.white),
-      child: Card(
+  return new Scaffold(
+    body: new Column(children: [
+      Container(
+        width: double.infinity,
+        height: 20,
         child: Image.asset(
-          'assets/images/indexback.jpg',
+          'assets/images/index_top2.jpg',
           fit: BoxFit.fill,
         ),
-        elevation: 8,
-        shadowColor: Colors.green,
-        margin: EdgeInsets.all(20),
-        shape: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Colors.white)),
       ),
-    ),
-    Container(
-      padding: EdgeInsets.fromLTRB(15, 33, 0, 0),
-      width: double.infinity,
-      height: 130,
-      alignment: Alignment.topLeft,
-      decoration: new BoxDecoration(color: Colors.white),
-      child: Column(children: <Widget>[
-        Align(
-          alignment: Alignment.topLeft,
-          child: _test1,
-        ),
-        Align(
-          alignment: Alignment.topLeft,
-          child: _test2,
-        ),
-      ]),
-    ),
-    Expanded(
-      child: Container(
+      Container(
+        alignment: Alignment.bottomLeft,
         width: double.infinity,
-        decoration: new BoxDecoration(color: Colors.lightGreenAccent),
+        height: 500,
+        decoration: new BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/index_top1.jpg"),
+              fit: BoxFit.fill,
+            ),
+            color: Colors.greenAccent),
+        child: Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.only(left: 10, top: 25),
+              alignment: Alignment.bottomLeft,
+              width: double.infinity,
+              child: Row(children: [
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: _test1,
+                ),
+                //右邊icon button
+                Expanded(
+                    //    child: _iconbutton(context)
+                    child: Align(
+                        alignment: Alignment.topRight,
+                        child: SizedBox(
+                            width: 30,
+                            height: 30,
+                            child: Container(
+                              decoration:
+                                  new BoxDecoration(color: Colors.white),
+                              child: InkWell(
+                                child: Image(
+                                  image: AssetImage("assets/images/login.png"),
+                                  fit: BoxFit.fill,
+                                ),
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => testmenu()));
+                                },
+                              ),
+                            )))),
+                SizedBox(
+                  width: 10,
+                )
+              ]),
+            ),
+          ],
+        ),
       ),
-    ),
-  ]);
+      Container(
+          child: Column(children: [
+        Container(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              mybutton(context, btnType.type1),
+              SizedBox(
+                width: 30,
+              ),
+              mybutton(context, btnType.type2)
+            ],
+          ),
+        ),
+        Container(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              mybutton(context, btnType.type3),
+              SizedBox(
+                width: 30,
+              ),
+              mybutton(context, btnType.type4)
+            ],
+          ),
+        )
+      ])),
+    ]),
+  );
+}
+
+Widget mybutton(BuildContext _context, btnType _type) {
+  String _ttt = '';
+
+  if (_type == btnType.type1) {
+    _ttt = '請假單';
+  }
+  if (_type == btnType.type2) {
+    _ttt = '加班單';
+  }
+  if (_type == btnType.type3) {
+    _ttt = '補休單';
+  }
+  if (_type == btnType.type4) {
+    _ttt = '公出單';
+  }
+
+  var d = '';
+
+  BuildContext _myContext;
+
+  return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        minimumSize: Size(140, 40),
+        onPrimary: Colors.white,
+        primary: Color.fromRGBO(8, 93, 185, 1.0),
+        onSurface: Colors.grey,
+        //side: BorderSide(color: Colors.black, width: 1),
+        elevation: 10,
+      ),
+      onPressed: () {
+        if (_type == btnType.type1) {
+          Navigator.push(
+              _context, MaterialPageRoute(builder: (context) => MyListView()));
+        }
+        if (_type == btnType.type2) {}
+        if (_type == btnType.type3) {}
+        if (_type == btnType.type4) {}
+      },
+      child: RichText(
+        text: TextSpan(
+          //outer span
+          style: TextStyle(
+              fontWeight: FontWeight.w400,
+              // color: Colors.black54,
+              fontSize: 18),
+          text: _ttt,
+        ),
+      ));
 }

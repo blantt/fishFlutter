@@ -27,7 +27,7 @@ String m_url_ClocjClass =
     "http://clockappservice.english4u.com.tw/api/func假別/admin";
 //請假單查詢 ,/all 是查全部
 String m_url_LeaveSch =
-    "http://clockappservice.english4u.com.tw/api/SelectAmcJobLeave/all";
+    "http://clockappservice.english4u.com.tw/api/SelectAmcJobLeave";
 
 enum CostType {
   /// 按平方
