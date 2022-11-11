@@ -32,8 +32,8 @@ class _MyHomePageState extends State<MyHomePage> {
     //   '歡迎來到AMC',
     // ),
     Myimage2(),
-    menu_Clock(),
-    testmenu(),
+    //menu_Clock(),
+    //testmenu(),
   ];
   int _selectedIndex = 0;
 

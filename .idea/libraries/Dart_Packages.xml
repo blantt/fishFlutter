@@ -436,6 +436,13 @@
             </list>
           </value>
         </entry>
+        <entry key="scrollable_positioned_list">
+          <value>
+            <list>
+              <option value="$PROJECT_DIR$/../../MyFlutter/flutter/.pub-cache/hosted/pub.dartlang.org/scrollable_positioned_list-0.3.5/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="shelf">
           <value>
             <list>
@@ -624,6 +631,7 @@
       <root url="file://$PROJECT_DIR$/../../MyFlutter/flutter/.pub-cache/hosted/pub.dartlang.org/pool-1.5.1/lib" />
       <root url="file://$PROJECT_DIR$/../../MyFlutter/flutter/.pub-cache/hosted/pub.dartlang.org/pub_semver-2.1.1/lib" />
       <root url="file://$PROJECT_DIR$/../../MyFlutter/flutter/.pub-cache/hosted/pub.dartlang.org/pubspec_parse-1.1.0/lib" />
+      <root url="file://$PROJECT_DIR$/../../MyFlutter/flutter/.pub-cache/hosted/pub.dartlang.org/scrollable_positioned_list-0.3.5/lib" />
       <root url="file://$PROJECT_DIR$/../../MyFlutter/flutter/.pub-cache/hosted/pub.dartlang.org/shelf-1.4.0/lib" />
       <root url="file://$PROJECT_DIR$/../../MyFlutter/flutter/.pub-cache/hosted/pub.dartlang.org/shelf_web_socket-1.0.2/lib" />
       <root url="file://$PROJECT_DIR$/../../MyFlutter/flutter/.pub-cache/hosted/pub.dartlang.org/source_gen-1.2.2/lib" />

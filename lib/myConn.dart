@@ -29,6 +29,16 @@ String m_url_ClocjClass =
 String m_url_LeaveSch =
     "http://clockappservice.english4u.com.tw/api/SelectAmcJobLeave";
 
+//人員查詢 ,/admin 是查全部
+String m_PersonSch = "http://clockappservice.english4u.com.tw/api/funcPerson";
+
+//假別
+String m_LeaveType =
+    "http://clockappservice.english4u.com.tw/api/funcLeaveType/admin";
+//假單明細
+String m_LeaveDetail =
+    "http://clockappservice.english4u.com.tw/api/SelectAmcJobLeaveDetail";
+
 enum CostType {
   /// 按平方
   BySquare,

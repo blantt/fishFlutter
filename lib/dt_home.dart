@@ -104,7 +104,7 @@ Widget _homemenu2(BuildContext context) {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => testmenu()));
+                                          builder: (context) => MyTryMenu()));
                                 },
                               ),
                             )))),

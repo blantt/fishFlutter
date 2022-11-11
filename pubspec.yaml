@@ -38,6 +38,7 @@ dependencies:
   freezed_annotation: ^0.14.3
   dio: ^4.0.0
   connectivity: ^0.4.8+2
+  scrollable_positioned_list: ^0.3.5
 dev_dependencies:
   flutter_test:
     sdk: flutter

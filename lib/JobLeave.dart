@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:blantt_love_test/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
@@ -9,15 +10,50 @@ import 'ListView.dart';
 import 'package:blantt_love_test/myConn.dart';
 import 'dart:io';
 import 'Model/Model1.dart';
+import 'ListPerson.dart';
 
 String _BatchID = '';
 String _UserNameN = '';
+// UserAgent
+// UserAgent2
+// UserAgentN
+// UserAgent2N
+// UserSee
+// UserSee2
+// UserSeeN
+// UserSee2N
+
+class BindControl {
+  String UserAgent = "";
+  String UserAgent2 = "";
+  String UserSee = "";
+  String UserSee2 = "";
+
+  TextEditingController FormControl_UserAgentN = new TextEditingController();
+  TextEditingController FormControl_UserAgent2N = new TextEditingController();
+  TextEditingController FormControl_UserSeeN = new TextEditingController();
+  TextEditingController FormControl_UserSee2N = new TextEditingController();
+  TextEditingController FormControl_Reason = new TextEditingController();
+
+  TextEditingController emailController = new TextEditingController();
+  TextEditingController ControllerClassTypeN = new TextEditingController();
+  TextEditingController ControllerUserNameN = new TextEditingController();
+  TextEditingController ControllerLeaveTypeN = new TextEditingController();
+}
 
 void main() {
   runApp(Jobleave());
 }
 
+var _BindControl = BindControl();
+
+//TODO setless
 class Jobleave extends StatelessWidget {
+  @override
+  // void initState() {
+  //   _BindControl.FormControl_UserSeeN.text = "ddddd";
+  // }
+
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as PageSend;
@@ -28,6 +64,14 @@ class Jobleave extends StatelessWidget {
     }
 
     return MaterialApp(
+      initialRoute: '/',
+      routes: <String, WidgetBuilder>{
+        // '/': (context) {
+        //   return const MyApp();
+        // },
+        '/register': (_) => new MyListPerson(value: 'abc2'),
+        '/register2': (_) => new MyListPerson(value: _BindControl.UserAgent)
+      },
       title: 'dddd',
       theme: ThemeData(
         primarySwatch: Colors.green,
@@ -35,6 +79,12 @@ class Jobleave extends StatelessWidget {
       home: Jobleave2(),
     );
   }
+}
+
+//先定義一個類別
+class User {
+  String id;
+  User(this.id);
 }
 
 class Jobleave2 extends StatefulWidget {
@@ -69,7 +119,21 @@ class _Jovleave extends State<Jobleave2> {
     super.initState();
     _counterSink = _counterStreamController.sink;
     _counterStream = _counterStreamController.stream;
+    //_BindControl.FormControl_UserSeeN.text = "ddddd2";
   }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    //_BindControl.FormControl_UserSeeN.text = "bbb";
+  }
+
+  // @override
+  // void didUpdateWidget(covariant HomeTabBar oldWidget) {
+  //   // TODO: implement didUpdateWidget
+  //   super.didUpdateWidget(oldWidget);
+  // }
 
   @override
   void dispose() {
@@ -81,20 +145,45 @@ class _Jovleave extends State<Jobleave2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('請假單 ' + _BatchID),
+        appBar: AppBar(
+          title: Text('請假單 ' + _BatchID),
+        ),
+        body: JobStreamNew(context),
+        bottomNavigationBar: BottomNavigationBar(
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.save),
+              label: '儲存',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle),
+              label: 'Profile',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_bag),
+              label: 'Shop',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          unselectedItemColor: Colors.grey,
+          onTap: _onTap,
+          elevation: 15,
+        ));
+  }
+
+  void onPressToNextScreen3() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MyListPerson(value: "我是從 A 傳來的資料2!"),
       ),
-      body: JobStreamNew(context),
-      // body: Align(
-      //   alignment: Alignment.bottomCenter,
-      //   child: Container(
-      //     alignment: Alignment.bottomCenter,
-      //     width: double.infinity,
-      //     height: 30,
-      //     decoration: new BoxDecoration(color: Colors.teal),
-      //   ),
-      // ),
     );
+    //從 B 畫面回傳後更新畫面資料
+    setState(() {
+      if (result != null) {
+        print(result);
+      }
+    });
   }
 
   Widget _showBottomNav() {
@@ -149,6 +238,204 @@ class _Jovleave extends State<Jobleave2> {
     return "";
   }
 
+  Widget _myorm(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(children: <Widget>[
+        Container(
+            alignment: Alignment.topCenter,
+            width: double.infinity,
+            margin: const EdgeInsets.only(left: 10, right: 10),
+            child: Form(
+                child: Column(children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 180,
+                    child: TextFormField(
+                      enabled: true,
+                      //'$textHolder'
+                      //initialValue: '$textHolder',
+                      controller: _BindControl.emailController,
+                      decoration: InputDecoration(labelText: '單號'),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Expanded(
+                    child: TextFormField(
+                      enabled: true,
+                      //'$textHolder'
+                      //initialValue: '$textHolder',
+                      controller: _BindControl.ControllerUserNameN,
+                      decoration: InputDecoration(labelText: '姓名'),
+                    ),
+                  )
+                ],
+              ),
+              Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                SizedBox(
+                  width: 180,
+                  child: TextFormField(
+                    enabled: true,
+                    //'$textHolder'
+                    //initialValue: '$textHolder',
+                    controller: _BindControl.ControllerClassTypeN,
+                    decoration: InputDecoration(labelText: '班別'),
+                  ),
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Expanded(
+                  child: TextFormField(
+                    enabled: true,
+                    //'$textHolder'
+                    //initialValue: '$textHolder',
+                    controller: _BindControl.ControllerLeaveTypeN,
+                    decoration: InputDecoration(labelText: '假別'),
+                  ),
+                )
+              ]),
+              //TODO pop 代理人
+              Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                InkWell(
+                  onTap: () {
+                    Navigator.of(context).pushNamed('/register2',
+                        arguments: {'name': 'Raymond'}).then((value) {
+                      var list = [];
+                      String dd = "";
+                      dd = value.toString();
+                      list = dd.split('/');
+                      _BindControl.UserAgent = list[0];
+                      _BindControl.FormControl_UserAgentN.text = list[1];
+                    });
+                  }, // Handle your callback
+                  child: SizedBox(
+                    width: 180,
+                    child: TextFormField(
+                      enabled: false,
+                      //'$textHolder'
+                      //initialValue: '$textHolder',
+                      controller: _BindControl.FormControl_UserAgentN,
+                      decoration: InputDecoration(labelText: '代理人1'),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Expanded(
+                    child: InkWell(
+                  onTap: () {
+                    Navigator.of(context).pushNamed('/register',
+                        arguments: {'name': 'Raymond'}).then((value) {
+                      var list = [];
+                      String dd = "";
+                      dd = value.toString();
+                      list = dd.split('/');
+                      _BindControl.UserAgent2 = list[0];
+                      _BindControl.FormControl_UserAgent2N.text = list[1];
+                    });
+                  }, // Handle yo
+                  child: TextFormField(
+                    enabled: false,
+                    //'$textHolder'
+                    //initialValue: '$textHolder',
+                    controller: _BindControl.FormControl_UserAgent2N,
+                    decoration: InputDecoration(labelText: '代理人2'),
+                  ),
+                ))
+              ]),
+              Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                InkWell(
+                  onTap: () {
+                    Navigator.of(context).pushNamed('/register',
+                        arguments: {'name': 'Raymond'}).then((value) {
+                      var list = [];
+                      String dd = "";
+                      dd = value.toString();
+                      list = dd.split('/');
+                      _BindControl.UserSee = list[0];
+                      _BindControl.FormControl_UserSeeN.text = list[1];
+                    });
+                  },
+                  child: SizedBox(
+                    width: 180,
+                    child: TextFormField(
+                      enabled: false,
+                      //'$textHolder'
+                      //initialValue: '$textHolder',
+                      controller: _BindControl.FormControl_UserSeeN,
+                      decoration: InputDecoration(labelText: '監交人1'),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Expanded(
+                    child: InkWell(
+                  onTap: () {
+                    Navigator.of(context).pushNamed('/register',
+                        arguments: {'name': 'Raymond'}).then((value) {
+                      var list = [];
+                      String dd = "";
+                      dd = value.toString();
+                      list = dd.split('/');
+                      _BindControl.UserSee2 = list[0];
+                      _BindControl.FormControl_UserSee2N.text = list[1];
+                    });
+                  },
+                  child: TextFormField(
+                    enabled: false,
+                    //'$textHolder'
+                    //initialValue: '$textHolder',
+                    controller: _BindControl.FormControl_UserSee2N,
+                    decoration: InputDecoration(labelText: '監交人2'),
+                  ),
+                ))
+              ]),
+              TextFormField(
+                //'$textHolder'
+                //initialValue: '$textHolder',
+                controller: _BindControl.ControllerLeaveTypeN,
+                decoration:
+                    InputDecoration(icon: Icon(Icons.people), labelText: '假別'),
+              ),
+              OutlinedButton(
+                child: Text(
+                  '人員選單',
+                  style: TextStyle(color: Colors.deepOrange),
+                ),
+                //TODO scrreen
+                //onPressed: onPressToNextScreen3,
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/register',
+                      arguments: {'name': 'Raymond'}).then((value) {
+                    var list = [];
+                    String dd = "";
+                    dd = value.toString();
+                    list = dd.split('/');
+                    _BindControl.UserAgent = list[0];
+                    _BindControl.FormControl_UserAgentN.text = list[1];
+                  });
+                },
+              ),
+              TextFormField(
+                controller: _BindControl.FormControl_Reason,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: '備註/原因',
+                ),
+                maxLines: 3,
+              ),
+            ]))),
+      ]),
+    );
+  }
+
   Widget JobStreamNew(BuildContext context) {
     GetDateLeave();
     return StreamBuilder<int>(
@@ -167,12 +454,26 @@ class _Jovleave extends State<Jobleave2> {
             var icount = list_Modal_LeaveSch2.length;
             if (icount <= 0) {
             } else {
+              //TODO 設定controls
               var row = list_Modal_LeaveSch2[icount - 1];
               _UserNameN = row.UserNameN;
               // 请求成功，显示数据
-              ControllerLeaveTypeN.text = row.LeaveTypeN;
-              emailController.text = _BatchID;
-              ControllerUserNameN.text = _UserNameN;
+              _BindControl.ControllerClassTypeN.text = row.ClassTypeN;
+              _BindControl.ControllerLeaveTypeN.text = row.LeaveTypeN;
+              _BindControl.emailController.text = _BatchID;
+              _BindControl.ControllerUserNameN.text = _UserNameN;
+
+              _BindControl.UserAgent = row.UserAgent;
+              _BindControl.UserAgent2 = row.UserAgent2;
+              _BindControl.FormControl_UserAgentN.text = row.UserAgentN;
+              _BindControl.FormControl_UserAgent2N.text = row.UserAgent2N;
+
+              _BindControl.UserSee = row.UserSee;
+              _BindControl.UserSee2 = row.UserSee2;
+              _BindControl.FormControl_UserSeeN.text = row.UserSeeN;
+
+              _BindControl.FormControl_UserSee2N.text = row.UserSee2N;
+              _BindControl.FormControl_Reason.text = row.Reason;
             }
             return _myorm(context);
           } else {
@@ -184,167 +485,4 @@ class _Jovleave extends State<Jobleave2> {
       },
     );
   }
-}
-
-Widget set1(BuildContext context) {
-  return TextField();
-}
-
-Stream<int> streamPage = (() async* {
-  //await Future<void>.delayed(Duration(seconds: 2));
-  //await Future<void>.delayed(Duration(seconds: 2));
-  final response = await Dio().get(m_url_LeaveSch + '/' + _BatchID);
-  list_Modal_LeaveSch2 = (response.data as List<dynamic>)
-      .map((e) => Modal_LeaveSch2.fromJson((e as Map<String, dynamic>)))
-      .toList();
-
-  yield 0;
-})();
-
-TextEditingController emailController = new TextEditingController();
-
-TextEditingController ControllerUserNameN = new TextEditingController();
-TextEditingController ControllerLeaveTypeN = new TextEditingController();
-
-Widget buildmyForm(BuildContext context) {
-  return Form(
-      child: Column(children: <Widget>[
-    TextFormField(
-      //'$textHolder'
-      //initialValue: '$textHolder',
-      //controller: emailController,
-      decoration: InputDecoration(icon: Icon(Icons.people), labelText: '單號'),
-    ),
-    TextField(),
-  ]));
-}
-
-Widget JobStream(BuildContext context) {
-  return StreamBuilder<int>(
-    stream: streamPage,
-    builder: (
-      BuildContext context,
-      AsyncSnapshot<int> snapshot,
-    ) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return CircularProgressIndicator();
-      } else if (snapshot.connectionState == ConnectionState.active ||
-          snapshot.connectionState == ConnectionState.done) {
-        if (snapshot.hasError) {
-          return const Text('Error');
-        } else if (snapshot.hasData) {
-          var icount = list_Modal_LeaveSch2.length;
-          if (icount <= 0) {
-          } else {
-            var row = list_Modal_LeaveSch2[icount - 1];
-            // _UserNameN = row.UserNameN;
-            // ControllerLeaveTypeN.text = row.UserNameN;
-            // // 请求成功，显示数据
-            // emailController.text = _BatchID;
-            // ControllerUserNameN.text = _UserNameN;
-          }
-          return _myorm(context);
-
-          // return TextField(
-          //   decoration: InputDecoration(
-          //     border: OutlineInputBorder(),
-          //     hintText: _UserNameN,
-          //   ),
-          // );
-          // return Text(snapshot.data.toString(),
-          //     style: const TextStyle(color: Colors.red, fontSize: 40));
-        } else {
-          return const Text('Empty data');
-        }
-      } else {
-        return Text('State: ${snapshot.connectionState}');
-      }
-    },
-  );
-}
-
-Widget _myorm(BuildContext context) {
-  return Column(children: <Widget>[
-    Container(
-        alignment: Alignment.topCenter,
-        width: double.infinity,
-        margin: const EdgeInsets.only(left: 10, right: 10),
-        child: Form(
-            child: Column(children: <Widget>[
-          TextFormField(
-            //'$textHolder'
-            //initialValue: '$textHolder',
-            controller: emailController,
-            decoration:
-                InputDecoration(icon: Icon(Icons.people), labelText: '單號'),
-          ),
-          TextField(
-            // controller: ControllerUserNameN..text = _UserNameN,
-            controller: ControllerUserNameN,
-          ),
-          TextFormField(
-            //'$textHolder'
-            //initialValue: '$textHolder',
-            controller: ControllerLeaveTypeN,
-            decoration:
-                InputDecoration(icon: Icon(Icons.people), labelText: '假別'),
-          ),
-        ]))),
-    Expanded(
-      child: Align(
-
-        alignment: FractionalOffset.bottomCenter,
-        child: MaterialButton(
-          onPressed: () => {},
-          child: Container(
-              alignment: Alignment.bottomCenter,
-              width: double.infinity,
-              height: 30,
-              //decoration: new BoxDecoration(color: Colors.teal),
-              child: ElevatedButton.icon(
-                icon: Icon(Icons.save),
-                label: Text("儲存"),
-                onPressed: () {},
-              )),
-        ),
-      ),
-    ),
-  ]);
-
-  return Container(
-      alignment: Alignment.topCenter,
-      width: double.infinity,
-      margin: const EdgeInsets.only(left: 10, right: 10),
-      child: Form(
-          child: Column(children: <Widget>[
-        TextFormField(
-          //'$textHolder'
-          //initialValue: '$textHolder',
-          controller: emailController,
-          decoration:
-              InputDecoration(icon: Icon(Icons.people), labelText: '單號'),
-        ),
-        TextField(
-          // controller: ControllerUserNameN..text = _UserNameN,
-          controller: ControllerUserNameN,
-        ),
-        TextFormField(
-          //'$textHolder'
-          //initialValue: '$textHolder',
-          controller: ControllerLeaveTypeN,
-          decoration:
-              InputDecoration(icon: Icon(Icons.people), labelText: '假別'),
-        ),
-        OutlinedButton(
-          child: Text(
-            '登入',
-            style: TextStyle(color: Colors.deepOrange),
-          ),
-          onPressed: () {
-            //changeText();
-            emailController.text = 'bbbb';
-            print(emailController.text);
-          },
-        ),
-      ])));
 }
