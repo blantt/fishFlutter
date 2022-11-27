@@ -40,6 +40,7 @@ class Modal_PsersonSch {
     required this.name1,
     required this.name2,
   });
+
   String name1;
   String name2;
 

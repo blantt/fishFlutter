@@ -14,6 +14,8 @@ import 'package:blantt_love_test/textForm.dart';
 import 'package:blantt_love_test/testconn.dart';
 import 'ListPerson.dart';
 import 'BScreen.dart';
+import 'package:blantt_love_test/testListSch.dart';
+import 'package:blantt_love_test/ListPerson2.dart';
 
 void main() {
   runApp(MyTryMenu());
@@ -83,6 +85,16 @@ class _PageState2 extends State<MyHomePage> {
               child: Column(children: [
             Container(
               margin: EdgeInsets.fromLTRB(0, 65, 0, 0),
+            ),
+            OutlinedButton(
+              child: Text(
+                'listviewSch2',
+                style: TextStyle(color: Colors.deepOrange),
+              ),
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => listSch2()));
+              },
             ),
             OutlinedButton(
               child: Text(
@@ -221,6 +233,16 @@ class _PageState2 extends State<MyHomePage> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => TextFieldExample()));
+              },
+            ),
+            OutlinedButton(
+              child: Text(
+                'listviewSch',
+                style: TextStyle(color: Colors.deepOrange),
+              ),
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => HomePage_list()));
               },
             ),
           ])),

@@ -50,10 +50,6 @@ var _BindControl = BindControl();
 //TODO setless
 class Jobleave extends StatelessWidget {
   @override
-  // void initState() {
-  //   _BindControl.FormControl_UserSeeN.text = "ddddd";
-  // }
-
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as PageSend;
@@ -70,7 +66,8 @@ class Jobleave extends StatelessWidget {
         //   return const MyApp();
         // },
         '/register': (_) => new MyListPerson(value: 'abc2'),
-        '/register2': (_) => new MyListPerson(value: _BindControl.UserAgent)
+        '/register2': (_) => new MyListPerson(value: _BindControl.UserAgent),
+        '/register3': (_) => new newPersonState(value: _BindControl.UserAgent),
       },
       title: 'dddd',
       theme: ThemeData(
@@ -116,10 +113,10 @@ class _Jovleave extends State<Jobleave2> {
 
   @override
   void initState() {
-    super.initState();
     _counterSink = _counterStreamController.sink;
     _counterStream = _counterStreamController.stream;
-    //_BindControl.FormControl_UserSeeN.text = "ddddd2";
+    _BindControl.FormControl_UserSeeN.text = "ddddd2";
+    super.initState();
   }
 
   @override
@@ -217,6 +214,7 @@ class _Jovleave extends State<Jobleave2> {
     setState(() {});
   }
 
+//TODO GetDateLeave
   Future<String> GetDateLeave() async {
     // return Future.delayed(Duration(seconds: 2), () => "我是从互联网上获取的数据");
     // getHttp();
@@ -302,9 +300,10 @@ class _Jovleave extends State<Jobleave2> {
               Row(mainAxisAlignment: MainAxisAlignment.start, children: [
                 InkWell(
                   onTap: () {
-                    Navigator.of(context).pushNamed('/register2',
+                    Navigator.of(context).pushNamed('/register3',
                         arguments: {'name': 'Raymond'}).then((value) {
                       var list = [];
+                      print('got');
                       String dd = "";
                       dd = value.toString();
                       list = dd.split('/');
@@ -436,6 +435,7 @@ class _Jovleave extends State<Jobleave2> {
     );
   }
 
+  //TODO lsaveStream
   Widget JobStreamNew(BuildContext context) {
     GetDateLeave();
     return StreamBuilder<int>(
