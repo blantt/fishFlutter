@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:blantt_love_test/JobLeave.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
@@ -78,13 +79,13 @@ class _PageState2 extends State<newPersonState> {
   // @override
   void initState() {
     //這個states應該只會進來一次,所以在這裡做初始值
+
     list_Modal_PsersonSch_new.clear();
     super.initState();
   }
 
   // 接收的參數是由建構子接收在這裡!!
   // MyListPerson({required this.value});
-
   onSearch(String search) {
     setState(() {
       list_Modal_PsersonSch_new = list_Modal_PsersonSch
@@ -94,7 +95,6 @@ class _PageState2 extends State<newPersonState> {
   }
 
   String getvalue = "";
-
   @override
   Widget build(BuildContext context) {
     getvalue = widget.value;
@@ -107,18 +107,16 @@ class _PageState2 extends State<newPersonState> {
         body: Container(
           child: Column(
             children: [
-              // Text('取得的值:' + getvalue),
+              TextField(),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
                   onChanged: (value) {
                     onSearch(value);
                   },
-
-                  // controller: editingController,
                   decoration: InputDecoration(
-                      labelText: "Search",
-                      hintText: "Search",
+                      labelText: "Search2",
+                      hintText: "Search2",
                       prefixIcon: Icon(Icons.search),
                       border: OutlineInputBorder(
                           borderRadius:
@@ -152,6 +150,12 @@ class BoxedReturns {
 Widget _buildList(BuildContext context) {
   //原來是 ListView.builder
   print('nowlen' + list_Modal_PsersonSch_new.length.toString());
+
+  var itemCount = list_Modal_PsersonSch_new.length;
+  if (itemCount == 0) {
+    itemCount = 1;
+  }
+
   return ScrollablePositionedList.builder(
       itemCount: list_Modal_PsersonSch_new.length,
       itemScrollController: itemScrollController,
@@ -168,8 +172,8 @@ Widget _buildList(BuildContext context) {
                   onPressed: () => {
                     //TODO pop參數
                     // debugPrint(row.name1)
-                    Navigator.pop(context, 'dddd')
-                    //Navigator.pop(context, row.name1 + '/' + row.name2)
+
+                    Navigator.pop(context, row.name1 + '/' + row.name2)
                   },
                   icon: Icon(
                     Icons.touch_app_sharp,
@@ -217,6 +221,7 @@ Widget _body(BuildContext context) {
   );
 }
 
+//TODO  list_Modal_PsersonSch_new 取值
 Future<String> GetDatePersonSch() async {
   if (list_Modal_PsersonSch_new.length > 0) {
     //代表有取過值了,過濾時,不要再去回調資料api了
@@ -227,6 +232,7 @@ Future<String> GetDatePersonSch() async {
       .map((e) => Modal_PsersonSch.fromJson((e as Map<String, dynamic>)))
       .toList();
   list_Modal_PsersonSch_new = list_Modal_PsersonSch;
+
   return "";
 }
 

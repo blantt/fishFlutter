@@ -11,6 +11,7 @@ import 'package:blantt_love_test/selectDate.dart';
 import 'package:blantt_love_test/testButton.dart';
 import 'package:blantt_love_test/dt_layout.dart';
 import 'package:blantt_love_test/textForm.dart';
+import 'package:blantt_love_test/testForm2.dart';
 import 'package:blantt_love_test/testconn.dart';
 import 'ListPerson.dart';
 import 'BScreen.dart';
@@ -225,14 +226,22 @@ class _PageState2 extends State<MyHomePage> {
             ),
             OutlinedButton(
               child: Text(
-                '表單',
+                '測試表單',
                 style: TextStyle(color: Colors.deepOrange),
               ),
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => TextFieldExample()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => testform()));
+              },
+            ),
+            OutlinedButton(
+              child: Text(
+                '測試表單2',
+                style: TextStyle(color: Colors.deepOrange),
+              ),
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => testform2()));
               },
             ),
             OutlinedButton(

@@ -60,9 +60,6 @@ class TextExample2 extends StatelessWidget {
       theme: ThemeData(
           scaffoldBackgroundColor: Colors.lightBlue, primaryColor: Colors.lime),
       initialRoute: '/',
-      routes: {
-        '/': (_) => TextFieldExample(),
-      },
     );
   }
 }

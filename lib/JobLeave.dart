@@ -9,19 +9,17 @@ import 'package:flutter/material.dart';
 import 'ListView.dart';
 import 'package:blantt_love_test/myConn.dart';
 import 'dart:io';
-import 'Model/Model1.dart';
+import 'Model/Model2.dart';
 import 'ListPerson.dart';
+import 'package:blantt_love_test/testListSch2.dart';
 
 String _BatchID = '';
 String _UserNameN = '';
-// UserAgent
-// UserAgent2
-// UserAgentN
-// UserAgent2N
-// UserSee
-// UserSee2
-// UserSeeN
-// UserSee2N
+
+// isNew 判斷是不是第一次進來,因為有些事件,會重複觸發build,
+//不是第一次進來,就不用再重抓資料bind,不然會有些例外狀況..
+//感覺應該還有更好的寫法,等待進化版!!
+bool isNew = true;
 
 class BindControl {
   String UserAgent = "";
@@ -50,7 +48,6 @@ var _BindControl = BindControl();
 //TODO setless
 class Jobleave extends StatelessWidget {
   @override
-  @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as PageSend;
     if (args != null) {
@@ -66,8 +63,10 @@ class Jobleave extends StatelessWidget {
         //   return const MyApp();
         // },
         '/register': (_) => new MyListPerson(value: 'abc2'),
-        '/register2': (_) => new MyListPerson(value: _BindControl.UserAgent),
-        '/register3': (_) => new newPersonState(value: _BindControl.UserAgent),
+        '/UserAgent': (_) => new newPersonState(value: _BindControl.UserAgent),
+        '/UserAgent2': (_) =>
+            new newPersonState(value: _BindControl.UserAgent2),
+        '/abc': (_) => new HomePage_list2(),
       },
       title: 'dddd',
       theme: ThemeData(
@@ -126,12 +125,6 @@ class _Jovleave extends State<Jobleave2> {
     //_BindControl.FormControl_UserSeeN.text = "bbb";
   }
 
-  // @override
-  // void didUpdateWidget(covariant HomeTabBar oldWidget) {
-  //   // TODO: implement didUpdateWidget
-  //   super.didUpdateWidget(oldWidget);
-  // }
-
   @override
   void dispose() {
     _counterStreamController.close();
@@ -172,7 +165,7 @@ class _Jovleave extends State<Jobleave2> {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => MyListPerson(value: "我是從 A 傳來的資料2!"),
+        builder: (context) => newPersonState(value: 'fff'),
       ),
     );
     //從 B 畫面回傳後更新畫面資料
@@ -300,10 +293,11 @@ class _Jovleave extends State<Jobleave2> {
               Row(mainAxisAlignment: MainAxisAlignment.start, children: [
                 InkWell(
                   onTap: () {
-                    Navigator.of(context).pushNamed('/register3',
+                    Navigator.of(context).pushNamed('/UserAgent',
                         arguments: {'name': 'Raymond'}).then((value) {
                       var list = [];
                       print('got');
+                      print(value);
                       String dd = "";
                       dd = value.toString();
                       list = dd.split('/');
@@ -328,7 +322,7 @@ class _Jovleave extends State<Jobleave2> {
                 Expanded(
                     child: InkWell(
                   onTap: () {
-                    Navigator.of(context).pushNamed('/register',
+                    Navigator.of(context).pushNamed('/UserAgent2',
                         arguments: {'name': 'Raymond'}).then((value) {
                       var list = [];
                       String dd = "";
@@ -409,18 +403,7 @@ class _Jovleave extends State<Jobleave2> {
                   style: TextStyle(color: Colors.deepOrange),
                 ),
                 //TODO scrreen
-                //onPressed: onPressToNextScreen3,
-                onPressed: () {
-                  Navigator.of(context).pushNamed('/register',
-                      arguments: {'name': 'Raymond'}).then((value) {
-                    var list = [];
-                    String dd = "";
-                    dd = value.toString();
-                    list = dd.split('/');
-                    _BindControl.UserAgent = list[0];
-                    _BindControl.FormControl_UserAgentN.text = list[1];
-                  });
-                },
+                onPressed: onPressToNextScreen3,
               ),
               TextFormField(
                 controller: _BindControl.FormControl_Reason,
@@ -437,6 +420,10 @@ class _Jovleave extends State<Jobleave2> {
 
   //TODO lsaveStream
   Widget JobStreamNew(BuildContext context) {
+    if (isNew == false) {
+      return _myorm(context);
+    }
+
     GetDateLeave();
     return StreamBuilder<int>(
       stream: _counterStreamController.stream,
@@ -475,6 +462,7 @@ class _Jovleave extends State<Jobleave2> {
               _BindControl.FormControl_UserSee2N.text = row.UserSee2N;
               _BindControl.FormControl_Reason.text = row.Reason;
             }
+            isNew = false;
             return _myorm(context);
           } else {
             return const Text('Empty data');

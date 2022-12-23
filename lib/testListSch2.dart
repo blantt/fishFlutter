@@ -11,10 +11,10 @@ class HomePage_list2 extends StatefulWidget {
   const HomePage_list2({Key? key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomePageState2 createState() => _HomePageState2();
 }
 
-class _HomePageState extends State<HomePage_list2> {
+class _HomePageState2 extends State<HomePage_list2> {
   List<User> _users = [
     User(
         'Elliana Palacios',
@@ -171,6 +171,18 @@ class _HomePageState extends State<HomePage_list2> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(children: [
+            IconButton(
+              onPressed: () => {
+                //TODO pop參數
+                // debugPrint(row.name1)
+                Navigator.pop(context, 'dddd/' + user.username)
+                //Navigator.pop(context, row.name1 + '/' + row.name2)
+              },
+              icon: Icon(
+                Icons.touch_app_sharp,
+                color: Color.fromRGBO(51, 207, 222, 1.0),
+              ),
+            ),
             Container(
                 width: 60,
                 height: 60,
