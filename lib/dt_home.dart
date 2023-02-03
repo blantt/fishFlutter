@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'TryMenu.dart';
-import 'package:blantt_love_test/testButton.dart';
-import 'ListView.dart';
+import 'package:blantt_love_test/utils/router_test.dart';
 
 class classhome extends StatelessWidget {
   const classhome({Key? key}) : super(key: key);
@@ -178,8 +177,7 @@ Widget mybutton(BuildContext _context, btnType _type) {
       ),
       onPressed: () {
         if (_type == btnType.type1) {
-          Navigator.push(
-              _context, MaterialPageRoute(builder: (context) => MyListView()));
+          RouterUtil_test.toJobLeaveList(_context);
         }
         if (_type == btnType.type2) {}
         if (_type == btnType.type3) {}

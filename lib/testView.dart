@@ -74,17 +74,6 @@ class _testview2 extends State<testview> {
             ),
           ],
         ),
-        // child: OutlinedButton(
-        //   child: Text(
-        //     '登入',
-        //     style: TextStyle(color: Colors.deepOrange),
-        //   ),
-        //   onPressed: () {
-        //     //changeText();
-        //     emailController.text = 'bbbb';
-        //     print(emailController.text);
-        //   },
-        // )
       )
     ]));
   }
@@ -120,18 +109,6 @@ class _testview2 extends State<testview> {
         body: Center(
             child: Container(
                 child: Column(children: <Widget>[
-      // Card(
-      //     child: ListTile(
-      //       title: Text("Codesinsider.com"),
-      //     ),
-      //     elevation: 3,
-      //     shadowColor: Colors.green,
-      //     shape:  OutlineInputBorder(
-      //         borderRadius: BorderRadius.circular(10),
-      //         borderSide: BorderSide(color: Colors.green, width: 1)
-      //     ),
-      //   ),
-
       Container(
         padding: EdgeInsets.fromLTRB(0, 160, 0, 0),
         //margin: EdgeInsets.fromLTRB(0, 120, 0, 0),
@@ -153,19 +130,10 @@ class _testview2 extends State<testview> {
                           color: Colors.black54,
                           offset: Offset(1, 2),
                           blurRadius: 4)
-                    ]
-                    // foreground: Paint()
-                    //   ..style = PaintingStyle.stroke
-                    //   ..strokeWidth = 6
-                    //   ..color = Colors.black
-                    )),
+                    ])),
           ],
         ),
-        // child: Center(
-        //   child: Text('ddddd'),
-        // ),
       ),
-
       Container(
         padding: EdgeInsets.all(20.0),
         margin: EdgeInsets.all(20.0),

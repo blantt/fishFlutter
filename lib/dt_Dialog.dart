@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:blantt_love_test/textForm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -13,12 +14,32 @@ class classDialog extends StatelessWidget {
 }
 
 TimeOfDay selectedTime = TimeOfDay.now();
+
+void fff(String x) {
+  print(x);
+}
+
 Widget _menu(BuildContext context) {
   return Scaffold(
       body: Center(
           child: Column(children: [
     Container(
       margin: EdgeInsets.fromLTRB(0, 65, 0, 0),
+    ),
+    OutlinedButton(
+      child: Text(
+        '測試回傳',
+        style: TextStyle(color: Colors.deepOrange),
+      ),
+      onPressed: () {
+        showDialog(builder: (_) => _displayDialog3(), context: context)
+            .then((value) {
+          // if (value != null) {
+          //   print(value);
+          // }
+          print(value);
+        });
+      },
     ),
     OutlinedButton(
       child: Text(
@@ -44,7 +65,7 @@ Widget _menu(BuildContext context) {
         style: TextStyle(color: Colors.deepOrange),
       ),
       onPressed: () {
-        _displayDialog2(context);
+        String ddd = _displayDialog2(context);
       },
     ),
     OutlinedButton(
@@ -65,6 +86,82 @@ Widget _menu(BuildContext context) {
   ])));
 }
 
+enum ConfirmAction { no, ACCEPT, CANCEL }
+
+class _displayDialog3 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text('測試可以用模組接收回傳值'),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              OutlinedButton(
+                child: Text(
+                  'test1',
+                  style: TextStyle(color: Colors.deepOrange),
+                ),
+                onPressed: () {
+                  Navigator.pop(context, ConfirmAction.ACCEPT);
+                },
+              ),
+              OutlinedButton(
+                child: Text(
+                  'test2',
+                  style: TextStyle(color: Colors.deepOrange),
+                ),
+                onPressed: () {
+                  Navigator.pop(context, ConfirmAction.CANCEL);
+                },
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}
+
+//TODO simple2
+_displayDialog2(BuildContext context) {
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Expanded(
+          child: SimpleDialog(
+            title: Text('訊息'),
+            children: [
+              TextButton(
+                onPressed: () {
+                  //  Navigator.of(context).pop();
+                  Navigator.pop(context, "OK");
+                },
+                child: Text(
+                  'YES',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context, "NO");
+                },
+                child: Text(
+                  'NO',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+            ],
+          ),
+        );
+      }).then((value) => debugPrint(value));
+}
+
+ttt(BuildContext context) {}
+
 _showDialog(BuildContext context) {
   showDialog(
     context: context,
@@ -76,7 +173,8 @@ _showDialog(BuildContext context) {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                //  Navigator.of(context).pop();
+                Navigator.pop(context, "OK");
               },
               child: Text(
                 'YES',
@@ -85,7 +183,7 @@ _showDialog(BuildContext context) {
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.pop(context, "NO");
               },
               child: Text(
                 'NO',
@@ -96,7 +194,7 @@ _showDialog(BuildContext context) {
         ),
       );
     },
-  );
+  ).then((value) => debugPrint(value));
 }
 
 _displayDialog(BuildContext context) {
@@ -144,41 +242,4 @@ _displayDialog(BuildContext context) {
       );
     },
   );
-}
-
-var _selected = "";
-_displayDialog2(BuildContext context) async {
-  _selected = await showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return Expanded(
-        child: SimpleDialog(
-          title: Text('Choose food'),
-          children: [
-            SimpleDialogOption(
-              onPressed: () {
-                Navigator.pop(context, "Pizza");
-              },
-              child: const Text('Pizza'),
-            ),
-            SimpleDialogOption(
-              onPressed: () {
-                Navigator.pop(context, "Burger");
-              },
-              child: const Text('Burger'),
-            ),
-          ],
-          elevation: 10,
-          //backgroundColor: Colors.green,
-        ),
-      );
-    },
-  );
-
-  // if(_selected != null)
-  // {
-  //   setState(() {
-  //     _selected = _selected;
-  //   });
-  // }
 }

@@ -11,7 +11,6 @@ import 'package:blantt_love_test/myConn.dart';
 import 'dart:io';
 import 'Model/Model1.dart';
 import 'ListPerson.dart';
-import 'package:blantt_love_test/testListSch2.dart';
 
 String _BatchID = '';
 String _UserNameN = '';
@@ -61,7 +60,6 @@ class testform extends StatelessWidget {
         '/UserAgent': (_) => new newPersonState(value: _BindControl.UserAgent),
         '/UserAgent2': (_) =>
             new newPersonState(value: _BindControl.UserAgent2),
-        '/abc': (_) => new HomePage_list2(),
       },
       title: 'dddd',
       theme: ThemeData(

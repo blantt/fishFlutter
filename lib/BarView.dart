@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:blantt_love_test/TryMenu.dart';
-import 'package:blantt_love_test/dt_image.dart';
 
 class barview extends StatelessWidget {
   @override
@@ -31,7 +30,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // Text(
     //   '歡迎來到AMC',
     // ),
-    Myimage2(),
+
     //menu_Clock(),
     //testmenu(),
   ];

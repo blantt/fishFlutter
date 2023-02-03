@@ -11,10 +11,13 @@ import 'package:blantt_love_test/myConn.dart';
 import 'dart:io';
 import 'Model/Model2.dart';
 import 'ListPerson.dart';
-import 'package:blantt_love_test/testListSch2.dart';
+import 'package:blantt_love_test/page/pop/pop_LeaveType.dart';
+import 'package:blantt_love_test/Model/modalBasic.dart';
 
 String _BatchID = '';
 String _UserNameN = '';
+
+List<Modal_basic> _modal_time = [];
 
 // isNew 判斷是不是第一次進來,因為有些事件,會重複觸發build,
 //不是第一次進來,就不用再重抓資料bind,不然會有些例外狀況..
@@ -26,6 +29,7 @@ class BindControl {
   String UserAgent2 = "";
   String UserSee = "";
   String UserSee2 = "";
+  String LeaveType = "";
 
   TextEditingController FormControl_UserAgentN = new TextEditingController();
   TextEditingController FormControl_UserAgent2N = new TextEditingController();
@@ -40,21 +44,28 @@ class BindControl {
 }
 
 void main() {
-  runApp(Jobleave());
+  runApp(Jobleave(""));
 }
 
 var _BindControl = BindControl();
 
 //TODO setless
 class Jobleave extends StatelessWidget {
+  String SendBatchID = '';
+  Jobleave(this.SendBatchID);
+
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)!.settings.arguments as PageSend;
-    if (args != null) {
-      _BatchID = args.BatchID;
-    } else {
-      _BatchID = "h";
-    }
+    //---這是另外一種傳值的寫法
+    // final args = ModalRoute.of(context)!.settings.arguments as PageSend;
+    // if (args != null) {
+    //   _BatchID = args.BatchID;
+    // } else {
+    //   _BatchID = "h";
+    // }
+    _BatchID = this.SendBatchID;
+
+    print('com in' + _BatchID);
 
     return MaterialApp(
       initialRoute: '/',
@@ -64,9 +75,9 @@ class Jobleave extends StatelessWidget {
         // },
         '/register': (_) => new MyListPerson(value: 'abc2'),
         '/UserAgent': (_) => new newPersonState(value: _BindControl.UserAgent),
+        '/LeaveType': (_) => new doorLeaveType2(),
         '/UserAgent2': (_) =>
             new newPersonState(value: _BindControl.UserAgent2),
-        '/abc': (_) => new HomePage_list2(),
       },
       title: 'dddd',
       theme: ThemeData(
@@ -256,7 +267,7 @@ class _Jovleave extends State<Jobleave2> {
                   ),
                   Expanded(
                     child: TextFormField(
-                      enabled: true,
+                      enabled: false,
                       //'$textHolder'
                       //initialValue: '$textHolder',
                       controller: _BindControl.ControllerUserNameN,
@@ -280,12 +291,28 @@ class _Jovleave extends State<Jobleave2> {
                   width: 5,
                 ),
                 Expanded(
-                  child: TextFormField(
-                    enabled: true,
-                    //'$textHolder'
-                    //initialValue: '$textHolder',
-                    controller: _BindControl.ControllerLeaveTypeN,
-                    decoration: InputDecoration(labelText: '假別'),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.of(context).pushNamed('/LeaveType',
+                          arguments: {'name': 'Raymond'}).then((value) {
+                        var _templist = [];
+
+                        String _tempValue = "";
+                        _tempValue = value.toString();
+                        _templist = _tempValue.split('/');
+
+                        _BindControl.LeaveType = _templist[0];
+                        _BindControl.ControllerLeaveTypeN.text = _templist[1];
+                      });
+                    }, // Handle your callback
+                    child: SizedBox(
+                      width: 180,
+                      child: TextFormField(
+                        enabled: false,
+                        controller: _BindControl.ControllerLeaveTypeN,
+                        decoration: InputDecoration(labelText: '假別'),
+                      ),
+                    ),
                   ),
                 )
               ]),
@@ -295,14 +322,12 @@ class _Jovleave extends State<Jobleave2> {
                   onTap: () {
                     Navigator.of(context).pushNamed('/UserAgent',
                         arguments: {'name': 'Raymond'}).then((value) {
-                      var list = [];
-                      print('got');
-                      print(value);
-                      String dd = "";
-                      dd = value.toString();
-                      list = dd.split('/');
-                      _BindControl.UserAgent = list[0];
-                      _BindControl.FormControl_UserAgentN.text = list[1];
+                      var _templist = [];
+                      String _tempValue = "";
+                      _tempValue = value.toString();
+                      _templist = _tempValue.split('/');
+                      _BindControl.UserAgent = _templist[0];
+                      _BindControl.FormControl_UserAgentN.text = _templist[1];
                     });
                   }, // Handle your callback
                   child: SizedBox(
@@ -322,14 +347,14 @@ class _Jovleave extends State<Jobleave2> {
                 Expanded(
                     child: InkWell(
                   onTap: () {
-                    Navigator.of(context).pushNamed('/UserAgent2',
+                    Navigator.of(context).pushNamed('/UserAgent',
                         arguments: {'name': 'Raymond'}).then((value) {
-                      var list = [];
-                      String dd = "";
-                      dd = value.toString();
-                      list = dd.split('/');
-                      _BindControl.UserAgent2 = list[0];
-                      _BindControl.FormControl_UserAgent2N.text = list[1];
+                      var _templist = [];
+                      String _tempValue = "";
+                      _tempValue = value.toString();
+                      _templist = _tempValue.split('/');
+                      _BindControl.UserAgent2 = _templist[0];
+                      _BindControl.FormControl_UserAgent2N.text = _templist[1];
                     });
                   }, // Handle yo
                   child: TextFormField(
@@ -344,14 +369,14 @@ class _Jovleave extends State<Jobleave2> {
               Row(mainAxisAlignment: MainAxisAlignment.start, children: [
                 InkWell(
                   onTap: () {
-                    Navigator.of(context).pushNamed('/register',
+                    Navigator.of(context).pushNamed('/UserAgent',
                         arguments: {'name': 'Raymond'}).then((value) {
-                      var list = [];
-                      String dd = "";
-                      dd = value.toString();
-                      list = dd.split('/');
-                      _BindControl.UserSee = list[0];
-                      _BindControl.FormControl_UserSeeN.text = list[1];
+                      var _templist = [];
+                      String _tempValue = "";
+                      _tempValue = value.toString();
+                      _templist = _tempValue.split('/');
+                      _BindControl.UserSee = _templist[0];
+                      _BindControl.FormControl_UserSeeN.text = _templist[1];
                     });
                   },
                   child: SizedBox(
@@ -371,14 +396,14 @@ class _Jovleave extends State<Jobleave2> {
                 Expanded(
                     child: InkWell(
                   onTap: () {
-                    Navigator.of(context).pushNamed('/register',
+                    Navigator.of(context).pushNamed('/UserAgent',
                         arguments: {'name': 'Raymond'}).then((value) {
-                      var list = [];
-                      String dd = "";
-                      dd = value.toString();
-                      list = dd.split('/');
-                      _BindControl.UserSee2 = list[0];
-                      _BindControl.FormControl_UserSee2N.text = list[1];
+                      var _templist = [];
+                      String _tempValue = "";
+                      _tempValue = value.toString();
+                      _templist = _tempValue.split('/');
+                      _BindControl.UserSee2 = _templist[0];
+                      _BindControl.FormControl_UserSee2N.text = _templist[1];
                     });
                   },
                   child: TextFormField(
@@ -390,21 +415,9 @@ class _Jovleave extends State<Jobleave2> {
                   ),
                 ))
               ]),
-              TextFormField(
-                //'$textHolder'
-                //initialValue: '$textHolder',
-                controller: _BindControl.ControllerLeaveTypeN,
-                decoration:
-                    InputDecoration(icon: Icon(Icons.people), labelText: '假別'),
-              ),
-              OutlinedButton(
-                child: Text(
-                  '人員選單',
-                  style: TextStyle(color: Colors.deepOrange),
-                ),
-                //TODO scrreen
-                onPressed: onPressToNextScreen3,
-              ),
+              //TODO======時間列表====
+
+              timeRage(context),
               TextFormField(
                 controller: _BindControl.FormControl_Reason,
                 decoration: const InputDecoration(
@@ -418,11 +431,101 @@ class _Jovleave extends State<Jobleave2> {
     );
   }
 
+  Widget timeRage(BuildContext context) {
+    _modal_time.add(Modal_basic(name1: 'bbb', name2: 'name2'));
+    _modal_time.add(Modal_basic(name1: 'ccc', name2: 'name3'));
+
+    Widget temprow(Modal_basic item) {
+      return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+        InkWell(
+          onTap: () {},
+          child: SizedBox(
+            width: 180,
+            child: TextFormField(
+              initialValue: item.name1,
+              decoration: InputDecoration(labelText: '起始時間'),
+            ),
+          ),
+        ),
+        SizedBox(
+          width: 5,
+        ),
+        Expanded(
+            child: InkWell(
+          onTap: () {},
+          child: TextFormField(
+            initialValue: item.name2,
+            decoration: InputDecoration(labelText: '結束時間'),
+          ),
+        ))
+      ]);
+    }
+
+    final children = <Widget>[];
+    children.add(Text('請假區段'));
+    for (var i = 0; i < _modal_time.length; i++) {
+      var row = _modal_time[i];
+      print(i);
+
+      children.add(temprow(row));
+    }
+
+    return Container(
+      padding: EdgeInsets.fromLTRB(8, 4, 8, 4),
+      //margin: EdgeInsets.fromLTRB(0, 120, 0, 0),
+
+      width: double.infinity,
+      decoration: new BoxDecoration(
+        // borderRadius: BorderRadius.circular(10.0),
+        borderRadius: new BorderRadius.only(
+          topRight: const Radius.circular(10.0),
+          topLeft: const Radius.circular(10.0),
+          bottomRight: const Radius.circular(10.0),
+          bottomLeft: const Radius.circular(10.0),
+        ),
+        border: Border(
+            // left: BorderSide(width: 16.0, color: Colors.lightBlue.shade600),
+            // bottom: BorderSide(width: 16.0, color: Colors.lightBlue.shade900),
+            ),
+        color: Colors.cyan,
+      ),
+      child: Column(children: children),
+    );
+
+    //return Column(children: children);
+
+    // return Column(children: <Widget>[
+    //   Text('dddd'),
+    //   Container(
+    //       padding: EdgeInsets.fromLTRB(8, 4, 8, 4),
+    //       //margin: EdgeInsets.fromLTRB(0, 120, 0, 0),
+    //
+    //       width: double.infinity,
+    //       decoration: new BoxDecoration(
+    //         // borderRadius: BorderRadius.circular(10.0),
+    //         borderRadius: new BorderRadius.only(
+    //           topRight: const Radius.circular(10.0),
+    //           topLeft: const Radius.circular(10.0),
+    //           bottomRight: const Radius.circular(10.0),
+    //           bottomLeft: const Radius.circular(10.0),
+    //         ),
+    //         border: Border(
+    //             // left: BorderSide(width: 16.0, color: Colors.lightBlue.shade600),
+    //             // bottom: BorderSide(width: 16.0, color: Colors.lightBlue.shade900),
+    //             ),
+    //         color: Colors.cyan,
+    //       ),
+    //       child: children)
+    // ]);
+  }
+
   //TODO lsaveStream
   Widget JobStreamNew(BuildContext context) {
-    if (isNew == false) {
-      return _myorm(context);
-    }
+    //---isNew 這段似乎不是必需的,原先只是避免彈跳視窗回來,重複呼叫浪費資源(但原來呼叫視窗回來不會經過這裡)
+
+    // if (isNew == false) {
+    //   return _myorm(context);
+    // }
 
     GetDateLeave();
     return StreamBuilder<int>(
@@ -432,7 +535,7 @@ class _Jovleave extends State<Jobleave2> {
         AsyncSnapshot<int> snapshot,
       ) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return new Center(child: CircularProgressIndicator());
         } else if (snapshot.connectionState == ConnectionState.active ||
             snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasError) {
@@ -447,6 +550,7 @@ class _Jovleave extends State<Jobleave2> {
               // 请求成功，显示数据
               _BindControl.ControllerClassTypeN.text = row.ClassTypeN;
               _BindControl.ControllerLeaveTypeN.text = row.LeaveTypeN;
+              _BindControl.LeaveType = row.LeaveType;
               _BindControl.emailController.text = _BatchID;
               _BindControl.ControllerUserNameN.text = _UserNameN;
 

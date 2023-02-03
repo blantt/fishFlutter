@@ -1,22 +1,5 @@
-import 'package:blantt_love_test/dt_image.dart';
 import 'package:flutter/material.dart';
-import 'package:blantt_love_test/testView.dart';
-import 'package:blantt_love_test/BarView.dart';
-import 'package:blantt_love_test/ListView.dart';
-import 'package:blantt_love_test/dt_rounter.dart';
-import 'package:blantt_love_test/myConn.dart';
-import 'package:blantt_love_test/dt_Dialog.dart';
-import 'package:blantt_love_test/selectTime.dart';
-import 'package:blantt_love_test/selectDate.dart';
-import 'package:blantt_love_test/testButton.dart';
-import 'package:blantt_love_test/dt_layout.dart';
-import 'package:blantt_love_test/textForm.dart';
-import 'package:blantt_love_test/testForm2.dart';
-import 'package:blantt_love_test/testconn.dart';
-import 'ListPerson.dart';
-import 'BScreen.dart';
-import 'package:blantt_love_test/testListSch.dart';
-import 'package:blantt_love_test/ListPerson2.dart';
+import 'package:blantt_love_test/utils/router_test.dart';
 
 void main() {
   runApp(MyTryMenu());
@@ -43,30 +26,6 @@ class MyHomePage extends StatefulWidget {
 class _PageState2 extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    // void onPressToNextScreen() {
-    //   Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //       builder: (context) => MyListPerson(value: "我是從 A 傳來的資料2!"),
-    //     ),
-    //   );
-    // }
-
-    void onPressToNextScreen() async {
-      final result = await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MyListPerson(value: "我是從 A 傳來的資料2!"),
-        ),
-      );
-      //從 B 畫面回傳後更新畫面資料
-      setState(() {
-        if (result != null) {
-          print(result);
-        }
-      });
-    }
-
     return Scaffold(
         appBar: AppBar(
           //leading: Icon(Icons.arrow_back),
@@ -89,69 +48,38 @@ class _PageState2 extends State<MyHomePage> {
             ),
             OutlinedButton(
               child: Text(
-                'listviewSch2',
+                'testtime',
                 style: TextStyle(color: Colors.deepOrange),
               ),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => listSch2()));
+                RouterUtil_test.toJTestTime(context);
               },
             ),
             OutlinedButton(
               child: Text(
-                '人員選單',
-                style: TextStyle(color: Colors.deepOrange),
-              ),
-              onPressed: onPressToNextScreen,
-            ),
-            OutlinedButton(
-              child: Text(
-                'login in',
+                'Login',
                 style: TextStyle(color: Colors.deepOrange),
               ),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => testview()));
+                RouterUtil_test.toLoginPage(context);
               },
             ),
             OutlinedButton(
               child: Text(
-                'menu bar',
+                '請假單查詢',
                 style: TextStyle(color: Colors.deepOrange),
               ),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => barview()));
+                RouterUtil_test.toJobLeaveList(context);
               },
             ),
             OutlinedButton(
               child: Text(
-                'listview',
+                'Runter測試',
                 style: TextStyle(color: Colors.deepOrange),
               ),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => MyListView()));
-              },
-            ),
-            OutlinedButton(
-              child: Text(
-                'MyRunter',
-                style: TextStyle(color: Colors.deepOrange),
-              ),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => MyRunter()));
-              },
-            ),
-            OutlinedButton(
-              child: Text(
-                'MyRImage',
-                style: TextStyle(color: Colors.deepOrange),
-              ),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Myimage()));
+                RouterUtil_test.toRounterTest(context);
               },
             ),
             OutlinedButton(
@@ -160,8 +88,7 @@ class _PageState2 extends State<MyHomePage> {
                 style: TextStyle(color: Colors.deepOrange),
               ),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => menu_conn()));
+                RouterUtil_test.toConnTest(context);
               },
             ),
             OutlinedButton(
@@ -170,8 +97,7 @@ class _PageState2 extends State<MyHomePage> {
                 style: TextStyle(color: Colors.deepOrange),
               ),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => classDialog()));
+                RouterUtil_test.toDialogTest(context);
               },
             ),
             OutlinedButton(
@@ -180,8 +106,7 @@ class _PageState2 extends State<MyHomePage> {
                 style: TextStyle(color: Colors.deepOrange),
               ),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => classSelectTime()));
+                RouterUtil_test.toSelectTimeTest(context);
               },
             ),
             OutlinedButton(
@@ -190,38 +115,7 @@ class _PageState2 extends State<MyHomePage> {
                 style: TextStyle(color: Colors.deepOrange),
               ),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => selectDate()));
-              },
-            ),
-            OutlinedButton(
-              child: Text(
-                'testbutton',
-                style: TextStyle(color: Colors.deepOrange),
-              ),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => testButton()));
-              },
-            ),
-            OutlinedButton(
-              child: Text(
-                'layout',
-                style: TextStyle(color: Colors.deepOrange),
-              ),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => templayout()));
-              },
-            ),
-            OutlinedButton(
-              child: Text(
-                'testconn',
-                style: TextStyle(color: Colors.deepOrange),
-              ),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => RandomArticle()));
+                RouterUtil_test.toSelectDateTest(context);
               },
             ),
             OutlinedButton(
@@ -230,28 +124,25 @@ class _PageState2 extends State<MyHomePage> {
                 style: TextStyle(color: Colors.deepOrange),
               ),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => testform()));
+                RouterUtil_test.totestform(context);
               },
             ),
             OutlinedButton(
               child: Text(
-                '測試表單2',
+                'listview簳例1',
                 style: TextStyle(color: Colors.deepOrange),
               ),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => testform2()));
+                RouterUtil_test.toListViewSample1(context);
               },
             ),
             OutlinedButton(
               child: Text(
-                'listviewSch',
+                'test 人員選單',
                 style: TextStyle(color: Colors.deepOrange),
               ),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => HomePage_list()));
+                RouterUtil_test.toLeaveType(context);
               },
             ),
           ])),

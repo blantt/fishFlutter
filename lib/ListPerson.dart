@@ -1,18 +1,12 @@
-import 'dart:ffi';
-
 import 'package:blantt_love_test/JobLeave.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'dart:io';
-import 'package:blantt_love_test/testView.dart';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:blantt_love_test/myConn.dart';
-import 'package:blantt_love_test/testButton.dart';
-import 'package:blantt_love_test/routesPage.dart';
 import 'Model/Model1.dart';
+import 'package:blantt_love_test/routesPage.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 //參收參數參考 https://fightwennote.blogspot.com/2020/04/flutter-widget.html?m=0
@@ -60,20 +54,12 @@ class MyListPerson extends StatelessWidget {
       theme: new ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: new MyHomePage(),
+      home: Text('暫時沒用'),
     );
   }
 }
 
 final ItemScrollController itemScrollController = ItemScrollController();
-
-//TODO StatefulWidget
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key}) : super(key: key);
-
-  @override
-  _PageState2 createState() => _PageState2();
-}
 
 class _PageState2 extends State<newPersonState> {
   // @override
@@ -115,7 +101,7 @@ class _PageState2 extends State<newPersonState> {
                     onSearch(value);
                   },
                   decoration: InputDecoration(
-                      labelText: "Search2",
+                      labelText: "Search3",
                       hintText: "Search2",
                       prefixIcon: Icon(Icons.search),
                       border: OutlineInputBorder(

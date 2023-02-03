@@ -1,22 +1,18 @@
-import 'dart:ffi';
-
-import 'package:blantt_love_test/ListView.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
 import 'dart:io';
 import 'package:blantt_love_test/testView.dart';
-
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:blantt_love_test/myConn.dart';
-import 'package:blantt_love_test/testButton.dart';
 import 'package:blantt_love_test/routesPage.dart';
 import 'Model/Model1.dart';
+import 'package:blantt_love_test/utils/router_test.dart';
 
-//我喜歡這種表單樣式,先紀錄起來
+//我喜歡這種表單樣式,先紀錄起來  lll
 //https://www.kindacode.com/article/adding-borders-to-cards-in-flutter/
 //不錯的做法! https://www.youtube.com/watch?v=4tG8M4wK4F0
+
+List<Modal_LeaveSch2> _modal_list = [];
+
 void main() {
   runApp(MyListView());
 }
@@ -29,15 +25,9 @@ class MyListView extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.green,
         ),
-        routes: RoutePath,
+        routes: RoutePath, //如用這寫法,是為了配合後面用  Navigator.pushNamed
         home: MyHomePage2());
   }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key}) : super(key: key);
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
 }
 
 class MyHomePage2 extends StatefulWidget {
@@ -46,98 +36,15 @@ class MyHomePage2 extends StatefulWidget {
   _MyHomePageState2 createState() => _MyHomePageState2();
 }
 
-class User {
-  final String username;
-  final String email;
-  final String myUrl;
-
-  const User(
-      {required this.username, required this.email, required this.myUrl});
-}
-
-List<User> users = [
-  const User(username: 'PP', email: 'dd', myUrl: 'MM'),
-  const User(username: 'PP2', email: 'dd', myUrl: 'MM')
-];
-
-//Modal_Kind 假別
-List<Modal_Kind> list_Modal_Kind = [Modal_Kind(name1: 'aaa', name2: 'aaa')];
-
-//Modal_Kind 假別
-class Modal_Kind {
-  Modal_Kind({
-    required this.name1,
-    required this.name2,
-  });
-
-  String name1;
-  String name2;
-
-  factory Modal_Kind.fromJson(Map<String, dynamic> json) => Modal_Kind(
-        name1: json["name1"],
-        name2: json["name2"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "name1": name1,
-        "name2": name2,
-      };
-}
-
 Future<String> GetDateLeaveSch() async {
-  // return Future.delayed(Duration(seconds: 2), () => "我是从互联网上获取的数据");
-  // getHttp();
-  //return Future.delayed(Duration(seconds: 5), () => "我是从互联网上获取的数据");
   final response = await Dio().get(m_url_LeaveSch + '/all');
   String sss = "";
   //if (response.statusCode == HttpStatus.ok) {
-  list_Modal_LeaveSch2 = (response.data as List<dynamic>)
+  _modal_list = (response.data as List<dynamic>)
       .map((e) => Modal_LeaveSch2.fromJson((e as Map<String, dynamic>)))
       .toList();
 
-  //print(list[1].name2);
-  //  return "";
-  //}
   return "";
-}
-
-Future<String> GetDataKind() async {
-  // return Future.delayed(Duration(seconds: 2), () => "我是从互联网上获取的数据");
-  // getHttp();
-  //return Future.delayed(Duration(seconds: 5), () => "我是从互联网上获取的数据");
-  final response = await Dio().get(m_url_ClocjClass);
-  String sss = "";
-  //if (response.statusCode == HttpStatus.ok) {
-  list_Modal_Kind = (response.data as List<dynamic>)
-      .map((e) => Modal_Kind.fromJson((e as Map<String, dynamic>)))
-      .toList();
-  //print(list[1].name2);
-  //  return "";
-  //}
-  return "";
-}
-
-Widget build2(BuildContext context) {
-  return Center(
-    child: FutureBuilder<String>(
-      future: GetDataKind(),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        // 请求已结束
-        if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot.hasError) {
-            // 请求失败，显示错误
-            return Text("Error: ${snapshot.error}");
-          } else {
-            // 请求成功，显示数据
-            return Text("Contents: ${snapshot.data}");
-          }
-        } else {
-          // 请求未结束，显示loading
-          return CircularProgressIndicator();
-        }
-      },
-    ),
-  );
 }
 
 Widget buildCell(
@@ -172,11 +79,7 @@ Widget buildCell(
         right: BorderSide(color: _borderColor, width: borderWidth),
       ),
     ),
-    // child: Text(
-    //   _value,
-    //   style: TextStyle(
-    //       fontSize: _fontSize, color: _textColor, fontWeight: _fontweight),
-    // ),
+
     child: RichText(
       text: TextSpan(
         //outer span
@@ -188,24 +91,6 @@ Widget buildCell(
       ),
     ),
   );
-}
-
-Widget buildLivtView_basic(BuildContext context) {
-  return ListView.builder(
-      itemCount: users.length,
-      itemBuilder: (context, index) {
-        final user = users[index];
-        return Card(
-          child: ListTile(
-            title: Text(user.username),
-            trailing: const Icon(Icons.arrow_forward),
-            onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => testview()));
-            },
-          ),
-        );
-      });
 }
 
 Widget _listCard_title(BuildContext context, String BatchID, String LeaveTypeN,
@@ -242,18 +127,8 @@ Widget _listCard_title(BuildContext context, String BatchID, String LeaveTypeN,
             Expanded(child: buildCell(0, 30, 100, '請假日期', 0)),
             // Expanded(child: FlutterLogo()),
           ]),
-        ])
-
-        // child: Row(children: <Widget>[
-        //   buildCell(0, 50, 136, '單據號碼', 2),
-        //   buildCell(0, 50, 85, '人員', 2),
-        //   buildCell(0, 50, 70, '假別', 2),
-        //   Expanded(child: buildCell(0, 50, 100, '單況', 0)),
-        //   // Expanded(child: FlutterLogo()),
-        // ])
-        ),
+        ])),
     _listCard_row(context, BatchID, LeaveTypeN, UserNameN, MStatusN)
-    // _listCard(context, BatchID),
   ]);
 }
 
@@ -311,9 +186,8 @@ Widget _listCard_row(BuildContext context, String BatchID, String LeaveTypeN,
       ),
       //TODO row點選時
       onTap: () {
-        // Navigator.push(
-        //     context, MaterialPageRoute(builder: (context) => testButton()));
-        Navigator.pushNamed(context, page3, arguments: PageSend(BatchID));
+        RouterUtil_test.toJobleaveForm(context, BatchID);
+        // Navigator.pushNamed(context, page3, arguments: PageSend(BatchID));
       },
     )
 
@@ -339,7 +213,7 @@ Widget _listCard(BuildContext context, String BatchID) {
   );
 }
 
-//TODO now listview
+//TODO listbuild
 Widget buildLivtView_LeaveSch(BuildContext context) {
   return FutureBuilder<String>(
     future: GetDateLeaveSch(),
@@ -353,10 +227,10 @@ Widget buildLivtView_LeaveSch(BuildContext context) {
         } else {
           // 请求成功，显示数据
           return ListView.builder(
-              itemCount: list_Modal_LeaveSch2.length,
+              itemCount: _modal_list.length,
               itemBuilder: (context, index) {
-                final user = list_Modal_LeaveSch2[index];
-                var row = list_Modal_LeaveSch2[index];
+                final user = _modal_list[index];
+                var row = _modal_list[index];
                 if (index == 0) {
                   return _listCard_title(context, row.BatchID, row.LeaveTypeN,
                       row.UserNameN, row.MStatusN);
@@ -375,66 +249,9 @@ Widget buildLivtView_LeaveSch(BuildContext context) {
   );
 }
 
-Widget buildLivtView_Kind(BuildContext context) {
-  return FutureBuilder<String>(
-    future: GetDataKind(),
-    builder: (BuildContext context, AsyncSnapshot snapshot) {
-      // 请求已结束
-      if (snapshot.connectionState == ConnectionState.done) {
-        if (snapshot.hasError) {
-          // 请求失败，显示错误
-          return Text("Error: ${snapshot.error}");
-          // return CircularProgressIndicator();
-        } else {
-          // 请求成功，显示数据
-          return ListView.builder(
-              itemCount: list_Modal_Kind.length,
-              itemBuilder: (context, index) {
-                final user = list_Modal_Kind[index];
-                return Card(
-                  child: ListTile(
-                    title: Text(user.name2),
-                    trailing: const Icon(Icons.arrow_forward),
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => testview()));
-                    },
-                  ),
-                );
-              });
-        }
-      } else {
-        // 请求未结束，显示loading
-        return new Center(child: CircularProgressIndicator());
-        // return CircularProgressIndicator();
-      }
-    },
-  );
-}
-
-void getHttp() async {
-  try {
-    Response response = await Dio().get(m_url_ClocjClass);
-    String sss = "";
-    if (response.statusCode == HttpStatus.ok) {
-      list_Modal_Kind = (response.data as List<dynamic>)
-          .map((e) => Modal_Kind.fromJson((e as Map<String, dynamic>)))
-          .toList();
-      //print(list[1].name2);
-    }
-  } catch (e) {
-    print(e);
-  }
-}
-
 class _MyHomePageState2 extends State<MyHomePage2> {
   @override
   Widget build(BuildContext context) {
-    // String ttt = '[{"name1":"0","name2":"特休"},{"name1":"1","name2":"特休2"}]';
-    // List<Nametry> list = (ttt as List<dynamic>)
-    //     .map((e) => Nametry.fromJson((e as Map<String, dynamic>)))
-    //     .toList();
-
     return Scaffold(
         appBar: AppBar(
           //leading: Icon(Icons.arrow_back),
@@ -447,23 +264,6 @@ class _MyHomePageState2 extends State<MyHomePage2> {
                 fontSize: 18),
           ),
         ),
-        // body: buildLivtView_Kind(context));
         body: buildLivtView_LeaveSch(context));
-  }
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    // String ttt = '[{"name1":"0","name2":"特休"},{"name1":"1","name2":"特休2"}]';
-    // List<Nametry> list = (ttt as List<dynamic>)
-    //     .map((e) => Nametry.fromJson((e as Map<String, dynamic>)))
-    //     .toList();
-
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("Flutter GridView basic3"),
-        ),
-        body: buildLivtView_basic(context));
   }
 }
