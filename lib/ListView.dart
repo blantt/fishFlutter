@@ -132,7 +132,6 @@ Widget _listCard_title(BuildContext context, String BatchID, String LeaveTypeN,
   ]);
 }
 
-//TODO cardrow
 Widget _listCard_row(BuildContext context, String BatchID, String LeaveTypeN,
     String UserNameN, String MStatusN) {
   return Column(children: <Widget>[

@@ -13,6 +13,7 @@ import 'package:blantt_love_test/ListPerson.dart';
 import 'package:blantt_love_test/testView2.dart';
 import 'package:blantt_love_test/page/pop/pop_LeaveType.dart';
 import 'package:blantt_love_test/testTime.dart';
+import 'package:blantt_love_test/TestFrom2.dart';
 
 class RouterUtil_test {
   static toPersonSch(BuildContext context, String _value) {
@@ -25,12 +26,12 @@ class RouterUtil_test {
   }
 
   static toJTestTime(BuildContext context) {
-    //假單表單edit
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => classTestTime()),
-      //context, page3, arguments: PageSend(BatchID)
-    );
+    // Navigator.push(
+    //   context,
+    //
+    //   MaterialPageRoute(builder: (context) => doorSelectTime('', '')),
+    //
+    // );
   }
 
   static toJobleaveForm(BuildContext context, String _BatchID) {
@@ -114,6 +115,15 @@ class RouterUtil_test {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => doorLeaveType()),
+      //MaterialPageRoute(builder: (context) => testView2()),
+    );
+  }
+
+  static toTestForm2(BuildContext context) {
+    //測試專用
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => doorForm2()),
       //MaterialPageRoute(builder: (context) => testView2()),
     );
   }

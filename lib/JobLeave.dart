@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:blantt_love_test/component/blanttButton.dart';
+import 'package:blantt_love_test/component/blanttColor.dart';
 import 'package:blantt_love_test/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +15,8 @@ import 'Model/Model2.dart';
 import 'ListPerson.dart';
 import 'package:blantt_love_test/page/pop/pop_LeaveType.dart';
 import 'package:blantt_love_test/Model/modalBasic.dart';
+import 'package:blantt_love_test/testTime.dart';
+import 'package:intl/intl.dart';
 
 String _BatchID = '';
 String _UserNameN = '';
@@ -49,7 +53,6 @@ void main() {
 
 var _BindControl = BindControl();
 
-//TODO setless
 class Jobleave extends StatelessWidget {
   String SendBatchID = '';
   Jobleave(this.SendBatchID);
@@ -65,14 +68,13 @@ class Jobleave extends StatelessWidget {
     // }
     _BatchID = this.SendBatchID;
 
-    print('com in' + _BatchID);
-
     return MaterialApp(
       initialRoute: '/',
       routes: <String, WidgetBuilder>{
         // '/': (context) {
         //   return const MyApp();
         // },
+        '/popTime': (_) => new doorSelectTime(name1: '', name2: ''),
         '/register': (_) => new MyListPerson(value: 'abc2'),
         '/UserAgent': (_) => new newPersonState(value: _BindControl.UserAgent),
         '/LeaveType': (_) => new doorLeaveType2(),
@@ -108,30 +110,29 @@ int _selectedIndex = 0;
 
 class _Jovleave extends State<Jobleave2> {
   //---重點是counterStreamController 要寫對地方,不然第二次進來stream,會出現錯誤!!!
+  String testdd = "";
 
   int _counter = 0;
   late Stream _counterStream;
   late StreamSink _counterSink;
   StreamController<int> _counterStreamController = StreamController<int>(
-    onCancel: () {
-      print('cancel');
-    },
-    onListen: () {
-      print('listen');
-    },
+    onCancel: () {},
+    onListen: () {},
   );
 
   @override
   void initState() {
+    testdd = "bb1";
     _counterSink = _counterStreamController.sink;
     _counterStream = _counterStreamController.stream;
     _BindControl.FormControl_UserSeeN.text = "ddddd2";
+    SetTimeList();
     super.initState();
+    print('in initState');
   }
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     //_BindControl.FormControl_UserSeeN.text = "bbb";
   }
@@ -149,7 +150,11 @@ class _Jovleave extends State<Jobleave2> {
         appBar: AppBar(
           title: Text('請假單 ' + _BatchID),
         ),
-        body: JobStreamNew(context),
+        body: Column(
+          children: [
+            JobStreamNew(context),
+          ],
+        ),
         bottomNavigationBar: BottomNavigationBar(
           items: [
             BottomNavigationBarItem(
@@ -181,9 +186,7 @@ class _Jovleave extends State<Jobleave2> {
     );
     //從 B 畫面回傳後更新畫面資料
     setState(() {
-      if (result != null) {
-        print(result);
-      }
+      if (result != null) {}
     });
   }
 
@@ -218,7 +221,6 @@ class _Jovleave extends State<Jobleave2> {
     setState(() {});
   }
 
-//TODO GetDateLeave
   Future<String> GetDateLeave() async {
     // return Future.delayed(Duration(seconds: 2), () => "我是从互联网上获取的数据");
     // getHttp();
@@ -240,6 +242,195 @@ class _Jovleave extends State<Jobleave2> {
     return "";
   }
 
+  //TODO testnewRange
+  Widget testTimeRange() {
+    Widget tempContainer(int itype, int Stype, Widget chid) {
+      //itype 0:title,1.row
+      //Stype row's index
+      Color _color;
+      Alignment _Alignment;
+
+      double _height;
+      if (Stype == 1) {
+        _Alignment = Alignment.centerLeft;
+      } else {
+        _Alignment = Alignment.center;
+      }
+
+      if (itype == 0) {
+        _height = 40;
+        _color = MyColor.back_COLOR1;
+      } else {
+        _height = 40;
+        _color = MyColor.back_COLOR2;
+      }
+      return Container(
+        decoration: new BoxDecoration(
+          color: _color,
+          border: new Border.all(
+            width: 1,
+            color: Colors.white,
+          ),
+        ),
+        // color: Colors.blue,
+
+        alignment: _Alignment,
+        width: 90,
+        height: _height,
+        child: chid,
+      );
+    }
+
+    Widget temprowTitle() {
+      return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+        Expanded(
+            child: tempContainer(
+              0,
+              1,
+              tempIconButton(
+                my_onPressed: () {
+                  Navigator.of(context).pushNamed('/popTime',
+                      arguments: {'name1': '', 'name2': ''}).then((value) {
+                    this.setState(() {
+                      var _templist = [];
+                      String _tempValue = "";
+                      _tempValue = value.toString();
+                      _templist = _tempValue.split('@');
+
+                      print(value);
+
+                      AddTimeList(Modal_basic(
+                          name1: _templist[0], name2: _templist[1]));
+                      // editTimeList("bbb", _templist[0], _templist[1]);
+                    });
+                  });
+                },
+                myicon: Icons.add,
+                my_Backcolor33: Color.fromRGBO(54, 123, 148, 1.0),
+              ),
+            ),
+            flex: 0),
+        Expanded(
+            child: tempContainer(
+                0,
+                2,
+                myText(
+                  m_text: '起始時間',
+                  m_fountWeight: FontWeight.w700,
+                  m_color: Colors.white,
+                )),
+            flex: 1),
+        Expanded(
+            child: tempContainer(
+                0,
+                3,
+                myText(
+                  m_text: '結束時間',
+                  m_fountWeight: FontWeight.w700,
+                  m_color: Colors.white,
+                )),
+            flex: 1),
+      ]);
+      //);
+    }
+
+    Widget TempTimeIcon(String name1, String name2) {
+      return Row(
+        children: [
+          tempIconButton(
+            my_onPressed: () {
+              this.setState(() {
+                _poptime(context, name1, name2);
+              });
+
+              // Navigator.of(context).pushNamed('/popTime',
+              //     arguments: {'name1': name1, 'name2': name2}).then((value) {
+              //   this.setState(() {
+              //     var _templist = [];
+              //     String _tempValue = "";
+              //     _tempValue = value.toString();
+              //     _templist = _tempValue.split('@');
+              //
+              //     print(value);
+              //     editTimeList(name1, _templist[0], _templist[1]);
+              //   });
+              // });
+            },
+            myicon: Icons.edit,
+          ),
+          SizedBox(
+            width: 2,
+          ),
+          tempIconButton(
+            my_onPressed: () {
+              this.setState(() {
+                DelTimeList(name1);
+                print('del');
+              });
+            },
+            myicon: Icons.delete_forever,
+          )
+        ],
+      );
+    }
+
+    Widget tempList() {
+      return ListView.builder(
+        itemBuilder: (BuildContext, index) {
+          Widget tempCard;
+          var row = _modal_time[index];
+
+          Widget ttt;
+          ttt = SizedBox(
+            height: 35.0,
+            width: 35.0,
+            child: TextButton(
+              style: ElevatedButton.styleFrom(
+                primary: Color.fromRGBO(87, 180, 156, 1.0),
+                //side: BorderSide(width: 1.0, color: Colors.blueAccent),
+              ),
+              child: Icon(
+                Icons.edit,
+                color: Colors.white,
+              ),
+              onPressed: () {},
+            ),
+          );
+
+          Widget bb =
+              Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+            Expanded(
+                child: tempContainer(1, 1, TempTimeIcon(row.name1, row.name2)),
+                flex: 0),
+            Expanded(child: tempContainer(1, 2, Text(row.name1)), flex: 1),
+            Expanded(child: tempContainer(1, 3, Text(row.name2)), flex: 1),
+          ]);
+
+          return bb;
+        },
+        itemCount: _modal_time.length,
+        shrinkWrap: true,
+        padding: EdgeInsets.all(0),
+        scrollDirection: Axis.vertical,
+      );
+    }
+
+    String tt = "";
+    final children = <Widget>[];
+    children.add(temprowTitle());
+    children.add(tempList());
+
+    Widget bb() {
+      //return sss();
+      return Column(children: children);
+    }
+
+    ;
+
+    return bb();
+  }
+
+  //TODO myform
   Widget _myorm(BuildContext context) {
     return SingleChildScrollView(
       child: Column(children: <Widget>[
@@ -316,7 +507,7 @@ class _Jovleave extends State<Jobleave2> {
                   ),
                 )
               ]),
-              //TODO pop 代理人
+
               Row(mainAxisAlignment: MainAxisAlignment.start, children: [
                 InkWell(
                   onTap: () {
@@ -415,9 +606,31 @@ class _Jovleave extends State<Jobleave2> {
                   ),
                 ))
               ]),
+
+              OutlinedButton(
+                child: Text(
+                  'poptimeTest',
+                  style: TextStyle(color: Colors.deepOrange),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/popTime',
+                      arguments: {'name': 'aabb'}).then((value) {
+                    this.setState(() {
+                      var _templist = [];
+                      String _tempValue = "";
+                      _tempValue = value.toString();
+                      _templist = _tempValue.split('@');
+
+                      print(value);
+                      editTimeList("bbb", _templist[0], _templist[1]);
+                    });
+                  });
+                },
+              ),
               //TODO======時間列表====
 
-              timeRage(context),
+              testTimeRange(),
+
               TextFormField(
                 controller: _BindControl.FormControl_Reason,
                 decoration: const InputDecoration(
@@ -431,102 +644,33 @@ class _Jovleave extends State<Jobleave2> {
     );
   }
 
-  Widget timeRage(BuildContext context) {
-    _modal_time.add(Modal_basic(name1: 'bbb', name2: 'name2'));
-    _modal_time.add(Modal_basic(name1: 'ccc', name2: 'name3'));
+  //TODO set add time
+  void SetTimeList() {
+    _modal_time.clear();
+    AddTimeList(
+        Modal_basic(name1: '2020-01-02 01:30', name2: '2020-01-02 06:04'));
+    AddTimeList(
+        Modal_basic(name1: '2020-01-04 03:04', name2: '2020-01-04 15:04'));
+  }
 
-    Widget temprow(Modal_basic item) {
-      return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-        InkWell(
-          onTap: () {},
-          child: SizedBox(
-            width: 180,
-            child: TextFormField(
-              initialValue: item.name1,
-              decoration: InputDecoration(labelText: '起始時間'),
-            ),
-          ),
-        ),
-        SizedBox(
-          width: 5,
-        ),
-        Expanded(
-            child: InkWell(
-          onTap: () {},
-          child: TextFormField(
-            initialValue: item.name2,
-            decoration: InputDecoration(labelText: '結束時間'),
-          ),
-        ))
-      ]);
-    }
+  void DelTimeList(String DelValue) {
+    _modal_time.removeWhere((item) => item.name1 == DelValue);
+  }
 
-    final children = <Widget>[];
-    children.add(Text('請假區段'));
-    for (var i = 0; i < _modal_time.length; i++) {
-      var row = _modal_time[i];
-      print(i);
+  void AddTimeList(Modal_basic item) {
+    _modal_time.add(item);
+  }
 
-      children.add(temprow(row));
-    }
-
-    return Container(
-      padding: EdgeInsets.fromLTRB(8, 4, 8, 4),
-      //margin: EdgeInsets.fromLTRB(0, 120, 0, 0),
-
-      width: double.infinity,
-      decoration: new BoxDecoration(
-        // borderRadius: BorderRadius.circular(10.0),
-        borderRadius: new BorderRadius.only(
-          topRight: const Radius.circular(10.0),
-          topLeft: const Radius.circular(10.0),
-          bottomRight: const Radius.circular(10.0),
-          bottomLeft: const Radius.circular(10.0),
-        ),
-        border: Border(
-            // left: BorderSide(width: 16.0, color: Colors.lightBlue.shade600),
-            // bottom: BorderSide(width: 16.0, color: Colors.lightBlue.shade900),
-            ),
-        color: Colors.cyan,
-      ),
-      child: Column(children: children),
-    );
-
-    //return Column(children: children);
-
-    // return Column(children: <Widget>[
-    //   Text('dddd'),
-    //   Container(
-    //       padding: EdgeInsets.fromLTRB(8, 4, 8, 4),
-    //       //margin: EdgeInsets.fromLTRB(0, 120, 0, 0),
-    //
-    //       width: double.infinity,
-    //       decoration: new BoxDecoration(
-    //         // borderRadius: BorderRadius.circular(10.0),
-    //         borderRadius: new BorderRadius.only(
-    //           topRight: const Radius.circular(10.0),
-    //           topLeft: const Radius.circular(10.0),
-    //           bottomRight: const Radius.circular(10.0),
-    //           bottomLeft: const Radius.circular(10.0),
-    //         ),
-    //         border: Border(
-    //             // left: BorderSide(width: 16.0, color: Colors.lightBlue.shade600),
-    //             // bottom: BorderSide(width: 16.0, color: Colors.lightBlue.shade900),
-    //             ),
-    //         color: Colors.cyan,
-    //       ),
-    //       child: children)
-    // ]);
+  //TODO edittimelist
+  void editTimeList(String key, String Chanedate1, String Chanedate2) {
+    _modal_time[_modal_time.indexWhere((element) => element.name1 == key)]
+        .name2 = Chanedate2;
+    _modal_time[_modal_time.indexWhere((element) => element.name1 == key)]
+        .name1 = Chanedate1;
   }
 
   //TODO lsaveStream
   Widget JobStreamNew(BuildContext context) {
-    //---isNew 這段似乎不是必需的,原先只是避免彈跳視窗回來,重複呼叫浪費資源(但原來呼叫視窗回來不會經過這裡)
-
-    // if (isNew == false) {
-    //   return _myorm(context);
-    // }
-
     GetDateLeave();
     return StreamBuilder<int>(
       stream: _counterStreamController.stream,
@@ -544,7 +688,6 @@ class _Jovleave extends State<Jobleave2> {
             var icount = list_Modal_LeaveSch2.length;
             if (icount <= 0) {
             } else {
-              //TODO 設定controls
               var row = list_Modal_LeaveSch2[icount - 1];
               _UserNameN = row.UserNameN;
               // 请求成功，显示数据
@@ -575,6 +718,63 @@ class _Jovleave extends State<Jobleave2> {
           return Text('State: ${snapshot.connectionState}');
         }
       },
+    );
+  }
+
+  Future<void> _poptime(BuildContext context, String key, String name2) async {
+    // Navigator.push returns a Future that completes after calling
+    // Navigator.pop on the Selection Screen.
+    // Navigator.pop on the Selection Screen.
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => doorSelectTime(name1: key, name2: name2)),
+    );
+    var _templist = [];
+    String _tempValue = "";
+    _tempValue = result.toString();
+    _templist = _tempValue.split('@');
+    this.setState(() {
+      editTimeList(key, _templist[0], _templist[1]);
+    });
+  }
+}
+
+class tempIconButton extends StatelessWidget {
+  final IconData? myicon;
+  final Color? my_Backcolor33;
+  final Function my_onPressed;
+  const tempIconButton({
+    this.myicon,
+    this.my_Backcolor33,
+    required this.my_onPressed,
+    Key? key,
+  }) : super(key: key);
+
+  //my_Backcolor= Color.fromRGBO(87, 180, 156, 1.0);
+  @override
+  Widget build(BuildContext context) {
+    Color? my_Backcolor = Color.fromRGBO(87, 180, 156, 1.0);
+    if (this.my_Backcolor33 != null) {
+      my_Backcolor = my_Backcolor33;
+    }
+
+    return SizedBox(
+      height: 40,
+      width: 40,
+      child: TextButton(
+        style: ElevatedButton.styleFrom(
+          primary: my_Backcolor,
+          //side: BorderSide(width: 1.0, color: Colors.blueAccent),
+        ),
+        child: Icon(
+          myicon,
+          color: Colors.white,
+        ),
+        onPressed: () {
+          my_onPressed();
+        },
+      ),
     );
   }
 }

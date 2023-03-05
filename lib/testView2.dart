@@ -84,7 +84,7 @@ class testView2 extends StatelessWidget {
     );
   }
 
-//TODO  list_Modal_PsersonSch_new 取值
+
   Future<String> GetDatePersonSch() async {
     final response = await Dio().get(m_PersonSch + '/admin');
     list_Modal_PsersonSch = (response.data as List<dynamic>)
@@ -108,7 +108,7 @@ class testView2 extends StatelessWidget {
         itemBuilder: (context, index) {
           final user = list_Modal_PsersonSch[index];
           var row = list_Modal_PsersonSch[index];
-          //TODO listview迴圈時
+
           return Card(
             child: ListTile(
                 title: Container(
@@ -116,7 +116,7 @@ class testView2 extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: () => {
-                      //TODO pop參數
+
                       // debugPrint(row.name1)
 
                       Navigator.pop(context, row.name1 + '/' + row.name2)

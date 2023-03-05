@@ -212,7 +212,7 @@ Widget _buildList() {
         final user = list_Modal_PsersonSch_new[index];
         var row = list_Modal_PsersonSch_new[index];
 
-        //TODO listview迴圈時
+
         return Card(
           child: ListTile(
               title: Container(
@@ -220,7 +220,7 @@ Widget _buildList() {
               children: [
                 IconButton(
                   onPressed: () => {
-                    //TODO pop參數
+
                     Navigator.pop(context, row.name1 + '/' + row.name2)
                   },
                   icon: Icon(

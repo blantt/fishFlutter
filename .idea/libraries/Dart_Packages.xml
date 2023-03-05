@@ -317,6 +317,13 @@
             </list>
           </value>
         </entry>
+        <entry key="intl">
+          <value>
+            <list>
+              <option value="$PROJECT_DIR$/../../MyFlutter/flutter/.pub-cache/hosted/pub.dartlang.org/intl-0.18.0/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="io">
           <value>
             <list>
@@ -621,6 +628,7 @@
       <root url="file://$PROJECT_DIR$/../../MyFlutter/flutter/.pub-cache/hosted/pub.dartlang.org/graphs-2.1.0/lib" />
       <root url="file://$PROJECT_DIR$/../../MyFlutter/flutter/.pub-cache/hosted/pub.dartlang.org/http_multi_server-3.2.1/lib" />
       <root url="file://$PROJECT_DIR$/../../MyFlutter/flutter/.pub-cache/hosted/pub.dartlang.org/http_parser-4.0.1/lib" />
+      <root url="file://$PROJECT_DIR$/../../MyFlutter/flutter/.pub-cache/hosted/pub.dartlang.org/intl-0.18.0/lib" />
       <root url="file://$PROJECT_DIR$/../../MyFlutter/flutter/.pub-cache/hosted/pub.dartlang.org/io-1.0.3/lib" />
       <root url="file://$PROJECT_DIR$/../../MyFlutter/flutter/.pub-cache/hosted/pub.dartlang.org/js-0.6.4/lib" />
       <root url="file://$PROJECT_DIR$/../../MyFlutter/flutter/.pub-cache/hosted/pub.dartlang.org/json_annotation-4.1.0/lib" />

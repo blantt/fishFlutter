@@ -72,7 +72,6 @@ class _HomePageState extends State<HomePage_list> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     setState(() {
