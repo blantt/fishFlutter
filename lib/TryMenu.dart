@@ -138,6 +138,24 @@ class _PageState2 extends State<MyHomePage> {
             ),
             OutlinedButton(
               child: Text(
+                '測試Dio Save',
+                style: TextStyle(color: Colors.deepOrange),
+              ),
+              onPressed: () {
+                RouterUtil_test.toTestForm4(context);
+              },
+            ),
+            OutlinedButton(
+              child: Text(
+                '測試彈跳視窗',
+                style: TextStyle(color: Colors.deepOrange),
+              ),
+              onPressed: () {
+                RouterUtil_test.toTestForm3(context);
+              },
+            ),
+            OutlinedButton(
+              child: Text(
                 '測試摪單2',
                 style: TextStyle(color: Colors.deepOrange),
               ),

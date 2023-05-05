@@ -17,12 +17,13 @@ import 'package:blantt_love_test/page/pop/pop_LeaveType.dart';
 import 'package:blantt_love_test/Model/modalBasic.dart';
 import 'package:blantt_love_test/testTime.dart';
 import 'package:intl/intl.dart';
+import '../component/blanttFileControl.dart';
 
 String _BatchID = '';
 String _UserNameN = '';
 
-List<Modal_basic> _modal_time = [];
-
+List<Modal_basic_LeaveTime> _modal_time = [];
+List<String> ListImage = [];
 // isNew 判斷是不是第一次進來,因為有些事件,會重複觸發build,
 //不是第一次進來,就不用再重抓資料bind,不然會有些例外狀況..
 //感覺應該還有更好的寫法,等待進化版!!
@@ -107,9 +108,12 @@ class GlobalState {}
 class GlobalLoadingState extends GlobalState {}
 
 int _selectedIndex = 0;
+MyFileControl classMyFile = MyFileControl(otherFolder: 'blantt2');
 
 class _Jovleave extends State<Jobleave2> {
   //---重點是counterStreamController 要寫對地方,不然第二次進來stream,會出現錯誤!!!
+  bool _isLoading = false;
+  bool _stopLoading = false;
   String testdd = "";
 
   int _counter = 0;
@@ -119,6 +123,22 @@ class _Jovleave extends State<Jobleave2> {
     onCancel: () {},
     onListen: () {},
   );
+  void _toggleLoading() {
+    setState(() {
+      _isLoading = !_isLoading;
+      if (_isLoading) {
+        _stopLoading = true;
+      }
+    });
+  }
+
+  void _stopLoadingAnimation() {
+    setState(() {
+      print('colse');
+      _isLoading = false;
+      _stopLoading = false;
+    });
+  }
 
   @override
   void initState() {
@@ -127,6 +147,7 @@ class _Jovleave extends State<Jobleave2> {
     _counterStream = _counterStreamController.stream;
     _BindControl.FormControl_UserSeeN.text = "ddddd2";
     SetTimeList();
+    GetFileList();
     super.initState();
     print('in initState');
   }
@@ -150,11 +171,16 @@ class _Jovleave extends State<Jobleave2> {
         appBar: AppBar(
           title: Text('請假單 ' + _BatchID),
         ),
-        body: Column(
-          children: [
-            JobStreamNew(context),
-          ],
-        ),
+        body: Stack(children: <Widget>[
+          JobStreamNew(context),
+          _isLoading
+              ? MyLoadingWidget(
+                  m_Strload: '儲存中',
+                  m_btnStopShow: true,
+                  m_onPressed: _stopLoadingAnimation,
+                )
+              : Container(),
+        ]),
         bottomNavigationBar: BottomNavigationBar(
           items: [
             BottomNavigationBarItem(
@@ -172,7 +198,7 @@ class _Jovleave extends State<Jobleave2> {
           ],
           currentIndex: _selectedIndex,
           unselectedItemColor: Colors.grey,
-          onTap: _onTap,
+          onTap: !_isLoading ? _onTap : _onTap2,
           elevation: 15,
         ));
   }
@@ -190,35 +216,107 @@ class _Jovleave extends State<Jobleave2> {
     });
   }
 
-  Widget _showBottomNav() {
-    return BottomNavigationBar(
-      items: [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: '首頁',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.account_circle),
-          label: '差勤系統',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.shopping_bag),
-          label: '測試專區',
-        ),
-      ],
-      currentIndex: _selectedIndex,
-      selectedItemColor: Colors.redAccent,
-      unselectedItemColor: Colors.teal,
-      selectedFontSize: 15,
-      unselectedFontSize: 15,
-      iconSize: 30,
-      onTap: _onTap,
-    );
-  }
+  //TODO 下方巡覽列事件
+  void _onTap2(int index) {}
 
   void _onTap(int index) {
     _selectedIndex = index;
-    setState(() {});
+    setState(() {
+      if (index == 0) {
+        //儲存
+        _toggleLoading();
+        SavePage();
+      }
+    });
+  }
+
+  var itemtest2 = {
+    "BatchID": "",
+    "Reason": "",
+    "UserName": "",
+    "UserNameN": '',
+    "LeaveTypeN": '',
+    "DeptID": '',
+    "LeaveType": '',
+    "ClassType": '',
+    "ClassTypeN": '',
+    "ReturnReason": '',
+    "MStatusN": '',
+    "UserAgent": '',
+    "UserAgent2": '',
+    "UserAgentN": '',
+    "UserAgent2N": '',
+    "UserSee": '',
+    "UserSee2": '',
+    "UserSeeN": '',
+    "UserSee2N": '',
+  };
+
+  //TODO 存檔
+  Future<String> SavePage() async {
+    SaveTime();
+//SaveDateLeave
+    return '';
+  }
+
+  Future<String> SaveTime() async {
+    var dio = Dio();
+
+    final response = await dio.post(m_url_SaveJovLeaveDetail,
+        // data: json.encode(items.map((item) => item.toJson()).toList()),
+        data: _modal_time
+        //options: Options(headers: {'Content-Type': 'application/json'}),
+        );
+
+    if (response.statusCode == 200) {
+      print('OK');
+      if (response.data != "0") {
+        print('error:' + response.data);
+      }
+      _stopLoadingAnimation();
+      return response.data;
+    } else {
+      _stopLoadingAnimation();
+      print('error');
+      //  throw Exception('Failed to add leave.');
+    }
+    return '';
+  }
+
+  Future<String> SaveDateLeave() async {
+    var dio = Dio();
+    // dio.options.contentType = Headers.formUrlEncodedContentType;
+    //Add請假單
+    //Addtest
+
+    itemtest2["BatchID"] = _BatchID;
+    itemtest2["Reason"] = _BindControl.FormControl_Reason.text;
+    itemtest2["UserAgent"] = _BindControl.UserAgent;
+    itemtest2["UserAgent2"] = _BindControl.UserAgent2;
+    itemtest2["UserSee"] = _BindControl.UserSee;
+    itemtest2["UserSee2"] = _BindControl.UserSee2;
+    var response = await dio.post(
+      m_url_UpdateJovLeave,
+      //data: jsonEncode(itemtest),
+      data: itemtest2,
+      // options: Options(
+      //   headers: {'Content-Type': 'application/json'},
+      // ),
+    );
+    if (response.statusCode == 200) {
+      print('OK');
+      if (response.data != "0") {
+        print('error:' + response.data);
+      }
+      _stopLoadingAnimation();
+      return response.data;
+    } else {
+      _stopLoadingAnimation();
+      print('error');
+      //  throw Exception('Failed to add leave.');
+    }
+
+    return '';
   }
 
   Future<String> GetDateLeave() async {
@@ -240,6 +338,55 @@ class _Jovleave extends State<Jobleave2> {
     }
 
     return "";
+  }
+
+  //TODO 附件control
+  Widget SetFileList() {
+    // return Text('file長度:' + ListImage.length.toString());
+
+    ListImage = classMyFile.getFileList2();
+
+    return myContain(
+      m_heght: 50,
+      m_child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (BuildContext, index) {
+          Widget tempCard;
+          //var Imageurl = ListImage[index];
+          // var Image = row;
+          Widget imageWidget;
+          // imageWidget= Padding(
+          //   padding: EdgeInsets.symmetric(vertical: 3.0),
+          //   child: ListTile(
+          //     title: Text(myItems[index]),
+          //   ),
+          // );
+          imageWidget = myContain(
+            m_boxDecoration: new BoxDecoration(
+              color: Colors.lightBlueAccent,
+              border: new Border.all(
+                width: 1,
+                color: Colors.black,
+              ),
+            ),
+            m_child: Image.file(
+              File(ListImage[index]),
+              // key: ValueKey(tempkey),
+              height: 80,
+              width: 80,
+              //fit: BoxFit.cover,
+            ),
+          );
+
+          return Padding(
+              padding: EdgeInsets.symmetric(horizontal: 1.0),
+              child: imageWidget);
+        },
+        itemCount: ListImage.length,
+        shrinkWrap: true,
+        padding: EdgeInsets.all(0),
+      ),
+    );
   }
 
   //TODO testnewRange
@@ -299,9 +446,13 @@ class _Jovleave extends State<Jobleave2> {
 
                       print(value);
 
-                      AddTimeList(Modal_basic(
-                          name1: _templist[0], name2: _templist[1]));
-                      // editTimeList("bbb", _templist[0], _templist[1]);
+                      // AddTimeList(Modal_basic(
+                      //     name1: _templist[0], name2: _templist[1]));
+                      AddTimeList(Modal_basic_LeaveTime(
+                          BatchID: _BatchID,
+                          STime: _templist[0],
+                          ETime: _templist[1],
+                          DetailClassID: "4"));
                     });
                   });
                 },
@@ -342,19 +493,6 @@ class _Jovleave extends State<Jobleave2> {
               this.setState(() {
                 _poptime(context, name1, name2);
               });
-
-              // Navigator.of(context).pushNamed('/popTime',
-              //     arguments: {'name1': name1, 'name2': name2}).then((value) {
-              //   this.setState(() {
-              //     var _templist = [];
-              //     String _tempValue = "";
-              //     _tempValue = value.toString();
-              //     _templist = _tempValue.split('@');
-              //
-              //     print(value);
-              //     editTimeList(name1, _templist[0], _templist[1]);
-              //   });
-              // });
             },
             myicon: Icons.edit,
           ),
@@ -400,10 +538,10 @@ class _Jovleave extends State<Jobleave2> {
           Widget bb =
               Row(mainAxisAlignment: MainAxisAlignment.start, children: [
             Expanded(
-                child: tempContainer(1, 1, TempTimeIcon(row.name1, row.name2)),
+                child: tempContainer(1, 1, TempTimeIcon(row.STime, row.ETime)),
                 flex: 0),
-            Expanded(child: tempContainer(1, 2, Text(row.name1)), flex: 1),
-            Expanded(child: tempContainer(1, 3, Text(row.name2)), flex: 1),
+            Expanded(child: tempContainer(1, 2, Text(row.STime)), flex: 1),
+            Expanded(child: tempContainer(1, 3, Text(row.ETime)), flex: 1),
           ]);
 
           return bb;
@@ -430,243 +568,317 @@ class _Jovleave extends State<Jobleave2> {
     return bb();
   }
 
-  //TODO myform
+  Widget from1(BuildContext context) {
+    return Container(
+        alignment: Alignment.topCenter,
+        width: double.infinity,
+        margin: const EdgeInsets.only(left: 10, right: 10),
+        child: Form(
+            child: Column(children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: 180,
+                child: TextFormField(
+                  enabled: true,
+                  //'$textHolder'
+                  //initialValue: '$textHolder',
+                  controller: _BindControl.emailController,
+                  decoration: InputDecoration(labelText: '單號'),
+                ),
+              ),
+              SizedBox(
+                width: 5,
+              ),
+              Expanded(
+                child: TextFormField(
+                  enabled: false,
+                  //'$textHolder'
+                  //initialValue: '$textHolder',
+                  controller: _BindControl.ControllerUserNameN,
+                  decoration: InputDecoration(labelText: '姓名'),
+                ),
+              )
+            ],
+          ),
+          Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+            SizedBox(
+              width: 180,
+              child: TextFormField(
+                enabled: true,
+                //'$textHolder'
+                //initialValue: '$textHolder',
+                controller: _BindControl.ControllerClassTypeN,
+                decoration: InputDecoration(labelText: '班別'),
+              ),
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            Expanded(
+              child: InkWell(
+                onTap: () {
+                  Navigator.of(context).pushNamed('/LeaveType',
+                      arguments: {'name': 'Raymond'}).then((value) {
+                    var _templist = [];
+
+                    String _tempValue = "";
+                    _tempValue = value.toString();
+                    _templist = _tempValue.split('/');
+
+                    _BindControl.LeaveType = _templist[0];
+                    _BindControl.ControllerLeaveTypeN.text = _templist[1];
+                  });
+                }, // Handle your callback
+                child: SizedBox(
+                  width: 180,
+                  child: TextFormField(
+                    enabled: false,
+                    controller: _BindControl.ControllerLeaveTypeN,
+                    decoration: InputDecoration(labelText: '假別'),
+                  ),
+                ),
+              ),
+            )
+          ]),
+
+          Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+            InkWell(
+              onTap: () {
+                Navigator.of(context).pushNamed('/UserAgent',
+                    arguments: {'name': 'Raymond'}).then((value) {
+                  var _templist = [];
+                  String _tempValue = "";
+                  _tempValue = value.toString();
+                  _templist = _tempValue.split('/');
+                  print(_templist[0]);
+                  _BindControl.UserAgent = _templist[0];
+                  _BindControl.FormControl_UserAgentN.text = _templist[1];
+                });
+              }, // Handle your callback
+              child: SizedBox(
+                width: 180,
+                child: TextFormField(
+                  enabled: false,
+                  //'$textHolder'
+                  //initialValue: '$textHolder',
+                  controller: _BindControl.FormControl_UserAgentN,
+                  decoration: InputDecoration(labelText: '代理人1'),
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            Expanded(
+                child: InkWell(
+              onTap: () {
+                Navigator.of(context).pushNamed('/UserAgent',
+                    arguments: {'name': 'Raymond'}).then((value) {
+                  var _templist = [];
+                  String _tempValue = "";
+                  _tempValue = value.toString();
+                  _templist = _tempValue.split('/');
+                  _BindControl.UserAgent2 = _templist[0];
+                  _BindControl.FormControl_UserAgent2N.text = _templist[1];
+                });
+              }, // Handle yo
+              child: TextFormField(
+                enabled: false,
+                //'$textHolder'
+                //initialValue: '$textHolder',
+                controller: _BindControl.FormControl_UserAgent2N,
+                decoration: InputDecoration(labelText: '代理人2'),
+              ),
+            ))
+          ]),
+          Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+            InkWell(
+              onTap: () {
+                Navigator.of(context).pushNamed('/UserAgent',
+                    arguments: {'name': 'Raymond'}).then((value) {
+                  var _templist = [];
+                  String _tempValue = "";
+                  _tempValue = value.toString();
+                  _templist = _tempValue.split('/');
+                  _BindControl.UserSee = _templist[0];
+                  _BindControl.FormControl_UserSeeN.text = _templist[1];
+                });
+              },
+              child: SizedBox(
+                width: 180,
+                child: TextFormField(
+                  enabled: false,
+                  //'$textHolder'
+                  //initialValue: '$textHolder',
+                  controller: _BindControl.FormControl_UserSeeN,
+                  decoration: InputDecoration(labelText: '監交人1'),
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            Expanded(
+                child: InkWell(
+              onTap: () {
+                Navigator.of(context).pushNamed('/UserAgent',
+                    arguments: {'name': 'Raymond'}).then((value) {
+                  var _templist = [];
+                  String _tempValue = "";
+                  _tempValue = value.toString();
+                  _templist = _tempValue.split('/');
+                  _BindControl.UserSee2 = _templist[0];
+                  _BindControl.FormControl_UserSee2N.text = _templist[1];
+                });
+              },
+              child: TextFormField(
+                enabled: false,
+                //'$textHolder'
+                //initialValue: '$textHolder',
+                controller: _BindControl.FormControl_UserSee2N,
+                decoration: InputDecoration(labelText: '監交人2'),
+              ),
+            ))
+          ]),
+
+          //TODO======時間列表====
+          testTimeRange(),
+          //SetFileList(),
+          SizedBox(
+            height: 10,
+          ),
+
+          TextFormField(
+            controller: _BindControl.FormControl_Reason,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: '備註/原因',
+            ),
+            maxLines: 3,
+          ),
+
+          myContain(
+            m_heght: 100,
+            m_Alignment: Alignment.topCenter,
+            m_boxDecoration: new BoxDecoration(
+              color: Color.fromRGBO(183, 183, 183, 1.0),
+              border: new Border.all(
+                width: 1,
+                color: Colors.black,
+              ),
+            ),
+            m_child: Column(
+              children: [
+                Row(children: [
+                  Expanded(
+                    child: myContain(
+                      m_heght: 25,
+                      m_Alignment: Alignment.center,
+                      m_boxDecoration: new BoxDecoration(
+                        color: MyColor.back_COLOR2,
+                        border: new Border.all(
+                          width: 1,
+                          color: Colors.black,
+                        ),
+                      ),
+                      m_child: Text('附件'),
+                    ),
+                  )
+                ]),
+                Expanded(
+                    child: myContain(
+                        m_boxDecoration: new BoxDecoration(
+                          // color: Colors.redAccent,
+                          border: new Border.all(
+                            width: 1,
+                            color: MyColor.back_COLOR1,
+                          ),
+                        ),
+                        m_child: SetFileList()))
+              ],
+            ),
+          ),
+        ])));
+  }
+
+  //--陰件集合
+  Widget FileList() {
+    return Text('預計這裡放置圖片');
+  }
+
+  //TODO myform2
   Widget _myorm(BuildContext context) {
     return SingleChildScrollView(
       child: Column(children: <Widget>[
-        Container(
-            alignment: Alignment.topCenter,
-            width: double.infinity,
-            margin: const EdgeInsets.only(left: 10, right: 10),
-            child: Form(
-                child: Column(children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 180,
-                    child: TextFormField(
-                      enabled: true,
-                      //'$textHolder'
-                      //initialValue: '$textHolder',
-                      controller: _BindControl.emailController,
-                      decoration: InputDecoration(labelText: '單號'),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Expanded(
-                    child: TextFormField(
-                      enabled: false,
-                      //'$textHolder'
-                      //initialValue: '$textHolder',
-                      controller: _BindControl.ControllerUserNameN,
-                      decoration: InputDecoration(labelText: '姓名'),
-                    ),
-                  )
-                ],
-              ),
-              Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                SizedBox(
-                  width: 180,
-                  child: TextFormField(
-                    enabled: true,
-                    //'$textHolder'
-                    //initialValue: '$textHolder',
-                    controller: _BindControl.ControllerClassTypeN,
-                    decoration: InputDecoration(labelText: '班別'),
-                  ),
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.of(context).pushNamed('/LeaveType',
-                          arguments: {'name': 'Raymond'}).then((value) {
-                        var _templist = [];
-
-                        String _tempValue = "";
-                        _tempValue = value.toString();
-                        _templist = _tempValue.split('/');
-
-                        _BindControl.LeaveType = _templist[0];
-                        _BindControl.ControllerLeaveTypeN.text = _templist[1];
-                      });
-                    }, // Handle your callback
-                    child: SizedBox(
-                      width: 180,
-                      child: TextFormField(
-                        enabled: false,
-                        controller: _BindControl.ControllerLeaveTypeN,
-                        decoration: InputDecoration(labelText: '假別'),
-                      ),
-                    ),
-                  ),
-                )
-              ]),
-
-              Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                InkWell(
-                  onTap: () {
-                    Navigator.of(context).pushNamed('/UserAgent',
-                        arguments: {'name': 'Raymond'}).then((value) {
-                      var _templist = [];
-                      String _tempValue = "";
-                      _tempValue = value.toString();
-                      _templist = _tempValue.split('/');
-                      _BindControl.UserAgent = _templist[0];
-                      _BindControl.FormControl_UserAgentN.text = _templist[1];
-                    });
-                  }, // Handle your callback
-                  child: SizedBox(
-                    width: 180,
-                    child: TextFormField(
-                      enabled: false,
-                      //'$textHolder'
-                      //initialValue: '$textHolder',
-                      controller: _BindControl.FormControl_UserAgentN,
-                      decoration: InputDecoration(labelText: '代理人1'),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                Expanded(
-                    child: InkWell(
-                  onTap: () {
-                    Navigator.of(context).pushNamed('/UserAgent',
-                        arguments: {'name': 'Raymond'}).then((value) {
-                      var _templist = [];
-                      String _tempValue = "";
-                      _tempValue = value.toString();
-                      _templist = _tempValue.split('/');
-                      _BindControl.UserAgent2 = _templist[0];
-                      _BindControl.FormControl_UserAgent2N.text = _templist[1];
-                    });
-                  }, // Handle yo
-                  child: TextFormField(
-                    enabled: false,
-                    //'$textHolder'
-                    //initialValue: '$textHolder',
-                    controller: _BindControl.FormControl_UserAgent2N,
-                    decoration: InputDecoration(labelText: '代理人2'),
-                  ),
-                ))
-              ]),
-              Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                InkWell(
-                  onTap: () {
-                    Navigator.of(context).pushNamed('/UserAgent',
-                        arguments: {'name': 'Raymond'}).then((value) {
-                      var _templist = [];
-                      String _tempValue = "";
-                      _tempValue = value.toString();
-                      _templist = _tempValue.split('/');
-                      _BindControl.UserSee = _templist[0];
-                      _BindControl.FormControl_UserSeeN.text = _templist[1];
-                    });
-                  },
-                  child: SizedBox(
-                    width: 180,
-                    child: TextFormField(
-                      enabled: false,
-                      //'$textHolder'
-                      //initialValue: '$textHolder',
-                      controller: _BindControl.FormControl_UserSeeN,
-                      decoration: InputDecoration(labelText: '監交人1'),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                Expanded(
-                    child: InkWell(
-                  onTap: () {
-                    Navigator.of(context).pushNamed('/UserAgent',
-                        arguments: {'name': 'Raymond'}).then((value) {
-                      var _templist = [];
-                      String _tempValue = "";
-                      _tempValue = value.toString();
-                      _templist = _tempValue.split('/');
-                      _BindControl.UserSee2 = _templist[0];
-                      _BindControl.FormControl_UserSee2N.text = _templist[1];
-                    });
-                  },
-                  child: TextFormField(
-                    enabled: false,
-                    //'$textHolder'
-                    //initialValue: '$textHolder',
-                    controller: _BindControl.FormControl_UserSee2N,
-                    decoration: InputDecoration(labelText: '監交人2'),
-                  ),
-                ))
-              ]),
-
-              OutlinedButton(
-                child: Text(
-                  'poptimeTest',
-                  style: TextStyle(color: Colors.deepOrange),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pushNamed('/popTime',
-                      arguments: {'name': 'aabb'}).then((value) {
-                    this.setState(() {
-                      var _templist = [];
-                      String _tempValue = "";
-                      _tempValue = value.toString();
-                      _templist = _tempValue.split('@');
-
-                      print(value);
-                      editTimeList("bbb", _templist[0], _templist[1]);
-                    });
-                  });
-                },
-              ),
-              //TODO======時間列表====
-
-              testTimeRange(),
-
-              TextFormField(
-                controller: _BindControl.FormControl_Reason,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: '備註/原因',
-                ),
-                maxLines: 3,
-              ),
-            ]))),
+        // _isLoading
+        //     ? MyLoadingWidget(
+        //         m_Strload: '儲存中',
+        //         m_btnStopShow: true,
+        //         m_onPressed: _stopLoadingAnimation,
+        //       )
+        //     : Container(),
+        from1(context),
       ]),
     );
   }
 
-  //TODO set add time
+  void callevictImage(String FileName) {
+    this.setState(() {
+      classMyFile.evictImage(FileName);
+    });
+  }
+
+  //TODO 取得附件list
+  //取得陰件list
+  void GetFileList() {
+    String url;
+    url =
+        'https://editor.4kids.com.tw/Portal/imageClock/A202303170002/0316.jpg';
+    classMyFile.setimage(url, 'aaa3.png', funcCall: () {
+      callevictImage('aaa3.png');
+    });
+    url = 'https://cdn-icons-png.flaticon.com/512/3884/3884851.png';
+    classMyFile.setimage(url, 'aaa4.png', funcCall: () {
+      callevictImage('aaa4.png');
+    });
+    // ListImage.add(url);
+    print('gotimage');
+  }
+
+  Widget WidgetFile() {
+    return Text('');
+  }
+
   void SetTimeList() {
     _modal_time.clear();
-    AddTimeList(
-        Modal_basic(name1: '2020-01-02 01:30', name2: '2020-01-02 06:04'));
-    AddTimeList(
-        Modal_basic(name1: '2020-01-04 03:04', name2: '2020-01-04 15:04'));
+    AddTimeList(Modal_basic_LeaveTime(
+        BatchID: _BatchID,
+        STime: '2020-01-02 01:30',
+        ETime: '2020-01-02 06:04',
+        DetailClassID: "4"));
+    AddTimeList(Modal_basic_LeaveTime(
+        BatchID: _BatchID,
+        STime: '2020-01-02 01:30',
+        ETime: '2020-01-02 06:04',
+        DetailClassID: "4"));
   }
 
   void DelTimeList(String DelValue) {
-    _modal_time.removeWhere((item) => item.name1 == DelValue);
+    _modal_time.removeWhere((item) => item.STime == DelValue);
   }
 
-  void AddTimeList(Modal_basic item) {
+  void AddTimeList(Modal_basic_LeaveTime item) {
     _modal_time.add(item);
   }
 
   //TODO edittimelist
   void editTimeList(String key, String Chanedate1, String Chanedate2) {
-    _modal_time[_modal_time.indexWhere((element) => element.name1 == key)]
-        .name2 = Chanedate2;
-    _modal_time[_modal_time.indexWhere((element) => element.name1 == key)]
-        .name1 = Chanedate1;
+    _modal_time[_modal_time.indexWhere((element) => element.STime == key)]
+        .ETime = Chanedate2;
+    _modal_time[_modal_time.indexWhere((element) => element.STime == key)]
+        .STime = Chanedate1;
   }
 
   //TODO lsaveStream

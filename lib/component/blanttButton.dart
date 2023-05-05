@@ -1,8 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-//=========
+class MyLoadingWidget extends StatelessWidget {
+  final bool? m_btnStopShow;
+  final String? m_Strload;
+  final Function? m_onPressed;
+  const MyLoadingWidget({
+    this.m_btnStopShow,
+    this.m_Strload,
+    this.m_onPressed,
+    Key? key,
+  }) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        alignment: Alignment.center,
+        decoration: new BoxDecoration(
+          color: Colors.white,
+          border: new Border.all(
+            width: 1,
+            color: Colors.redAccent,
+          ),
+        ),
+        //height: 500,
+        child: myContain(
+          m_heght: 300,
+          m_boxDecoration: new BoxDecoration(
+              //color: Colors.lightBlue,
+              ),
+          m_child: Column(
+            children: [
+              SpinKitChasingDots(
+                color: Colors.blue,
+                size: 50.0,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text(m_Strload ?? "loading"),
+              //' onPressed: m_onPressed != null ? () => m_onPressed!() : null,'
+              Visibility(
+                visible: m_btnStopShow ?? false,
+                child: OutlinedButton(
+                    onPressed: () {
+                      // do something
+                    },
+                    child: myButton(
+                        m_child: Text('stop'),
+                        m_onPressed:
+                            m_onPressed != null ? () => m_onPressed!() : null)),
+              )
+            ],
+          ),
+        ));
+  }
+}
 
 class myContain extends StatelessWidget {
   final Widget? m_child;
@@ -40,13 +94,13 @@ class myContain extends StatelessWidget {
 class myIconButton extends StatelessWidget {
   final String m_text;
   final Widget m_Icon;
-  final Function m_onPressed;
+  final Function? m_onPressed;
   final Color? m_Backcolor;
 
   const myIconButton({
     required this.m_text, // non-nullable and required
     required this.m_Icon,
-    required this.m_onPressed,
+    this.m_onPressed,
     this.m_Backcolor,
     Key? key,
   }) : super(key: key);
@@ -54,9 +108,8 @@ class myIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
-      onPressed: () {
-        m_onPressed();
-      },
+      //
+      onPressed: m_onPressed != null ? () => m_onPressed!() : null,
       style: ElevatedButton.styleFrom(primary: m_Backcolor),
       icon: m_Icon,
       label: Text(m_text), // <-- Text
@@ -68,10 +121,10 @@ class myButton extends StatelessWidget {
   final Color m_color;
   final Widget m_child;
   final Size? m_minimumSize;
-  final Function m_onPressed;
+  final Function? m_onPressed;
   const myButton({
     required this.m_child,
-    required this.m_onPressed,
+    this.m_onPressed,
     this.m_minimumSize,
     this.m_color = Colors.white,
     Key? key,
@@ -85,9 +138,7 @@ class myButton extends StatelessWidget {
         backgroundColor: m_color, //<-- SEE HERE
       ),
       child: m_child,
-      onPressed: () {
-        m_onPressed();
-      },
+      onPressed: m_onPressed != null ? () => m_onPressed!() : null,
     );
   }
 }

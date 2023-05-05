@@ -30,8 +30,8 @@ class doorSelectTime2 extends State<doorSelectTime> {
   }
 
   Color m_btncolor = Color.fromRGBO(9, 111, 148, 1.0);
-  DateTime _date = DateTime(2020, 11, 10, 7, 15);
-  DateTime _date2 = DateTime(2020, 11, 11, 12, 15);
+  DateTime _date = DateTime(1911, 11, 10, 7, 15);
+  DateTime _date2 = DateTime(1911, 11, 11, 12, 15);
   void _selectTime(int itype) async {
     print(widget.name1);
     DateTime tempDate;
@@ -63,20 +63,31 @@ class doorSelectTime2 extends State<doorSelectTime> {
     }
   }
 
+  //TODO select Date
   void _selectDate(int itype) async {
     DateTime tempDate;
     tempDate = DateTime.now();
+    DateTime maxDate;
+    DateTime minDate;
+    minDate = DateTime(DateTime.now().year - 10, 1);
+    maxDate = DateTime(DateTime.now().year + 10, 1);
     if (itype == 0) {
       tempDate = _date;
     }
     if (itype == 1) {
       tempDate = _date2;
     }
+
+    if (tempDate.year == 1911) {
+      //如果是新進來空,ui上是空值,預設帶今天
+      tempDate = DateTime.now();
+    }
+
     final DateTime? newDate = await showDatePicker(
       context: context,
       initialDate: tempDate,
-      firstDate: DateTime(2017, 1),
-      lastDate: DateTime(2022, 7),
+      firstDate: minDate,
+      lastDate: maxDate,
       helpText: 'Select a date',
     );
     if (newDate != null) {
@@ -260,6 +271,12 @@ class classFild extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String tempdate = "";
+    if (this.mytime.year == 1911) {
+      tempdate = "";
+    } else {
+      tempdate = DateFormat('yyyy-MM-dd HH:mm').format(mytime);
+    }
     return Container(
       height: 40,
       padding: EdgeInsets.all(10.0),
@@ -282,7 +299,7 @@ class classFild extends StatelessWidget {
         ],
       ),
       child: new Text(
-        DateFormat('yyyy-MM-dd HH:mm').format(mytime),
+        tempdate,
         //DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now()),
         style: new TextStyle(
             fontWeight: FontWeight.w400, color: Colors.indigo, fontSize: 18),
