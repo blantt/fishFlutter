@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.blantt_love_test"
-    android:versionCode="1"
-    android:versionName="1.0.0" >
+    package="com.yourdomain.AMCFB"
+    android:versionCode="2"
+    android:versionName="2.0.0" >
 
     <uses-sdk
         android:minSdkVersion="16"
@@ -14,16 +14,15 @@
     -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
         android:name="android.app.Application"
         android:appComponentFactory="androidx.core.app.CoreComponentFactory"
         android:debuggable="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="blantt_love_test" >
+        android:icon="@mipmap/launcher_icon"
+        android:label="AMC臉書" >
         <activity
-            android:name="com.example.blantt_love_test.MainActivity"
+            android:name="com.yourdomain.AMCFB.MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:exported="true"
             android:hardwareAccelerated="true"

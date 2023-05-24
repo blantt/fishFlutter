@@ -1,4 +1,4 @@
-package com.example.blantt_love_test
+package com.yourdomain.AMCFB
 
 import io.flutter.embedding.android.FlutterActivity
 
