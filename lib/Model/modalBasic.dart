@@ -31,12 +31,16 @@ class Modal_basic_LeaveTime {
     required this.BatchID,
     required this.STime,
     required this.ETime,
+    required this.STime2,
+    required this.ETime2,
     required this.DetailClassID,
   });
 
   String BatchID;
   String STime;
   String ETime;
+  String STime2;
+  String ETime2;
   String DetailClassID;
 
   factory Modal_basic_LeaveTime.fromJson(Map<String, dynamic> json) =>
@@ -44,6 +48,8 @@ class Modal_basic_LeaveTime {
         BatchID: json["BatchID"] ?? '',
         STime: json["STime"] ?? '',
         ETime: json["ETime"] ?? '',
+        STime2: json["STime2"] ?? '',
+        ETime2: json["ETime2"] ?? '',
         DetailClassID: json["DetailClassID"] ?? '',
       );
 
@@ -51,6 +57,8 @@ class Modal_basic_LeaveTime {
         "BatchID": BatchID,
         "STime": STime,
         "ETime": ETime,
+        "STime": STime2,
+        "ETime": ETime2,
         "DetailClassID": DetailClassID,
       };
 }

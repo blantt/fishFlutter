@@ -42,6 +42,20 @@ class MyFileControl {
     return FolderPath;
   }
 
+  Future<String> Copyimage(String imageurl, String filename,
+      {Function? funcCall}) async {
+    final path = await GetFolderPath();
+    String tempPath = path + '/' + filename;
+
+    await File(imageurl).copy(tempPath);
+    //funcCall 是download完成後才執行的function(例如清除圖片暫緩)
+    if (funcCall != null) {
+      funcCall();
+    }
+
+    return tempPath;
+  }
+
   Future<String> setimage(String imageurl, String filename,
       {Function? funcCall}) async {
     final path = await GetFolderPath();
@@ -84,7 +98,7 @@ class MyFileControl {
   }
 
   //刪除資料匣內所有內容
-  void delFilefolder() async {
+  void delFilefolder(String delfile) async {
     Directory tempDir = await getTemporaryDirectory();
     Directory directory = new Directory(FolderPath);
 
@@ -93,11 +107,20 @@ class MyFileControl {
 
       if (files.length > 0) {
         files.forEach((file) {
-          file.deleteSync();
-          print('com in');
+          if (delfile == "") {
+            file.deleteSync();
+          } else {
+            String fileName = file.path.split('/').last;
+            if (fileName == delfile) {
+              file.deleteSync();
+            }
+          }
         });
       }
-      directory.deleteSync();
+      if (delfile != "") {
+        directory.deleteSync();
+      }
+
       print('刪除完成');
     }
   }

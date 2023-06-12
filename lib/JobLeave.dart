@@ -16,8 +16,8 @@ import 'ListPerson.dart';
 import 'package:blantt_love_test/page/pop/pop_LeaveType.dart';
 import 'package:blantt_love_test/Model/modalBasic.dart';
 import 'package:blantt_love_test/testTime.dart';
-import 'package:intl/intl.dart';
 import '../component/blanttFileControl.dart';
+import 'package:image_picker/image_picker.dart';
 
 String _BatchID = '';
 String _UserNameN = '';
@@ -146,6 +146,7 @@ class _Jovleave extends State<Jobleave2> {
     _counterSink = _counterStreamController.sink;
     _counterStream = _counterStreamController.stream;
     _BindControl.FormControl_UserSeeN.text = "ddddd2";
+    classMyFile.delFilefolder("");
     SetTimeList();
     GetFileList();
     super.initState();
@@ -225,7 +226,7 @@ class _Jovleave extends State<Jobleave2> {
       if (index == 0) {
         //儲存
         _toggleLoading();
-        SavePage();
+        SaveAllPage();
       }
     });
   }
@@ -253,33 +254,58 @@ class _Jovleave extends State<Jobleave2> {
   };
 
   //TODO 存檔
-  Future<String> SavePage() async {
-    SaveTime();
-//SaveDateLeave
-    return '';
-  }
-
-  Future<String> SaveTime() async {
+  Future<String> SaveAllPage() async {
     var dio = Dio();
-
-    final response = await dio.post(m_url_SaveJovLeaveDetail,
-        // data: json.encode(items.map((item) => item.toJson()).toList()),
-        data: _modal_time
-        //options: Options(headers: {'Content-Type': 'application/json'}),
-        );
-
-    if (response.statusCode == 200) {
-      print('OK');
-      if (response.data != "0") {
-        print('error:' + response.data);
-      }
-      _stopLoadingAnimation();
-      return response.data;
-    } else {
-      _stopLoadingAnimation();
-      print('error');
-      //  throw Exception('Failed to add leave.');
+    for (int i = 0; i <= _modal_time.length - 1; i++) {
+      // 在此处执行循环体中的操作
+      _modal_time[i].DetailClassID = "xxx";
+      _modal_time[i].STime2 = _modal_time[i].STime;
+      _modal_time[i].ETime2 = _modal_time[i].ETime;
     }
+    //--實測結果,傳給api時,STime 會被 STime2吃掉,不知為什麼?
+    //暫時性解決,先在迴卷把Stime再補上,以後再找更好的解法
+
+    try {
+      // final response =
+      //     await dio.post(m_url_SaveJovLeaveDetail, data: _modal_time);
+
+      itemtest2["BatchID"] = _BatchID;
+      itemtest2["Reason"] = _BindControl.FormControl_Reason.text;
+      itemtest2["UserAgent"] = _BindControl.UserAgent;
+      itemtest2["UserAgent2"] = _BindControl.UserAgent2;
+      itemtest2["UserSee"] = _BindControl.UserSee;
+      itemtest2["UserSee2"] = _BindControl.UserSee2;
+
+      Map<String, dynamic> requestData = {
+        'detail': _modal_time,
+        'master': itemtest2
+      };
+
+      Response response = await dio.post(
+        m_url_SaveJovLeaveAll,
+        data: [requestData],
+      );
+
+      if (response.statusCode == 200) {
+        print('回傳:' + response.data);
+        if (response.data != "0") {
+          print('error:' + response.data);
+        }
+        _stopLoadingAnimation();
+        return response.data;
+      } else {
+        _stopLoadingAnimation();
+        print('error');
+        //  throw Exception('Failed to add leave.');
+      }
+    } catch (e) {
+      if (e is DioError) {
+        print('发生 DioError 错误：${e.response?.statusCode} - ${e.message}');
+      } else {
+        print('发生其他错误：$e');
+      }
+    }
+
     return '';
   }
 
@@ -352,15 +378,9 @@ class _Jovleave extends State<Jobleave2> {
         scrollDirection: Axis.horizontal,
         itemBuilder: (BuildContext, index) {
           Widget tempCard;
-          //var Imageurl = ListImage[index];
-          // var Image = row;
+
           Widget imageWidget;
-          // imageWidget= Padding(
-          //   padding: EdgeInsets.symmetric(vertical: 3.0),
-          //   child: ListTile(
-          //     title: Text(myItems[index]),
-          //   ),
-          // );
+
           imageWidget = myContain(
             m_boxDecoration: new BoxDecoration(
               color: Colors.lightBlueAccent,
@@ -369,13 +389,24 @@ class _Jovleave extends State<Jobleave2> {
                 color: Colors.black,
               ),
             ),
-            m_child: Image.file(
-              File(ListImage[index]),
-              // key: ValueKey(tempkey),
-              height: 80,
-              width: 80,
-              //fit: BoxFit.cover,
+
+            m_child: GestureDetector(
+              onTap: () {
+                print('image 按下');
+                String ddd = _popMyimage(context, index);
+              },
+              child: Image.file(
+                File(ListImage[index]),
+                height: 80,
+                width: 80,
+              ),
             ),
+
+            // m_child: Image.file(
+            //   File(ListImage[index]),
+            //   height: 80,
+            //   width: 80,
+            // ),
           );
 
           return Padding(
@@ -452,6 +483,8 @@ class _Jovleave extends State<Jobleave2> {
                           BatchID: _BatchID,
                           STime: _templist[0],
                           ETime: _templist[1],
+                          STime2: '',
+                          ETime2: '',
                           DetailClassID: "4"));
                     });
                   });
@@ -534,7 +567,7 @@ class _Jovleave extends State<Jobleave2> {
               onPressed: () {},
             ),
           );
-
+          //TODO 時間ui
           Widget bb =
               Row(mainAxisAlignment: MainAxisAlignment.start, children: [
             Expanded(
@@ -760,6 +793,56 @@ class _Jovleave extends State<Jobleave2> {
           ),
 
           myContain(
+            m_heght: 30,
+            m_Alignment: Alignment.topCenter,
+            m_boxDecoration: new BoxDecoration(
+              color: MyColor.back_COLOR2,
+              border: new Border.all(
+                width: 1,
+                color: Colors.black,
+              ),
+            ),
+            m_child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    //color: Colors.red,
+                    child: myButton(
+                        m_color: Color.fromRGBO(115, 217, 193, 1.0),
+                        //TODO 新增圖檔案鈕
+                        m_child: InkWell(
+                          onTap: () {
+                            // 按下事件处理逻辑
+                            _popMyimage(context, -1);
+                          },
+                          child: Icon(
+                            Icons.add_box_sharp,
+                            //size: 24,
+                            // color: Colors.yellow,
+                          ),
+                        )
+                        //Icon(Icons.add_box_sharp),
+                        ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    alignment: Alignment.center,
+                    //color: Colors.green,
+                    child: Text('附件'),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                      // color: Colors.amber,
+                      ),
+                ),
+              ],
+            ),
+          ),
+
+          myContain(
             m_heght: 100,
             m_Alignment: Alignment.topCenter,
             m_boxDecoration: new BoxDecoration(
@@ -771,22 +854,6 @@ class _Jovleave extends State<Jobleave2> {
             ),
             m_child: Column(
               children: [
-                Row(children: [
-                  Expanded(
-                    child: myContain(
-                      m_heght: 25,
-                      m_Alignment: Alignment.center,
-                      m_boxDecoration: new BoxDecoration(
-                        color: MyColor.back_COLOR2,
-                        border: new Border.all(
-                          width: 1,
-                          color: Colors.black,
-                        ),
-                      ),
-                      m_child: Text('附件'),
-                    ),
-                  )
-                ]),
                 Expanded(
                     child: myContain(
                         m_boxDecoration: new BoxDecoration(
@@ -851,18 +918,50 @@ class _Jovleave extends State<Jobleave2> {
     return Text('');
   }
 
+  Future<String> GetDateLeaveDetail() async {
+    // return Future.delayed(Duration(seconds: 2), () => "我是从互联网上获取的数据");
+    // getHttp();
+    //return Future.delayed(Duration(seconds: 5), () => "我是从互联网上获取的数据");
+    final response = await Dio().get(m_LeaveDetail + '/' + _BatchID);
+    String sss = "";
+
+    list_Modal_LeaveSch2 = (response.data as List<dynamic>)
+        .map((e) => Modal_LeaveSch2.fromJson((e as Map<String, dynamic>)))
+        .toList();
+
+    if (response.statusCode == HttpStatus.ok) {
+      print('有取到時間明細');
+      _modal_time = (response.data as List<dynamic>)
+          .map((e) =>
+              Modal_basic_LeaveTime.fromJson((e as Map<String, dynamic>)))
+          .toList();
+
+      for (int i = 0; i <= _modal_time.length - 1; i++) {
+        // 在此处执行循环体中的操作
+        _modal_time[i].STime = _modal_time[i].STime2;
+        _modal_time[i].ETime = _modal_time[i].ETime2;
+      }
+    }
+
+    return "";
+  }
+
+  //TODO 取得時間明細
   void SetTimeList() {
     _modal_time.clear();
-    AddTimeList(Modal_basic_LeaveTime(
-        BatchID: _BatchID,
-        STime: '2020-01-02 01:30',
-        ETime: '2020-01-02 06:04',
-        DetailClassID: "4"));
-    AddTimeList(Modal_basic_LeaveTime(
-        BatchID: _BatchID,
-        STime: '2020-01-02 01:30',
-        ETime: '2020-01-02 06:04',
-        DetailClassID: "4"));
+
+    GetDateLeaveDetail();
+
+    // AddTimeList(Modal_basic_LeaveTime(
+    //     BatchID: _BatchID,
+    //     STime: '2020-01-02 01:30',
+    //     ETime: '2020-01-02 06:04',
+    //     DetailClassID: "4"));
+    // AddTimeList(Modal_basic_LeaveTime(
+    //     BatchID: _BatchID,
+    //     STime: '2020-01-02 01:30',
+    //     ETime: '2020-01-02 06:04',
+    //     DetailClassID: "4"));
   }
 
   void DelTimeList(String DelValue) {
@@ -949,6 +1048,138 @@ class _Jovleave extends State<Jobleave2> {
     this.setState(() {
       editTimeList(key, _templist[0], _templist[1]);
     });
+  }
+
+  //TODO 選擇圖片視窗
+  _popMyimage(BuildContext context, int index) {
+    Widget myob;
+
+    File myfile;
+
+    Image? myimage;
+    String fileName = "";
+
+    // 在使用之前进行空值检查
+    if (index == -1) {
+      //新增時沒有點案,給個空的
+      myob = myContain(
+        m_heght: 150,
+        m_weight: 150,
+      );
+    } else {
+      // 使用Image Widget
+      myfile = File(ListImage[index]);
+      myimage = Image.file(
+        myfile,
+        height: 150,
+        width: 150,
+      );
+      fileName = myfile.path.split('/').last;
+      myob = myimage;
+    }
+
+    // myimage = null;
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Expanded(
+            child: SimpleDialog(
+              title: Text('select file'),
+              children: [
+                // myimage,
+                myob,
+                SizedBox(
+                  height: 20,
+                ),
+                Expanded(
+                  child: myContain(
+                    m_heght: 35,
+                    m_Alignment: Alignment.center,
+                    m_child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        myButton(
+                          m_child: myText(
+                            m_text: '選擇圖片',
+                            m_color: Colors.black,
+                          ),
+                          m_onPressed: () {
+                            _openImagePicker(fileName);
+                          },
+                        ),
+                        myButton(
+                          m_child: myText(
+                            m_text: '取消',
+                            m_color: Colors.black,
+                          ),
+                          m_onPressed: () {},
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, "NO");
+                  },
+                  child: Text(
+                    'NO',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }).then((value) => debugPrint(value));
+  }
+
+  //TODO 檔案上傳
+  void uploadFile() async {
+    Dio dio = Dio();
+    String apiUrl = 'YOUR_API_ENDPOINT';
+
+    // 创建FormData对象
+    FormData formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile('path/to/file'),
+      'name': 'John Doe',
+    });
+
+    try {
+      // 发送POST请求
+      Response response = await dio.post(apiUrl, data: formData);
+
+      if (response.statusCode == 200) {
+        print('文件上传成功');
+      } else {
+        print('文件上传失败');
+      }
+    } catch (e) {
+      print('请求失败: $e');
+    }
+  }
+
+  Future<void> _openImagePicker(String oldfilename) async {
+    final picker = ImagePicker();
+    final pickedFile =
+        await picker.pickImage(source: ImageSource.gallery); // 打开手机相册
+
+    if (pickedFile != null) {
+      print('我選擇了圖片');
+      //--(待驗證)取得圖片,取得文件名,刪除原來的檔案,並且寫入選擇的檔案
+
+      //String fileName = basename(pickedFile.path);
+      String filePath = pickedFile.path;
+      File file = File(filePath);
+      String fileName = file.path.split('/').last;
+      print('选中的文件名：$fileName');
+
+      classMyFile.delFilefolder(oldfilename);
+      classMyFile.Copyimage(pickedFile.path, fileName);
+      this.setState(() {
+        SetFileList();
+      });
+    }
   }
 }
 

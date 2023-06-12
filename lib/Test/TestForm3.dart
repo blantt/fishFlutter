@@ -217,7 +217,7 @@ class TestFomr3status extends State<TestFomr3> {
             myButton(
                 m_child: Text('刪除文件內容'),
                 m_onPressed: () {
-                  classMyFile.delFilefolder();
+                  classMyFile.delFilefolder('');
                 }),
             myButton(
                 m_child: Text('清暫存測試'),

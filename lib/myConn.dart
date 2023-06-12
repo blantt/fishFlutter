@@ -22,6 +22,9 @@ import 'package:flutter/material.dart';
 // public static string m_url請假單Sch = "http://clockappservice.english4u.com.tw/api/SelectAmcJobLeave/all";
 // public static string m_url請假單Detail = "http://clockappservice.english4u.com.tw/api/SelectAmcJobLeaveDetail";
 
+String m_url_SaveJovLeaveAll =
+    "http://clockappservice.english4u.com.tw/api/Add請假單All";
+
 //---存請假單時間區段
 String m_url_SaveJovLeaveDetail =
     "http://clockappservice.english4u.com.tw/api/Add請假單明細";
