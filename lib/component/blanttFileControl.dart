@@ -137,6 +137,11 @@ class MyFileControl {
 
   List<String> getFileList2() {
     List<String> stringList = [];
+    if (FolderPath == '') {
+      //--防呆,如果頁面取值時,還沒有取到時,會有例外
+      return stringList;
+    }
+
     Directory directory = new Directory(FolderPath);
     directory.listSync().forEach((file) {
       stringList.add(file.path);

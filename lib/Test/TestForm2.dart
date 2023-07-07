@@ -11,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'dart:async';
+import 'package:http/http.dart' as http;
 
 class doorForm2 extends StatefulWidget {
   doorForm2({Key? key}) : super(key: key);
@@ -271,6 +272,18 @@ class aaa extends State<doorForm2> {
                   //getAssetFile("assets/images/date1.png");
                 }),
             myButton(
+                m_child: Text('saveimage_測試用webapi'),
+                m_onPressed: () {
+                  sendfileFromWebpage();
+
+                  //getAssetFile("assets/images/date1.png");
+                }),
+            myButton(
+                m_child: Text('webapitest2'),
+                m_onPressed: () {
+                  sendWebapitest();
+                }),
+            myButton(
                 m_child: Text('got image'),
                 m_onPressed: () {
                   this.setState(() {
@@ -279,19 +292,6 @@ class aaa extends State<doorForm2> {
                     // _AssetImage = AssetImage("assets/images/date1.png");
                   });
                 }),
-            // Image.network(
-            //   'https://cdn-icons-png.flaticon.com/512/3884/3884851.png', // 替换为你的图片 URL
-            //   fit: BoxFit.cover,
-            // ),
-            // Image(
-            //   image: _AssetImage,
-            // ),
-            // Image.file(
-            //   File(StrIOFilepath),
-            //   fit: BoxFit.cover,
-            // ),
-            imageWidget,
-            Text(ttt)
           ],
         ),
       ),
@@ -302,27 +302,133 @@ class aaa extends State<doorForm2> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('測試單元2_3')),
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+
+          // 添加更多按鈕
+        ],
+      ),
       body: Center(
           child: Column(children: [
-        // Expanded(
-        //   child: myContain(
-        //     m_child: Text('662'),
-        //     m_boxDecoration: new BoxDecoration(color: MyColor.back_COLOR1),
-        //     m_heght: 15,
-        //   ),
-        //   flex: 0,
-        // ),
-        // Expanded(
-        //   child: myContain(
-        //     m_child: tempList(),
-        //     m_heght: 80,
-        //   ),
-        //   flex: 0,
-        // ),
+        TextButton.icon(
+            label: myText(
+              m_color: Colors.blue,
+              m_text: "new",
+              m_fontsize: 16,
+            ),
+            icon: Icon(
+              Icons.add,
+              color: Colors.black,
+            ),
+            onPressed: () {}),
+        Container(
+            child: TextButton.icon(
+                label: Text(
+                  'add',
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
+                icon: Icon(
+                  Icons.abc,
+                  color: Colors.white,
+                ),
+                onPressed: () {}),
+            decoration: new BoxDecoration(
+              color: Color.fromRGBO(100, 176, 231, 1.0),
+              // border: new Border.all(
+              //   width: 1,
+              //   color: Colors.green,
+              // ),
+              // boxShadow: [
+              //   BoxShadow(
+              //       color: MyColor.back_COLOR3,
+              //       offset: Offset(3.0, 0.0), //陰影y軸偏移量
+              //       blurRadius: 2, //陰影模糊程度
+              //       spreadRadius: 0 //陰影擴散程度
+              //       )
+              // ],
+            )),
         Expanded(
           child: sss(),
         )
       ])),
     );
+  }
+}
+
+Widget myformfield() {
+  Widget dd;
+
+  return Text('data');
+}
+
+Future<String?> uploadFile(String filename, List<int> fileBytes) async {
+  try {
+    String url = 'your_web_api_url'; // 替換為你的網頁版API的URL
+
+    var request = http.MultipartRequest('POST', Uri.parse(url));
+    request.fields['filename'] = filename;
+    request.files.add(
+        http.MultipartFile.fromBytes('file', fileBytes, filename: filename));
+
+    var response = await request.send();
+    if (response.statusCode == 200) {
+      var responseData = await response.stream.bytesToString();
+      return responseData;
+    } else {
+      print('API request failed with status code: ${response.statusCode}');
+      return null;
+    }
+  } catch (error) {
+    print('API request failed with error: $error');
+    return null;
+  }
+}
+
+Future<void> sendWebapitest() async {
+  try {
+    String url =
+        'https://editor.4kids.com.tw/Portal/blantt/testWebapi/test1.html'; // 替換為你的 API 端點 URL
+
+    Uri uri = Uri.parse(url);
+    Map<String, String> queryParams = {
+      'aa': '888',
+      'bb': '999',
+    };
+    uri = uri.replace(queryParameters: queryParams);
+
+    var response = await http.get(uri);
+    if (response.statusCode == 200) {
+      print('OK');
+      print(response.body);
+    } else {
+      print('API request failed with status code: ${response.statusCode}');
+    }
+  } catch (error) {
+    print('API request failed with error: $error');
+  }
+}
+
+Future<void> sendfileFromWebpage() async {
+  String filename = 'your_filename.pdf'; // 替換為你的檔案名稱
+  List<int> fileBytes =
+      await File('path_to_your_file').readAsBytes(); // 替換為讀取檔案的方式
+
+  String? apiResponse = await uploadFile(filename, fileBytes);
+  if (apiResponse != null) {
+    // 處理API回應
+  } else {
+    // API請求失敗的處理
   }
 }

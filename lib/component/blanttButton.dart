@@ -147,6 +147,7 @@ class myText extends StatelessWidget {
   final String m_text;
   final Color? m_color;
   final FontWeight? m_fountWeight;
+  final double? m_letterSpacing;
   final Function(bool)? onFocusChange; // nullable and optional
   final double? m_fontsize;
   const myText(
@@ -155,7 +156,8 @@ class myText extends StatelessWidget {
       this.m_color, // non-nullable but optional with a default value
       this.onFocusChange, // nullable and optional
       this.m_fontsize,
-      this.m_fountWeight})
+      this.m_fountWeight,
+      this.m_letterSpacing})
       : super(key: key);
 
   @override
@@ -163,7 +165,11 @@ class myText extends StatelessWidget {
     return Text(
       m_text,
       style: TextStyle(
-          color: m_color, fontWeight: m_fountWeight, fontSize: m_fontsize),
+        color: m_color,
+        fontWeight: m_fountWeight,
+        fontSize: m_fontsize,
+        letterSpacing: m_letterSpacing,
+      ),
     );
   }
 }

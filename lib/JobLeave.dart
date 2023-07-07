@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:blantt_love_test/component/blanttButton.dart';
 import 'package:blantt_love_test/component/blanttColor.dart';
@@ -28,6 +29,37 @@ List<String> ListImage = [];
 //不是第一次進來,就不用再重抓資料bind,不然會有些例外狀況..
 //感覺應該還有更好的寫法,等待進化版!!
 bool isNew = true;
+
+enum buttonType { _home, _save, _del, _send, _approve }
+
+enum formType {
+  _batchid,
+  _name,
+  //班別
+  _class,
+  //假別
+  _type,
+  //代理1
+  _agent1,
+  //代理2
+  _agent2,
+  _see1,
+  _see2,
+}
+
+class AlwaysDisabledFocusNode extends FocusNode {
+  @override
+  bool get hasFocus => false;
+}
+
+class AlwaysDisabledFocusNode2 extends FocusNode {
+  bool isEnabled;
+
+  AlwaysDisabledFocusNode2({this.isEnabled = false});
+
+  @override
+  bool get hasFocus => isEnabled;
+}
 
 class BindControl {
   String UserAgent = "";
@@ -83,9 +115,7 @@ class Jobleave extends StatelessWidget {
             new newPersonState(value: _BindControl.UserAgent2),
       },
       title: 'dddd',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
+      theme: ThemeData(primarySwatch: Colors.green, fontFamily: 'NotoSansHK'),
       home: Jobleave2(),
     );
   }
@@ -147,8 +177,10 @@ class _Jovleave extends State<Jobleave2> {
     _counterStream = _counterStreamController.stream;
     _BindControl.FormControl_UserSeeN.text = "ddddd2";
     classMyFile.delFilefolder("");
-    SetTimeList();
     GetFileList();
+    GetDateLeave2();
+    SetTimeList();
+
     super.initState();
     print('in initState');
   }
@@ -169,39 +201,77 @@ class _Jovleave extends State<Jobleave2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('請假單 ' + _BatchID),
-        ),
-        body: Stack(children: <Widget>[
-          JobStreamNew(context),
-          _isLoading
-              ? MyLoadingWidget(
-                  m_Strload: '儲存中',
-                  m_btnStopShow: true,
-                  m_onPressed: _stopLoadingAnimation,
-                )
-              : Container(),
-        ]),
-        bottomNavigationBar: BottomNavigationBar(
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.save),
-              label: '儲存',
+      appBar: AppBar(
+        backgroundColor: MyColor.back_COLOR1, // 設定背景色為藍色
+        title: Text('請假單 ' + _BatchID),
+      ),
+      body: Stack(children: <Widget>[
+        // JobStreamNew(context),
+        _myorm(context),
+        _isLoading
+            ? MyLoadingWidget(
+                m_Strload: '儲存中',
+                m_btnStopShow: true,
+                m_onPressed: _stopLoadingAnimation,
+              )
+            : Container(),
+      ]),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            tempBottomButton(
+              myitype: buttonType._home,
+              my_onPressed: () {},
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle),
-              label: 'Profile',
+            tempBottomButton(
+              myitype: buttonType._save,
+              my_onPressed: () {
+                _toggleLoading();
+                SaveAllPage();
+              },
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_bag),
-              label: 'Shop',
+            tempBottomButton(
+              myitype: buttonType._del,
+              my_onPressed: () {},
+            ),
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                // 處理按鈕點擊事件
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.person),
+              onPressed: () {
+                // 處理按鈕點擊事件
+              },
             ),
           ],
-          currentIndex: _selectedIndex,
-          unselectedItemColor: Colors.grey,
-          onTap: !_isLoading ? _onTap : _onTap2,
-          elevation: 15,
-        ));
+        ),
+      ),
+
+      // bottomNavigationBar: BottomNavigationBar(
+      //   items: [
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.save),
+      //       label: '儲存',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.account_circle),
+      //       label: 'Profile',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.shopping_bag),
+      //       label: 'Shop',
+      //     ),
+      //   ],
+      //   currentIndex: _selectedIndex,
+      //   unselectedItemColor: Colors.grey,
+      //   onTap: !_isLoading ? _onTap : _onTap2,
+      //   elevation: 15,
+      // )
+    );
   }
 
   void onPressToNextScreen3() async {
@@ -345,6 +415,44 @@ class _Jovleave extends State<Jobleave2> {
     return '';
   }
 
+  Future<String> GetDateLeave2() async {
+    // return Future.delayed(Duration(seconds: 2), () => "我是从互联网上获取的数据");
+    // getHttp();
+    //return Future.delayed(Duration(seconds: 5), () => "我是从互联网上获取的数据");
+    final response = await Dio().get(m_url_LeaveSch + '/' + _BatchID);
+    String sss = "";
+
+    if (response.statusCode == HttpStatus.ok) {
+      list_Modal_LeaveSch2 = (response.data as List<dynamic>)
+          .map((e) => Modal_LeaveSch2.fromJson((e as Map<String, dynamic>)))
+          .toList();
+
+      var row = list_Modal_LeaveSch2[0];
+      _UserNameN = row.UserNameN;
+      // 请求成功，显示数据
+      _BindControl.ControllerClassTypeN.text = row.ClassTypeN;
+      _BindControl.ControllerLeaveTypeN.text = row.LeaveTypeN;
+      _BindControl.LeaveType = row.LeaveType;
+      _BindControl.emailController.text = _BatchID;
+      _BindControl.ControllerUserNameN.text = _UserNameN;
+
+      _BindControl.UserAgent = row.UserAgent;
+      _BindControl.UserAgent2 = row.UserAgent2;
+      _BindControl.FormControl_UserAgentN.text = row.UserAgentN;
+      _BindControl.FormControl_UserAgent2N.text = row.UserAgent2N;
+
+      _BindControl.UserSee = row.UserSee;
+      _BindControl.UserSee2 = row.UserSee2;
+      _BindControl.FormControl_UserSeeN.text = row.UserSeeN;
+
+      _BindControl.FormControl_UserSee2N.text = row.UserSee2N;
+      _BindControl.FormControl_Reason.text = row.Reason;
+    }
+
+    return "";
+  }
+
+  //TODO 取得表頭表單
   Future<String> GetDateLeave() async {
     // return Future.delayed(Duration(seconds: 2), () => "我是从互联网上获取的数据");
     // getHttp();
@@ -420,7 +528,6 @@ class _Jovleave extends State<Jobleave2> {
     );
   }
 
-  //TODO testnewRange
   Widget testTimeRange() {
     Widget tempContainer(int itype, int Stype, Widget chid) {
       //itype 0:title,1.row
@@ -459,49 +566,45 @@ class _Jovleave extends State<Jobleave2> {
       );
     }
 
+    //TODO row title
     Widget temprowTitle() {
       return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-        Expanded(
-            child: tempContainer(
-              0,
-              1,
-              tempIconButton(
-                my_onPressed: () {
-                  Navigator.of(context).pushNamed('/popTime',
-                      arguments: {'name1': '', 'name2': ''}).then((value) {
-                    this.setState(() {
-                      var _templist = [];
-                      String _tempValue = "";
-                      _tempValue = value.toString();
-                      _templist = _tempValue.split('@');
-
-                      print(value);
-
-                      // AddTimeList(Modal_basic(
-                      //     name1: _templist[0], name2: _templist[1]));
-                      AddTimeList(Modal_basic_LeaveTime(
-                          BatchID: _BatchID,
-                          STime: _templist[0],
-                          ETime: _templist[1],
-                          STime2: '',
-                          ETime2: '',
-                          DetailClassID: "4"));
-                    });
-                  });
-                },
-                myicon: Icons.add,
-                my_Backcolor33: Color.fromRGBO(54, 123, 148, 1.0),
-              ),
+        Container(
+          decoration: new BoxDecoration(
+            color: MyColor.back_COLOR1,
+            border: new Border.all(
+              width: 1,
+              color: Colors.white,
             ),
-            flex: 0),
+          ),
+          // color: Colors.blue,
+          height: 40,
+          //alignment: _Alignment,
+          width: 90,
+
+          child: TextButton.icon(
+              label: myText(
+                m_color: Colors.white,
+                m_text: "new",
+                m_fontsize: 16,
+              ),
+              icon: Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                print('Pressed');
+              }),
+        ),
         Expanded(
             child: tempContainer(
                 0,
                 2,
                 myText(
                   m_text: '起始時間',
-                  m_fountWeight: FontWeight.w700,
+                  m_fountWeight: FontWeight.w600,
                   m_color: Colors.white,
+                  m_letterSpacing: 2,
                 )),
             flex: 1),
         Expanded(
@@ -510,8 +613,9 @@ class _Jovleave extends State<Jobleave2> {
                 3,
                 myText(
                   m_text: '結束時間',
-                  m_fountWeight: FontWeight.w700,
+                  m_fountWeight: FontWeight.w600,
                   m_color: Colors.white,
+                  m_letterSpacing: 2,
                 )),
             flex: 1),
       ]);
@@ -522,6 +626,7 @@ class _Jovleave extends State<Jobleave2> {
       return Row(
         children: [
           tempIconButton(
+            my_Backcolor33: MyColor.myblue,
             my_onPressed: () {
               this.setState(() {
                 _poptime(context, name1, name2);
@@ -533,6 +638,7 @@ class _Jovleave extends State<Jobleave2> {
             width: 2,
           ),
           tempIconButton(
+            my_Backcolor33: MyColor.back_COLOR3,
             my_onPressed: () {
               this.setState(() {
                 DelTimeList(name1);
@@ -602,272 +708,113 @@ class _Jovleave extends State<Jobleave2> {
   }
 
   Widget from1(BuildContext context) {
+    UnderlineInputBorder tempenabledBorder;
+    tempenabledBorder = UnderlineInputBorder(
+      borderSide: BorderSide(
+          width: 3, color: MyColor.myblue.withOpacity(0.5)), //<-- SEE HERE
+    );
+    UnderlineInputBorder tempfocusedBorder;
+    tempfocusedBorder = UnderlineInputBorder(
+      borderSide: BorderSide(width: 3, color: Colors.blue),
+    );
+
     return Container(
-        alignment: Alignment.topCenter,
-        width: double.infinity,
-        margin: const EdgeInsets.only(left: 10, right: 10),
-        child: Form(
-            child: Column(children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: 180,
-                child: TextFormField(
-                  enabled: true,
-                  //'$textHolder'
-                  //initialValue: '$textHolder',
-                  controller: _BindControl.emailController,
-                  decoration: InputDecoration(labelText: '單號'),
-                ),
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              Expanded(
-                child: TextFormField(
-                  enabled: false,
-                  //'$textHolder'
-                  //initialValue: '$textHolder',
-                  controller: _BindControl.ControllerUserNameN,
-                  decoration: InputDecoration(labelText: '姓名'),
-                ),
-              )
-            ],
-          ),
-          Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+      alignment: Alignment.topCenter,
+      width: double.infinity,
+      margin: const EdgeInsets.only(left: 10, right: 10),
+      child: Form(
+        child: Column(
+          children: [
+            tempFormField(formType._batchid, formType._name),
+            tempFormField(formType._class, formType._type),
+            tempFormField(formType._agent1, formType._agent2),
+            tempFormField(formType._see1, formType._see2),
+
             SizedBox(
-              width: 180,
-              child: TextFormField(
-                enabled: true,
-                //'$textHolder'
-                //initialValue: '$textHolder',
-                controller: _BindControl.ControllerClassTypeN,
-                decoration: InputDecoration(labelText: '班別'),
-              ),
+              height: 1,
             ),
+            //TODO======時間列表====
+            testTimeRange(),
             SizedBox(
-              width: 5,
+              height: 10,
             ),
-            Expanded(
-              child: InkWell(
-                onTap: () {
-                  Navigator.of(context).pushNamed('/LeaveType',
-                      arguments: {'name': 'Raymond'}).then((value) {
-                    var _templist = [];
 
-                    String _tempValue = "";
-                    _tempValue = value.toString();
-                    _templist = _tempValue.split('/');
+            TextFormField(
+              controller: _BindControl.FormControl_Reason,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: '備註/原因',
+              ),
+              maxLines: 3,
+            ),
 
-                    _BindControl.LeaveType = _templist[0];
-                    _BindControl.ControllerLeaveTypeN.text = _templist[1];
-                  });
-                }, // Handle your callback
-                child: SizedBox(
-                  width: 180,
-                  child: TextFormField(
-                    enabled: false,
-                    controller: _BindControl.ControllerLeaveTypeN,
-                    decoration: InputDecoration(labelText: '假別'),
-                  ),
+            myContain(
+              m_heght: 45,
+              m_Alignment: Alignment.topCenter,
+              m_boxDecoration: new BoxDecoration(
+                color: MyColor.back_COLOR2,
+                border: new Border.all(
+                  width: 1,
+                  color: Colors.black,
                 ),
               ),
-            )
-          ]),
-
-          Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-            InkWell(
-              onTap: () {
-                Navigator.of(context).pushNamed('/UserAgent',
-                    arguments: {'name': 'Raymond'}).then((value) {
-                  var _templist = [];
-                  String _tempValue = "";
-                  _tempValue = value.toString();
-                  _templist = _tempValue.split('/');
-                  print(_templist[0]);
-                  _BindControl.UserAgent = _templist[0];
-                  _BindControl.FormControl_UserAgentN.text = _templist[1];
-                });
-              }, // Handle your callback
-              child: SizedBox(
-                width: 180,
-                child: TextFormField(
-                  enabled: false,
-                  //'$textHolder'
-                  //initialValue: '$textHolder',
-                  controller: _BindControl.FormControl_UserAgentN,
-                  decoration: InputDecoration(labelText: '代理人1'),
-                ),
-              ),
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            Expanded(
-                child: InkWell(
-              onTap: () {
-                Navigator.of(context).pushNamed('/UserAgent',
-                    arguments: {'name': 'Raymond'}).then((value) {
-                  var _templist = [];
-                  String _tempValue = "";
-                  _tempValue = value.toString();
-                  _templist = _tempValue.split('/');
-                  _BindControl.UserAgent2 = _templist[0];
-                  _BindControl.FormControl_UserAgent2N.text = _templist[1];
-                });
-              }, // Handle yo
-              child: TextFormField(
-                enabled: false,
-                //'$textHolder'
-                //initialValue: '$textHolder',
-                controller: _BindControl.FormControl_UserAgent2N,
-                decoration: InputDecoration(labelText: '代理人2'),
-              ),
-            ))
-          ]),
-          Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-            InkWell(
-              onTap: () {
-                Navigator.of(context).pushNamed('/UserAgent',
-                    arguments: {'name': 'Raymond'}).then((value) {
-                  var _templist = [];
-                  String _tempValue = "";
-                  _tempValue = value.toString();
-                  _templist = _tempValue.split('/');
-                  _BindControl.UserSee = _templist[0];
-                  _BindControl.FormControl_UserSeeN.text = _templist[1];
-                });
-              },
-              child: SizedBox(
-                width: 180,
-                child: TextFormField(
-                  enabled: false,
-                  //'$textHolder'
-                  //initialValue: '$textHolder',
-                  controller: _BindControl.FormControl_UserSeeN,
-                  decoration: InputDecoration(labelText: '監交人1'),
-                ),
-              ),
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            Expanded(
-                child: InkWell(
-              onTap: () {
-                Navigator.of(context).pushNamed('/UserAgent',
-                    arguments: {'name': 'Raymond'}).then((value) {
-                  var _templist = [];
-                  String _tempValue = "";
-                  _tempValue = value.toString();
-                  _templist = _tempValue.split('/');
-                  _BindControl.UserSee2 = _templist[0];
-                  _BindControl.FormControl_UserSee2N.text = _templist[1];
-                });
-              },
-              child: TextFormField(
-                enabled: false,
-                //'$textHolder'
-                //initialValue: '$textHolder',
-                controller: _BindControl.FormControl_UserSee2N,
-                decoration: InputDecoration(labelText: '監交人2'),
-              ),
-            ))
-          ]),
-
-          //TODO======時間列表====
-          testTimeRange(),
-          //SetFileList(),
-          SizedBox(
-            height: 10,
-          ),
-
-          TextFormField(
-            controller: _BindControl.FormControl_Reason,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: '備註/原因',
-            ),
-            maxLines: 3,
-          ),
-
-          myContain(
-            m_heght: 30,
-            m_Alignment: Alignment.topCenter,
-            m_boxDecoration: new BoxDecoration(
-              color: MyColor.back_COLOR2,
-              border: new Border.all(
-                width: 1,
-                color: Colors.black,
-              ),
-            ),
-            m_child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    alignment: Alignment.centerLeft,
-                    //color: Colors.red,
-                    child: myButton(
-                        m_color: Color.fromRGBO(115, 217, 193, 1.0),
-                        //TODO 新增圖檔案鈕
-                        m_child: InkWell(
-                          onTap: () {
-                            // 按下事件处理逻辑
-                            _popMyimage(context, -1);
-                          },
-                          child: Icon(
-                            Icons.add_box_sharp,
-                            //size: 24,
-                            // color: Colors.yellow,
-                          ),
-                        )
-                        //Icon(Icons.add_box_sharp),
-                        ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    alignment: Alignment.center,
-                    //color: Colors.green,
-                    child: Text('附件'),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                      // color: Colors.amber,
+              m_child: Row(
+                children: [
+                  Expanded(
+                      //TODO now my textbutton
+                      child: tempIconButton2(
+                    myitype: 0,
+                    my_onPressed: () {
+                      _popMyimage(context, -1);
+                    },
+                  )),
+                  Expanded(
+                    child: Container(
+                      alignment: Alignment.center,
+                      //color: Colors.green,
+                      child: myText(
+                        m_text: '附件',
+                        m_letterSpacing: 2,
                       ),
-                ),
-              ],
-            ),
-          ),
-
-          myContain(
-            m_heght: 100,
-            m_Alignment: Alignment.topCenter,
-            m_boxDecoration: new BoxDecoration(
-              color: Color.fromRGBO(183, 183, 183, 1.0),
-              border: new Border.all(
-                width: 1,
-                color: Colors.black,
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                        // color: Colors.amber,
+                        ),
+                  ),
+                ],
               ),
             ),
-            m_child: Column(
-              children: [
-                Expanded(
-                    child: myContain(
-                        m_boxDecoration: new BoxDecoration(
-                          // color: Colors.redAccent,
-                          border: new Border.all(
-                            width: 1,
-                            color: MyColor.back_COLOR1,
+            myContain(
+              m_heght: 100,
+              m_Alignment: Alignment.topCenter,
+              m_boxDecoration: new BoxDecoration(
+                color: Color.fromRGBO(183, 183, 183, 1.0),
+                border: new Border.all(
+                  width: 1,
+                  color: Colors.black,
+                ),
+              ),
+              m_child: Column(
+                children: [
+                  Expanded(
+                      child: myContain(
+                          m_boxDecoration: new BoxDecoration(
+                            // color: Colors.redAccent,
+                            border: new Border.all(
+                              width: 1,
+                              color: MyColor.back_COLOR1,
+                            ),
                           ),
-                        ),
-                        m_child: SetFileList()))
-              ],
+                          m_child: SetFileList()))
+                ],
+              ),
             ),
-          ),
-        ])));
+          ],
+        ),
+      ),
+    );
   }
 
   //--陰件集合
@@ -879,13 +826,6 @@ class _Jovleave extends State<Jobleave2> {
   Widget _myorm(BuildContext context) {
     return SingleChildScrollView(
       child: Column(children: <Widget>[
-        // _isLoading
-        //     ? MyLoadingWidget(
-        //         m_Strload: '儲存中',
-        //         m_btnStopShow: true,
-        //         m_onPressed: _stopLoadingAnimation,
-        //       )
-        //     : Container(),
         from1(context),
       ]),
     );
@@ -919,9 +859,6 @@ class _Jovleave extends State<Jobleave2> {
   }
 
   Future<String> GetDateLeaveDetail() async {
-    // return Future.delayed(Duration(seconds: 2), () => "我是从互联网上获取的数据");
-    // getHttp();
-    //return Future.delayed(Duration(seconds: 5), () => "我是从互联网上获取的数据");
     final response = await Dio().get(m_LeaveDetail + '/' + _BatchID);
     String sss = "";
 
@@ -951,17 +888,6 @@ class _Jovleave extends State<Jobleave2> {
     _modal_time.clear();
 
     GetDateLeaveDetail();
-
-    // AddTimeList(Modal_basic_LeaveTime(
-    //     BatchID: _BatchID,
-    //     STime: '2020-01-02 01:30',
-    //     ETime: '2020-01-02 06:04',
-    //     DetailClassID: "4"));
-    // AddTimeList(Modal_basic_LeaveTime(
-    //     BatchID: _BatchID,
-    //     STime: '2020-01-02 01:30',
-    //     ETime: '2020-01-02 06:04',
-    //     DetailClassID: "4"));
   }
 
   void DelTimeList(String DelValue) {
@@ -999,6 +925,8 @@ class _Jovleave extends State<Jobleave2> {
             var icount = list_Modal_LeaveSch2.length;
             if (icount <= 0) {
             } else {
+              print('取得表頭');
+
               var row = list_Modal_LeaveSch2[icount - 1];
               _UserNameN = row.UserNameN;
               // 请求成功，显示数据
@@ -1032,6 +960,296 @@ class _Jovleave extends State<Jobleave2> {
     );
   }
 
+  //TODO 自設formfield
+  Widget tempFormField(formType stype1, formType stype2) {
+    UnderlineInputBorder tempenabledBorder;
+    tempenabledBorder = UnderlineInputBorder(
+      borderSide: BorderSide(
+          width: 3, color: MyColor.myblue.withOpacity(0.5)), //<-- SEE HERE
+    );
+    UnderlineInputBorder tempfocusedBorder;
+    tempfocusedBorder = UnderlineInputBorder(
+      borderSide: BorderSide(width: 3, color: Colors.blue),
+    );
+
+    bool bshow(formType settype) {
+      if (settype == formType._batchid ||
+          settype == formType._class ||
+          settype == formType._name) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+
+    String templabel(formType settype) {
+      if (settype == formType._batchid) {
+        return '單據號碼';
+      }
+      if (settype == formType._class) {
+        return '班別';
+      }
+      if (settype == formType._type) {
+        return '假別';
+      }
+      if (settype == formType._agent1) {
+        return '代理人1';
+      }
+      if (settype == formType._agent2) {
+        return '代理人2';
+      }
+
+      if (settype == formType._see2) {
+        return '監交人2';
+      }
+
+      if (settype == formType._see1) {
+        return '監交人1';
+      }
+      if (settype == formType._see2) {
+        return '監交人2';
+      }
+      if (settype == formType._name) {
+        return '請假人';
+      }
+      return '';
+    }
+
+    void btnevent(formType settype) {
+      if (settype == formType._type) {
+        this.setState(() {
+          Navigator.of(context).pushNamed('/LeaveType',
+              arguments: {'name': 'Raymond'}).then((value) {
+            var _templist = [];
+
+            String _tempValue = "";
+            _tempValue = value.toString();
+            _templist = _tempValue.split('/');
+
+            _BindControl.LeaveType = _templist[0];
+            _BindControl.ControllerLeaveTypeN.text = _templist[1];
+          });
+        });
+      }
+
+      if (settype == formType._agent1) {
+        this.setState(() {
+          Navigator.of(context).pushNamed('/UserAgent',
+              arguments: {'name': 'Raymond'}).then((value) {
+            var _templist = [];
+            String _tempValue = "";
+            _tempValue = value.toString();
+            _templist = _tempValue.split('/');
+            _BindControl.UserAgent = _templist[0];
+            _BindControl.FormControl_UserAgentN.text = _templist[1];
+          });
+        });
+      }
+
+      if (settype == formType._agent2) {
+        this.setState(() {
+          Navigator.of(context).pushNamed('/UserAgent',
+              arguments: {'name': 'Raymond'}).then((value) {
+            var _templist = [];
+            String _tempValue = "";
+            _tempValue = value.toString();
+            _templist = _tempValue.split('/');
+            _BindControl.UserAgent2 = _templist[0];
+            _BindControl.FormControl_UserAgent2N.text = _templist[1];
+          });
+        });
+      }
+      if (settype == formType._see1) {
+        this.setState(() {
+          Navigator.of(context).pushNamed('/UserAgent',
+              arguments: {'name': 'Raymond'}).then((value) {
+            var _templist = [];
+            String _tempValue = "";
+            _tempValue = value.toString();
+            _templist = _tempValue.split('/');
+            _BindControl.UserSee = _templist[0];
+            _BindControl.FormControl_UserSeeN.text = _templist[1];
+          });
+        });
+      }
+      if (settype == formType._see2) {
+        Navigator.of(context).pushNamed('/UserAgent',
+            arguments: {'name': 'Raymond'}).then((value) {
+          var _templist = [];
+          String _tempValue = "";
+          _tempValue = value.toString();
+          _templist = _tempValue.split('/');
+          _BindControl.UserSee2 = _templist[0];
+          _BindControl.FormControl_UserSee2N.text = _templist[1];
+        });
+      }
+    }
+
+    TextEditingController tempController(formType settype) {
+      if (settype == formType._batchid) {
+        return _BindControl.emailController;
+      }
+      if (settype == formType._name) {
+        return _BindControl.ControllerUserNameN;
+      }
+      if (settype == formType._type) {
+        return _BindControl.ControllerLeaveTypeN;
+      }
+      if (settype == formType._class) {
+        return _BindControl.ControllerClassTypeN;
+      }
+      if (settype == formType._class) {
+        return _BindControl.ControllerLeaveTypeN;
+      }
+      if (settype == formType._agent1) {
+        return _BindControl.FormControl_UserAgentN;
+      }
+      if (settype == formType._agent2) {
+        return _BindControl.FormControl_UserAgent2N;
+      }
+
+      if (settype == formType._see1) {
+        return _BindControl.FormControl_UserSeeN;
+      }
+      if (settype == formType._see2) {
+        return _BindControl.FormControl_UserSee2N;
+      }
+      return _BindControl.emailController;
+    }
+
+    return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+      Expanded(
+          child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Expanded(
+            child: InkWell(
+              onTap: () {},
+              child: SizedBox(
+                //width: 140,
+                child: TextFormField(
+                  focusNode: new AlwaysDisabledFocusNode2(isEnabled: false),
+                  controller: tempController(stype1),
+                  decoration: InputDecoration(
+                      enabledBorder: tempenabledBorder,
+                      focusedBorder: tempfocusedBorder,
+                      labelText: templabel(stype1)),
+                ),
+              ),
+            ),
+          ),
+          Visibility(
+            visible: bshow(stype1), // 根據條件來控制顯示與隱藏
+            child: SizedBox(
+                child: tempIconButton(
+              my_Backcolor33: MyColor.myblue.withOpacity(0.5),
+              my_onPressed: () {
+                this.setState(() {
+                  btnevent(stype1);
+                });
+              },
+              myicon: Icons.search_sharp,
+            )),
+          ),
+        ],
+      )),
+      SizedBox(
+        width: 5,
+      ),
+      Expanded(
+          child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Expanded(
+            child: InkWell(
+              onTap: () {},
+              child: SizedBox(
+                //width: 140,
+                child: TextFormField(
+                  focusNode: new AlwaysDisabledFocusNode2(isEnabled: false),
+                  controller: tempController(stype2),
+                  decoration: InputDecoration(
+                      enabledBorder: tempenabledBorder,
+                      focusedBorder: tempfocusedBorder,
+                      labelText: templabel(stype2)),
+                ),
+              ),
+            ),
+          ),
+          Visibility(
+            visible: bshow(stype2), // 根據條件來控制顯示與隱藏
+            child: SizedBox(
+                child: tempIconButton(
+              my_Backcolor33: MyColor.myblue.withOpacity(0.5),
+              my_onPressed: () {
+                this.setState(() {
+                  btnevent(stype2);
+                });
+              },
+              myicon: Icons.search_sharp,
+            )),
+          ),
+        ],
+      )),
+    ]);
+
+    return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+      InkWell(
+        onTap: () {},
+        child: SizedBox(
+          width: 140,
+          child: TextFormField(
+            focusNode: new AlwaysDisabledFocusNode2(isEnabled: false),
+            controller: tempController(stype1),
+            decoration: InputDecoration(
+                enabledBorder: tempenabledBorder,
+                focusedBorder: tempfocusedBorder,
+                labelText: templabel(stype1)),
+          ),
+        ),
+      ),
+      Visibility(
+        visible: bshow(stype1), // 根據條件來控制顯示與隱藏
+        child: SizedBox(
+            child: tempIconButton(
+          my_Backcolor33: MyColor.myblue.withOpacity(0.5),
+          my_onPressed: () {
+            this.setState(() {
+              btnevent(stype1);
+            });
+          },
+          myicon: Icons.search_sharp,
+        )),
+      ),
+      SizedBox(
+        width: 5,
+      ),
+      Expanded(
+          child: InkWell(
+        onTap: () {},
+        child: TextFormField(
+          focusNode: new AlwaysDisabledFocusNode2(isEnabled: false),
+          controller: tempController(stype2),
+          decoration: InputDecoration(
+              enabledBorder: tempenabledBorder,
+              focusedBorder: tempfocusedBorder,
+              labelText: templabel(stype2)),
+        ),
+      )),
+      Visibility(
+        visible: bshow(stype2), // 根據條件來控制顯示與隱藏
+        child: SizedBox(
+            child: tempIconButton(
+          my_Backcolor33: MyColor.myblue.withOpacity(0.5),
+          my_onPressed: () {
+            btnevent(stype2);
+          },
+          myicon: Icons.search_sharp,
+        )),
+      ),
+    ]);
+  }
+
   Future<void> _poptime(BuildContext context, String key, String name2) async {
     // Navigator.push returns a Future that completes after calling
     // Navigator.pop on the Selection Screen.
@@ -1050,11 +1268,22 @@ class _Jovleave extends State<Jobleave2> {
     });
   }
 
+  List<int>? convertImageToBytes(String imagePath) {
+    File imageFile = File(imagePath);
+    if (imageFile.existsSync()) {
+      List<int> fileBytes = imageFile.readAsBytesSync();
+      return fileBytes;
+    } else {
+      print('Image file does not exist');
+      return null;
+    }
+  }
+
   //TODO 選擇圖片視窗
   _popMyimage(BuildContext context, int index) {
     Widget myob;
 
-    File myfile;
+    File? myfile;
 
     Image? myimage;
     String fileName = "";
@@ -1069,6 +1298,7 @@ class _Jovleave extends State<Jobleave2> {
     } else {
       // 使用Image Widget
       myfile = File(ListImage[index]);
+
       myimage = Image.file(
         myfile,
         height: 150,
@@ -1077,8 +1307,6 @@ class _Jovleave extends State<Jobleave2> {
       fileName = myfile.path.split('/').last;
       myob = myimage;
     }
-
-    // myimage = null;
 
     showDialog(
         context: context,
@@ -1128,6 +1356,20 @@ class _Jovleave extends State<Jobleave2> {
                     style: TextStyle(color: Colors.black),
                   ),
                 ),
+                TextButton(
+                  onPressed: () {
+                    if (myfile != null) {
+                      print('savefile1');
+                      List<int> fileBytes = myfile.readAsBytesSync();
+                      uploadFile("ddd", "bbbb", fileBytes);
+                      print('savefile2');
+                    }
+                  },
+                  child: Text(
+                    'savetest',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
               ],
             ),
           );
@@ -1135,14 +1377,15 @@ class _Jovleave extends State<Jobleave2> {
   }
 
   //TODO 檔案上傳
-  void uploadFile() async {
+  void uploadFile(String filepath, String filename, List<int> fileBytes) async {
     Dio dio = Dio();
-    String apiUrl = 'YOUR_API_ENDPOINT';
+    String apiUrl = m_url_SaveUploadFile2;
 
+//    List<int> fileBytes;
     // 创建FormData对象
     FormData formData = FormData.fromMap({
-      'file': await MultipartFile.fromFile('path/to/file'),
-      'name': 'John Doe',
+      'filename': filename,
+      'filebyte': MultipartFile.fromBytes(fileBytes, filename: filename),
     });
 
     try {
@@ -1151,6 +1394,7 @@ class _Jovleave extends State<Jobleave2> {
 
       if (response.statusCode == 200) {
         print('文件上传成功');
+        print('回傳:' + response.data);
       } else {
         print('文件上传失败');
       }
@@ -1183,6 +1427,7 @@ class _Jovleave extends State<Jobleave2> {
   }
 }
 
+//TODO IconButton
 class tempIconButton extends StatelessWidget {
   final IconData? myicon;
   final Color? my_Backcolor33;
@@ -1197,7 +1442,7 @@ class tempIconButton extends StatelessWidget {
   //my_Backcolor= Color.fromRGBO(87, 180, 156, 1.0);
   @override
   Widget build(BuildContext context) {
-    Color? my_Backcolor = Color.fromRGBO(87, 180, 156, 1.0);
+    Color? my_Backcolor = MyColor.back_COLOR1;
     if (this.my_Backcolor33 != null) {
       my_Backcolor = my_Backcolor33;
     }
@@ -1208,6 +1453,7 @@ class tempIconButton extends StatelessWidget {
       child: TextButton(
         style: ElevatedButton.styleFrom(
           primary: my_Backcolor,
+
           //side: BorderSide(width: 1.0, color: Colors.blueAccent),
         ),
         child: Icon(
@@ -1219,5 +1465,115 @@ class tempIconButton extends StatelessWidget {
         },
       ),
     );
+  }
+}
+
+class tempBottomButton extends StatelessWidget {
+  final buttonType myitype;
+  final Function my_onPressed;
+  const tempBottomButton({
+    required this.myitype,
+    required this.my_onPressed,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Icon myicon = Icon(Icons.save);
+    String myText = "";
+    if (myitype == buttonType._save) {
+      myicon = Icon(Icons.save);
+      myText = "儲存";
+    }
+    if (myitype == buttonType._del) {
+      myicon = Icon(Icons.delete);
+      myText = "刪除";
+    }
+    if (myitype == buttonType._home) {
+      myicon = Icon(Icons.home);
+      myText = "Home";
+    }
+    return SizedBox(
+      width: 45,
+      height: 45,
+      child: ClipOval(
+        child: Material(
+          color: Colors.amberAccent,
+          child: InkWell(
+            splashColor: Colors.green,
+            onTap: () {
+              my_onPressed();
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                myicon, // <-- Icon
+                Text(myText), // <-- Text
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+//TODO add button
+class tempIconButton2 extends StatelessWidget {
+  final int myitype;
+  final IconData? myicon;
+  final Function my_onPressed;
+  const tempIconButton2({
+    required this.myitype,
+    this.myicon,
+    required this.my_onPressed,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Color? my_Backcolor = MyColor.back_COLOR1;
+
+    Widget tempIcon;
+    tempIcon = Icon(
+      Icons.add,
+      color: Colors.white,
+    );
+    Widget tempLabel;
+    tempLabel = myText(
+      m_color: Colors.white,
+      m_text: "new",
+      m_fontsize: 16,
+    );
+
+    if (myitype == 0) {}
+
+    return Container(
+        alignment: Alignment.topLeft,
+        child: Container(
+            // width: 90,
+            //TODO now my textbutton
+
+            child: TextButton.icon(
+                label: tempLabel,
+                icon: tempIcon,
+                onPressed: () {
+                  my_onPressed();
+                }),
+            decoration: new BoxDecoration(
+              color: Color.fromRGBO(100, 176, 231, 1.0),
+              border: new Border.all(
+                width: 1,
+                color: Colors.green,
+              ),
+              boxShadow: [
+                BoxShadow(
+                    color: MyColor.back_COLOR3,
+                    offset: Offset(3.0, 0.0), //陰影y軸偏移量
+                    blurRadius: 2, //陰影模糊程度
+                    spreadRadius: 0 //陰影擴散程度
+                    )
+              ],
+            )));
   }
 }
