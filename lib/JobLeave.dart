@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:ffi';
-
+import 'package:blantt_love_test/utils/router_test.dart';
 import 'package:blantt_love_test/component/blanttButton.dart';
 import 'package:blantt_love_test/component/blanttColor.dart';
+import 'package:blantt_love_test/dt_home.dart';
 import 'package:blantt_love_test/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ import 'package:image_picker/image_picker.dart';
 
 String _BatchID = '';
 String _UserNameN = '';
-
+en_FromType nowFromtype = en_FromType._void;
 List<Modal_basic_LeaveTime> _modal_time = [];
 List<String> ListImage = [];
 // isNew 判斷是不是第一次進來,因為有些事件,會重複觸發build,
@@ -32,7 +33,16 @@ bool isNew = true;
 
 enum buttonType { _home, _save, _del, _send, _approve }
 
-enum formType {
+enum en_FromType {
+  _add,
+  _edit,
+  _return,
+  _send,
+  _app,
+  _void,
+}
+
+enum filedType {
   _batchid,
   _name,
   //班別
@@ -67,6 +77,10 @@ class BindControl {
   String UserSee = "";
   String UserSee2 = "";
   String LeaveType = "";
+  //String MStatusN = "";
+  String MStatus = "0";
+
+  TextEditingController ControllerMStatusN = new TextEditingController();
 
   TextEditingController FormControl_UserAgentN = new TextEditingController();
   TextEditingController FormControl_UserAgent2N = new TextEditingController();
@@ -92,13 +106,6 @@ class Jobleave extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //---這是另外一種傳值的寫法
-    // final args = ModalRoute.of(context)!.settings.arguments as PageSend;
-    // if (args != null) {
-    //   _BatchID = args.BatchID;
-    // } else {
-    //   _BatchID = "h";
-    // }
     _BatchID = this.SendBatchID;
 
     return MaterialApp(
@@ -142,6 +149,7 @@ MyFileControl classMyFile = MyFileControl(otherFolder: 'blantt2');
 
 class _Jovleave extends State<Jobleave2> {
   //---重點是counterStreamController 要寫對地方,不然第二次進來stream,會出現錯誤!!!
+  bool _isdataload = false;
   bool _isLoading = false;
   bool _stopLoading = false;
   String testdd = "";
@@ -164,7 +172,6 @@ class _Jovleave extends State<Jobleave2> {
 
   void _stopLoadingAnimation() {
     setState(() {
-      print('colse');
       _isLoading = false;
       _stopLoading = false;
     });
@@ -202,12 +209,66 @@ class _Jovleave extends State<Jobleave2> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: MyColor.back_COLOR1, // 設定背景色為藍色
-        title: Text('請假單 ' + _BatchID),
-      ),
+          backgroundColor: MyColor.back_COLOR1, // 設定背景色為藍色
+          title:
+              //Text('請假單 ' + _BatchID),
+              Row(
+            children: [
+              Text('請假單 ' + _BatchID),
+              Expanded(child: Text('')),
+              SizedBox(
+                width: 35,
+              ),
+              Align(
+                  alignment: Alignment.centerRight,
+                  child: SizedBox(
+                    width: 105,
+                    child: Stack(
+                      alignment: Alignment.centerLeft,
+                      children: [
+                        myContain(
+                          m_weight: 40,
+                          m_heght: 40,
+                          m_boxDecoration: BoxDecoration(
+                            color: Color.fromRGBO(
+                                111, 225, 227, 0.9019607843137255),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        Positioned(
+                            left: 20,
+                            child: myContain(
+                                m_Alignment: Alignment.centerLeft,
+                                m_weight: 90,
+                                m_heght: 50,
+                                m_child: Text(
+                                    _BindControl.ControllerMStatusN.text,
+                                    style: TextStyle(
+                                      // fontFamily: 'NotoSansHK',
+                                      //fontSize: 18,
+                                      fontWeight: FontWeight.w700,
+                                      color: Color.fromRGBO(238, 228, 142, 1.0),
+                                      letterSpacing: 2.0,
+                                      shadows: [
+                                        Shadow(
+                                          color: Colors.black45,
+                                          offset: Offset(2.0, 2.0),
+                                          blurRadius: 5.0,
+                                        ),
+                                      ],
+                                    )))),
+                      ],
+                    ),
+                  ))
+            ],
+          )),
       body: Stack(children: <Widget>[
         // JobStreamNew(context),
-        _myorm(context),
+        _isdataload
+            ? _myorm(context)
+            : !_isdataload
+                ? CircularProgressIndicator() // Show a loading indicator
+                : Container(),
         _isLoading
             ? MyLoadingWidget(
                 m_Strload: '儲存中',
@@ -216,62 +277,73 @@ class _Jovleave extends State<Jobleave2> {
               )
             : Container(),
       ]),
-      bottomNavigationBar: BottomAppBar(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            tempBottomButton(
-              myitype: buttonType._home,
-              my_onPressed: () {},
-            ),
-            tempBottomButton(
-              myitype: buttonType._save,
-              my_onPressed: () {
-                _toggleLoading();
-                SaveAllPage();
-              },
-            ),
-            tempBottomButton(
-              myitype: buttonType._del,
-              my_onPressed: () {},
-            ),
-            IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () {
-                // 處理按鈕點擊事件
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.person),
-              onPressed: () {
-                // 處理按鈕點擊事件
-              },
-            ),
-          ],
-        ),
-      ),
-
-      // bottomNavigationBar: BottomNavigationBar(
-      //   items: [
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.save),
-      //       label: '儲存',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.account_circle),
-      //       label: 'Profile',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.shopping_bag),
-      //       label: 'Shop',
-      //     ),
-      //   ],
-      //   currentIndex: _selectedIndex,
-      //   unselectedItemColor: Colors.grey,
-      //   onTap: !_isLoading ? _onTap : _onTap2,
-      //   elevation: 15,
+      // bottomNavigationBar: BottomAppBar(
+      //   child: Row(
+      //     //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      //     children: buildRowChildren(),
+      //   ),
       // )
+      bottomNavigationBar: _isdataload
+          ? BottomAppBar(
+              child: Row(
+                //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: buildRowChildren(),
+              ),
+            )
+          : Container(),
     );
+  }
+
+  double tempwidgh = 8;
+
+  List<Widget> buildRowChildren() {
+    List<Widget> children = <Widget>[];
+    children.add(SizedBox(
+      width: tempwidgh,
+    ));
+    children.add(tempBottomButton(
+      myitype: buttonType._home,
+      my_onPressed: () {
+        RouterUtil_test.myhome(context);
+      },
+    ));
+    if (nowFromtype == en_FromType._edit) {
+      children.add(SizedBox(
+        width: tempwidgh,
+      ));
+      children.add(tempBottomButton(
+        myitype: buttonType._save,
+        my_onPressed: () {
+          _toggleLoading();
+          SaveAllPage();
+        },
+      ));
+      children.add(SizedBox(
+        width: tempwidgh,
+      ));
+      children.add(tempBottomButton(
+        myitype: buttonType._del,
+        my_onPressed: () {},
+      ));
+      children.add(SizedBox(
+        width: tempwidgh,
+      ));
+      children.add(tempBottomButton(
+        myitype: buttonType._send,
+        my_onPressed: () {},
+      ));
+    }
+    if (nowFromtype == en_FromType._send) {
+      children.add(SizedBox(
+        width: tempwidgh,
+      ));
+      children.add(tempBottomButton(
+        myitype: buttonType._approve,
+        my_onPressed: () {},
+      ));
+    }
+
+    return children;
   }
 
   void onPressToNextScreen3() async {
@@ -365,15 +437,12 @@ class _Jovleave extends State<Jobleave2> {
         return response.data;
       } else {
         _stopLoadingAnimation();
-        print('error');
+
         //  throw Exception('Failed to add leave.');
       }
     } catch (e) {
       if (e is DioError) {
-        print('发生 DioError 错误：${e.response?.statusCode} - ${e.message}');
-      } else {
-        print('发生其他错误：$e');
-      }
+      } else {}
     }
 
     return '';
@@ -400,7 +469,6 @@ class _Jovleave extends State<Jobleave2> {
       // ),
     );
     if (response.statusCode == 200) {
-      print('OK');
       if (response.data != "0") {
         print('error:' + response.data);
       }
@@ -415,21 +483,28 @@ class _Jovleave extends State<Jobleave2> {
     return '';
   }
 
+//TODO 取得表頭
   Future<String> GetDateLeave2() async {
-    // return Future.delayed(Duration(seconds: 2), () => "我是从互联网上获取的数据");
-    // getHttp();
-    //return Future.delayed(Duration(seconds: 5), () => "我是从互联网上获取的数据");
     final response = await Dio().get(m_url_LeaveSch + '/' + _BatchID);
     String sss = "";
 
     if (response.statusCode == HttpStatus.ok) {
+      setState(() {
+        _isdataload = true;
+      });
+
+      print(_BatchID + ',有取到表頭明細');
       list_Modal_LeaveSch2 = (response.data as List<dynamic>)
           .map((e) => Modal_LeaveSch2.fromJson((e as Map<String, dynamic>)))
           .toList();
 
       var row = list_Modal_LeaveSch2[0];
       _UserNameN = row.UserNameN;
-      // 请求成功，显示数据
+      //TODO 取得bind數據
+      _BindControl.ControllerMStatusN.text = row.MStatusN;
+      _BindControl.MStatus = row.MStatus;
+      getNowFromType(row.MStatus);
+
       _BindControl.ControllerClassTypeN.text = row.ClassTypeN;
       _BindControl.ControllerLeaveTypeN.text = row.LeaveTypeN;
       _BindControl.LeaveType = row.LeaveType;
@@ -452,7 +527,8 @@ class _Jovleave extends State<Jobleave2> {
     return "";
   }
 
-  //TODO 取得表頭表單
+  //TODO 取得表頭表單(Old)
+  //--這段似乎沒有在用了
   Future<String> GetDateLeave() async {
     // return Future.delayed(Duration(seconds: 2), () => "我是从互联网上获取的数据");
     // getHttp();
@@ -476,10 +552,7 @@ class _Jovleave extends State<Jobleave2> {
 
   //TODO 附件control
   Widget SetFileList() {
-    // return Text('file長度:' + ListImage.length.toString());
-
     ListImage = classMyFile.getFileList2();
-
     return myContain(
       m_heght: 50,
       m_child: ListView.builder(
@@ -500,7 +573,6 @@ class _Jovleave extends State<Jobleave2> {
 
             m_child: GestureDetector(
               onTap: () {
-                print('image 按下');
                 String ddd = _popMyimage(context, index);
               },
               child: Image.file(
@@ -566,36 +638,41 @@ class _Jovleave extends State<Jobleave2> {
       );
     }
 
+    bool isShow = true;
+    if (nowFromtype == en_FromType._edit) {
+      isShow = true;
+    } else {
+      isShow = false;
+    }
     //TODO row title
     Widget temprowTitle() {
       return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
         Container(
-          decoration: new BoxDecoration(
-            color: MyColor.back_COLOR1,
-            border: new Border.all(
-              width: 1,
-              color: Colors.white,
-            ),
-          ),
-          // color: Colors.blue,
-          height: 40,
-          //alignment: _Alignment,
-          width: 90,
-
-          child: TextButton.icon(
-              label: myText(
-                m_color: Colors.white,
-                m_text: "new",
-                m_fontsize: 16,
-              ),
-              icon: Icon(
-                Icons.add,
+            decoration: new BoxDecoration(
+              color: MyColor.back_COLOR1,
+              border: new Border.all(
+                width: 1,
                 color: Colors.white,
               ),
-              onPressed: () {
-                print('Pressed');
-              }),
-        ),
+            ),
+            // color: Colors.blue,
+            height: 40,
+            //alignment: _Alignment,
+            width: 90,
+            child: Visibility(
+              visible: isShow,
+              child: TextButton.icon(
+                  label: myText(
+                    m_color: Colors.white,
+                    m_text: "new",
+                    m_fontsize: 16,
+                  ),
+                  icon: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {}),
+            )),
         Expanded(
             child: tempContainer(
                 0,
@@ -625,28 +702,31 @@ class _Jovleave extends State<Jobleave2> {
     Widget TempTimeIcon(String name1, String name2) {
       return Row(
         children: [
-          tempIconButton(
-            my_Backcolor33: MyColor.myblue,
-            my_onPressed: () {
-              this.setState(() {
-                _poptime(context, name1, name2);
-              });
-            },
-            myicon: Icons.edit,
-          ),
+          Visibility(
+              visible: isShow,
+              child: tempIconButton(
+                my_Backcolor33: MyColor.myblue,
+                my_onPressed: () {
+                  this.setState(() {
+                    _poptime(context, name1, name2);
+                  });
+                },
+                myicon: Icons.edit,
+              )),
           SizedBox(
             width: 2,
           ),
-          tempIconButton(
-            my_Backcolor33: MyColor.back_COLOR3,
-            my_onPressed: () {
-              this.setState(() {
-                DelTimeList(name1);
-                print('del');
-              });
-            },
-            myicon: Icons.delete_forever,
-          )
+          Visibility(
+              visible: isShow,
+              child: tempIconButton(
+                my_Backcolor33: MyColor.back_COLOR3,
+                my_onPressed: () {
+                  this.setState(() {
+                    DelTimeList(name1);
+                  });
+                },
+                myicon: Icons.delete_forever,
+              )),
         ],
       );
     }
@@ -718,6 +798,12 @@ class _Jovleave extends State<Jobleave2> {
       borderSide: BorderSide(width: 3, color: Colors.blue),
     );
 
+    bool bbShow = false;
+    if (nowFromtype == en_FromType._edit) {
+      bbShow = true;
+    }
+
+    print(_BatchID + ',開始進來讀取form表頭2' + _BindControl.ControllerUserNameN.text);
     return Container(
       alignment: Alignment.topCenter,
       width: double.infinity,
@@ -725,10 +811,10 @@ class _Jovleave extends State<Jobleave2> {
       child: Form(
         child: Column(
           children: [
-            tempFormField(formType._batchid, formType._name),
-            tempFormField(formType._class, formType._type),
-            tempFormField(formType._agent1, formType._agent2),
-            tempFormField(formType._see1, formType._see2),
+            tempFormField(filedType._batchid, filedType._name),
+            tempFormField(filedType._class, filedType._type),
+            tempFormField(filedType._agent1, filedType._agent2),
+            tempFormField(filedType._see1, filedType._see2),
 
             SizedBox(
               height: 1,
@@ -740,6 +826,7 @@ class _Jovleave extends State<Jobleave2> {
             ),
 
             TextFormField(
+              focusNode: new AlwaysDisabledFocusNode2(isEnabled: bbShow),
               controller: _BindControl.FormControl_Reason,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
@@ -761,12 +848,14 @@ class _Jovleave extends State<Jobleave2> {
               m_child: Row(
                 children: [
                   Expanded(
-                      //TODO now my textbutton
-                      child: tempIconButton2(
-                    myitype: 0,
-                    my_onPressed: () {
-                      _popMyimage(context, -1);
-                    },
+                      child: Visibility(
+                    visible: bbShow,
+                    child: tempIconButton2(
+                      myitype: 0,
+                      my_onPressed: () {
+                        _popMyimage(context, -1);
+                      },
+                    ),
                   )),
                   Expanded(
                     child: Container(
@@ -824,6 +913,7 @@ class _Jovleave extends State<Jobleave2> {
 
   //TODO myform2
   Widget _myorm(BuildContext context) {
+    print(_BatchID + '開始進來讀取form表頭');
     return SingleChildScrollView(
       child: Column(children: <Widget>[
         from1(context),
@@ -851,7 +941,6 @@ class _Jovleave extends State<Jobleave2> {
       callevictImage('aaa4.png');
     });
     // ListImage.add(url);
-    print('gotimage');
   }
 
   Widget WidgetFile() {
@@ -867,7 +956,7 @@ class _Jovleave extends State<Jobleave2> {
         .toList();
 
     if (response.statusCode == HttpStatus.ok) {
-      print('有取到時間明細');
+      print(_BatchID + '有取到時間明細');
       _modal_time = (response.data as List<dynamic>)
           .map((e) =>
               Modal_basic_LeaveTime.fromJson((e as Map<String, dynamic>)))
@@ -908,6 +997,7 @@ class _Jovleave extends State<Jobleave2> {
 
   //TODO lsaveStream
   Widget JobStreamNew(BuildContext context) {
+    print('kkkk');
     GetDateLeave();
     return StreamBuilder<int>(
       stream: _counterStreamController.stream,
@@ -961,7 +1051,7 @@ class _Jovleave extends State<Jobleave2> {
   }
 
   //TODO 自設formfield
-  Widget tempFormField(formType stype1, formType stype2) {
+  Widget tempFormField(filedType stype1, filedType stype2) {
     UnderlineInputBorder tempenabledBorder;
     tempenabledBorder = UnderlineInputBorder(
       borderSide: BorderSide(
@@ -972,51 +1062,55 @@ class _Jovleave extends State<Jobleave2> {
       borderSide: BorderSide(width: 3, color: Colors.blue),
     );
 
-    bool bshow(formType settype) {
-      if (settype == formType._batchid ||
-          settype == formType._class ||
-          settype == formType._name) {
+    bool bshow(filedType settype) {
+      if (settype == filedType._batchid ||
+          settype == filedType._class ||
+          settype == filedType._name) {
         return false;
       } else {
-        return true;
+        if (nowFromtype == en_FromType._edit) {
+          return true;
+        } else {
+          return false;
+        }
       }
     }
 
-    String templabel(formType settype) {
-      if (settype == formType._batchid) {
+    String templabel(filedType settype) {
+      if (settype == filedType._batchid) {
         return '單據號碼';
       }
-      if (settype == formType._class) {
+      if (settype == filedType._class) {
         return '班別';
       }
-      if (settype == formType._type) {
+      if (settype == filedType._type) {
         return '假別';
       }
-      if (settype == formType._agent1) {
+      if (settype == filedType._agent1) {
         return '代理人1';
       }
-      if (settype == formType._agent2) {
+      if (settype == filedType._agent2) {
         return '代理人2';
       }
 
-      if (settype == formType._see2) {
+      if (settype == filedType._see2) {
         return '監交人2';
       }
 
-      if (settype == formType._see1) {
+      if (settype == filedType._see1) {
         return '監交人1';
       }
-      if (settype == formType._see2) {
+      if (settype == filedType._see2) {
         return '監交人2';
       }
-      if (settype == formType._name) {
+      if (settype == filedType._name) {
         return '請假人';
       }
       return '';
     }
 
-    void btnevent(formType settype) {
-      if (settype == formType._type) {
+    void btnevent(filedType settype) {
+      if (settype == filedType._type) {
         this.setState(() {
           Navigator.of(context).pushNamed('/LeaveType',
               arguments: {'name': 'Raymond'}).then((value) {
@@ -1032,7 +1126,7 @@ class _Jovleave extends State<Jobleave2> {
         });
       }
 
-      if (settype == formType._agent1) {
+      if (settype == filedType._agent1) {
         this.setState(() {
           Navigator.of(context).pushNamed('/UserAgent',
               arguments: {'name': 'Raymond'}).then((value) {
@@ -1046,7 +1140,7 @@ class _Jovleave extends State<Jobleave2> {
         });
       }
 
-      if (settype == formType._agent2) {
+      if (settype == filedType._agent2) {
         this.setState(() {
           Navigator.of(context).pushNamed('/UserAgent',
               arguments: {'name': 'Raymond'}).then((value) {
@@ -1059,7 +1153,7 @@ class _Jovleave extends State<Jobleave2> {
           });
         });
       }
-      if (settype == formType._see1) {
+      if (settype == filedType._see1) {
         this.setState(() {
           Navigator.of(context).pushNamed('/UserAgent',
               arguments: {'name': 'Raymond'}).then((value) {
@@ -1072,7 +1166,7 @@ class _Jovleave extends State<Jobleave2> {
           });
         });
       }
-      if (settype == formType._see2) {
+      if (settype == filedType._see2) {
         Navigator.of(context).pushNamed('/UserAgent',
             arguments: {'name': 'Raymond'}).then((value) {
           var _templist = [];
@@ -1085,33 +1179,33 @@ class _Jovleave extends State<Jobleave2> {
       }
     }
 
-    TextEditingController tempController(formType settype) {
-      if (settype == formType._batchid) {
+    TextEditingController tempController(filedType settype) {
+      if (settype == filedType._batchid) {
         return _BindControl.emailController;
       }
-      if (settype == formType._name) {
+      if (settype == filedType._name) {
         return _BindControl.ControllerUserNameN;
       }
-      if (settype == formType._type) {
+      if (settype == filedType._type) {
         return _BindControl.ControllerLeaveTypeN;
       }
-      if (settype == formType._class) {
+      if (settype == filedType._class) {
         return _BindControl.ControllerClassTypeN;
       }
-      if (settype == formType._class) {
+      if (settype == filedType._class) {
         return _BindControl.ControllerLeaveTypeN;
       }
-      if (settype == formType._agent1) {
+      if (settype == filedType._agent1) {
         return _BindControl.FormControl_UserAgentN;
       }
-      if (settype == formType._agent2) {
+      if (settype == filedType._agent2) {
         return _BindControl.FormControl_UserAgent2N;
       }
 
-      if (settype == formType._see1) {
+      if (settype == filedType._see1) {
         return _BindControl.FormControl_UserSeeN;
       }
-      if (settype == formType._see2) {
+      if (settype == filedType._see2) {
         return _BindControl.FormControl_UserSee2N;
       }
       return _BindControl.emailController;
@@ -1126,8 +1220,12 @@ class _Jovleave extends State<Jobleave2> {
             child: InkWell(
               onTap: () {},
               child: SizedBox(
-                //width: 140,
+                  //height: 150,
+                  //width: 140,
+                  child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 0),
                 child: TextFormField(
+                  maxLines: 1, // 设置最大行数，这会自动调整高度
                   focusNode: new AlwaysDisabledFocusNode2(isEnabled: false),
                   controller: tempController(stype1),
                   decoration: InputDecoration(
@@ -1135,7 +1233,7 @@ class _Jovleave extends State<Jobleave2> {
                       focusedBorder: tempfocusedBorder,
                       labelText: templabel(stype1)),
                 ),
-              ),
+              )),
             ),
           ),
           Visibility(
@@ -1192,62 +1290,24 @@ class _Jovleave extends State<Jobleave2> {
         ],
       )),
     ]);
+  }
 
-    return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-      InkWell(
-        onTap: () {},
-        child: SizedBox(
-          width: 140,
-          child: TextFormField(
-            focusNode: new AlwaysDisabledFocusNode2(isEnabled: false),
-            controller: tempController(stype1),
-            decoration: InputDecoration(
-                enabledBorder: tempenabledBorder,
-                focusedBorder: tempfocusedBorder,
-                labelText: templabel(stype1)),
-          ),
-        ),
-      ),
-      Visibility(
-        visible: bshow(stype1), // 根據條件來控制顯示與隱藏
-        child: SizedBox(
-            child: tempIconButton(
-          my_Backcolor33: MyColor.myblue.withOpacity(0.5),
-          my_onPressed: () {
-            this.setState(() {
-              btnevent(stype1);
-            });
-          },
-          myicon: Icons.search_sharp,
-        )),
-      ),
-      SizedBox(
-        width: 5,
-      ),
-      Expanded(
-          child: InkWell(
-        onTap: () {},
-        child: TextFormField(
-          focusNode: new AlwaysDisabledFocusNode2(isEnabled: false),
-          controller: tempController(stype2),
-          decoration: InputDecoration(
-              enabledBorder: tempenabledBorder,
-              focusedBorder: tempfocusedBorder,
-              labelText: templabel(stype2)),
-        ),
-      )),
-      Visibility(
-        visible: bshow(stype2), // 根據條件來控制顯示與隱藏
-        child: SizedBox(
-            child: tempIconButton(
-          my_Backcolor33: MyColor.myblue.withOpacity(0.5),
-          my_onPressed: () {
-            btnevent(stype2);
-          },
-          myicon: Icons.search_sharp,
-        )),
-      ),
-    ]);
+  void getNowFromType(String mstatus) {
+    if (mstatus == "0") {
+      nowFromtype = en_FromType._edit;
+    }
+    if (mstatus == "3") {
+      nowFromtype = en_FromType._edit;
+    }
+    if (mstatus == "5") {
+      nowFromtype = en_FromType._send;
+    }
+    if (mstatus == "10") {
+      nowFromtype = en_FromType._app;
+    }
+    if (mstatus == "99") {
+      nowFromtype = en_FromType._void;
+    }
   }
 
   Future<void> _poptime(BuildContext context, String key, String name2) async {
@@ -1359,10 +1419,8 @@ class _Jovleave extends State<Jobleave2> {
                 TextButton(
                   onPressed: () {
                     if (myfile != null) {
-                      print('savefile1');
                       List<int> fileBytes = myfile.readAsBytesSync();
                       uploadFile("ddd", "bbbb", fileBytes);
-                      print('savefile2');
                     }
                   },
                   child: Text(
@@ -1468,6 +1526,7 @@ class tempIconButton extends StatelessWidget {
   }
 }
 
+//-TODO 下方巡覽列按鈕
 class tempBottomButton extends StatelessWidget {
   final buttonType myitype;
   final Function my_onPressed;
@@ -1481,40 +1540,57 @@ class tempBottomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     Icon myicon = Icon(Icons.save);
     String myText = "";
+    bool isshow = true;
+
     if (myitype == buttonType._save) {
       myicon = Icon(Icons.save);
       myText = "儲存";
+      if (nowFromtype != en_FromType._edit) {
+        isshow = false;
+      }
     }
     if (myitype == buttonType._del) {
       myicon = Icon(Icons.delete);
       myText = "刪除";
+      if (nowFromtype != en_FromType._edit) {}
     }
     if (myitype == buttonType._home) {
       myicon = Icon(Icons.home);
       myText = "Home";
     }
-    return SizedBox(
-      width: 45,
-      height: 45,
-      child: ClipOval(
-        child: Material(
-          color: Colors.amberAccent,
-          child: InkWell(
-            splashColor: Colors.green,
-            onTap: () {
-              my_onPressed();
-            },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                myicon, // <-- Icon
-                Text(myText), // <-- Text
-              ],
-            ),
-          ),
+    if (myitype == buttonType._send) {
+      myicon = Icon(Icons.add_circle);
+      myText = "送審";
+    }
+
+    if (myitype == buttonType._approve) {
+      myicon = Icon(Icons.access_alarm);
+      myText = "簽核";
+    }
+
+    return Visibility(
+        // visible: isshow,
+        child: myContain(
+      m_weight: 55,
+      m_heght: 45,
+      m_boxDecoration: new BoxDecoration(
+        color: Colors.amberAccent,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      m_child: InkWell(
+        splashColor: Colors.green,
+        onTap: () {
+          my_onPressed();
+        },
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            myicon, // <-- Icon
+            Text(myText), // <-- Text
+          ],
         ),
       ),
-    );
+    ));
   }
 }
 

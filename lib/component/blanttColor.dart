@@ -15,4 +15,6 @@ class MyColor {
   static const Color myyellow = Color.fromRGBO(231, 195, 61, 1.0);
 
   static const Color mytest = Color.fromRGBO(36, 229, 192, 1.0);
+
+  static const Color bbb = Color.fromRGBO(246, 235, 126, 1.0);
 }

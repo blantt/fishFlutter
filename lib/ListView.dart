@@ -26,12 +26,12 @@ class MyListView extends StatelessWidget {
           primarySwatch: Colors.green,
         ),
         routes: RoutePath, //如用這寫法,是為了配合後面用  Navigator.pushNamed
-        home: MyHomePage2());
+        home: ListViewSch());
   }
 }
 
-class MyHomePage2 extends StatefulWidget {
-  MyHomePage2({Key? key}) : super(key: key);
+class ListViewSch extends StatefulWidget {
+  ListViewSch({Key? key}) : super(key: key);
   @override
   _MyHomePageState2 createState() => _MyHomePageState2();
 }
@@ -248,7 +248,7 @@ Widget buildLivtView_LeaveSch(BuildContext context) {
   );
 }
 
-class _MyHomePageState2 extends State<MyHomePage2> {
+class _MyHomePageState2 extends State<ListViewSch> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

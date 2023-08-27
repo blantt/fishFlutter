@@ -6,10 +6,24 @@ import 'package:blantt_love_test/textFormField.dart';
 import 'package:blantt_love_test/TryMenu.dart';
 import 'package:blantt_love_test/BarView.dart';
 import 'package:blantt_love_test/dt_home.dart';
+import 'package:blantt_love_test/utils/router_test.dart';
+import 'package:blantt_love_test/Test/TestForm2.dart';
+import 'package:blantt_love_test/Model/modalBasic.dart';
+import 'package:blantt_love_test/Test/tempmain.dart';
 
 //3333
 void main() {
-  runApp(const MyApp2());
+  runApp(MyApp3());
+}
+
+class MyApp3 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        //  home: doorForm2(), // 將您自定義的首頁頁面設置為home
+        home: classhome());
+    //  home: YourNewPage());
+  }
 }
 
 class MyApp2 extends StatelessWidget {

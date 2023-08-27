@@ -1,3 +1,4 @@
+import 'package:blantt_love_test/dt_home.dart';
 import 'package:flutter/material.dart';
 import 'package:blantt_love_test/testView.dart';
 import 'package:blantt_love_test/ListView.dart';
@@ -16,8 +17,25 @@ import 'package:blantt_love_test/testTime.dart';
 import 'package:blantt_love_test/Test/TestForm2.dart';
 import 'package:blantt_love_test/Test/TestForm3.dart';
 import 'package:blantt_love_test/Test/TestForm4.dart';
+import 'package:blantt_love_test/main.dart';
 
 class RouterUtil_test {
+  static myhome(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => classhome()),
+      // MaterialPageRoute(builder: (context) => MyApp2()),
+      //MaterialPageRoute(builder: (context) => testView2()),
+    );
+  }
+
+  static totestform(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => testform()),
+    );
+  }
+
   static toPersonSch(BuildContext context, String _value) {
     //人員POP選單
     Navigator.push(
@@ -50,13 +68,6 @@ class RouterUtil_test {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => HomePage_list()),
-    );
-  }
-
-  static totestform(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => testform()),
     );
   }
 
@@ -94,7 +105,7 @@ class RouterUtil_test {
     //請假單查詢畫面
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => MyListView()),
+      MaterialPageRoute(builder: (context) => ListViewSch()),
     );
   }
 
@@ -126,7 +137,6 @@ class RouterUtil_test {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => doorForm2()),
-      //MaterialPageRoute(builder: (context) => testView2()),
     );
   }
 
@@ -135,7 +145,6 @@ class RouterUtil_test {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => TestFomr3()),
-      //MaterialPageRoute(builder: (context) => testView2()),
     );
   }
 

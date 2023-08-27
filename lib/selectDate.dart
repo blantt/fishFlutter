@@ -22,6 +22,14 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   DateTime _date = DateTime(2020, 11, 17);
 
+  void _backpage() {
+    //返迴上頁路由
+    Navigator.pop(context, '');
+
+    //判斷是否有上一層路由
+    //Navigator.canPop(context);
+  }
+
   void _selectDate() async {
     final DateTime? newDate = await showDatePicker(
       context: context,
@@ -44,6 +52,16 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            OutlinedButton(
+              child: Text('返回'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            ElevatedButton(
+              onPressed: _backpage,
+              child: Text('返迴上頁'),
+            ),
             ElevatedButton(
               onPressed: _selectDate,
               child: Text('SELECT DATE'),

@@ -1,3 +1,4 @@
+import 'package:blantt_love_test/Test/TestForm3.dart';
 import 'package:flutter/material.dart';
 import 'package:blantt_love_test/utils/router_test.dart';
 
@@ -13,17 +14,17 @@ class MyTryMenu extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.green,
         ),
-        home: MyHomePage());
+        home: TryMenu());
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key}) : super(key: key);
+class TryMenu extends StatefulWidget {
+  TryMenu({Key? key}) : super(key: key);
   @override
   _PageState2 createState() => _PageState2();
 }
 
-class _PageState2 extends State<MyHomePage> {
+class _PageState2 extends State<TryMenu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -138,7 +139,7 @@ class _PageState2 extends State<MyHomePage> {
             ),
             OutlinedButton(
               child: Text(
-                '測試Dio Save',
+                '測試listview分頁',
                 style: TextStyle(color: Colors.deepOrange),
               ),
               onPressed: () {
@@ -147,11 +148,13 @@ class _PageState2 extends State<MyHomePage> {
             ),
             OutlinedButton(
               child: Text(
-                '測試彈跳視窗',
+                '測試彈跳視窗2',
                 style: TextStyle(color: Colors.deepOrange),
               ),
               onPressed: () {
-                RouterUtil_test.toTestForm3(context);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => TestFomr3()));
+                // RouterUtil_test.toTestForm3(context);
               },
             ),
             OutlinedButton(

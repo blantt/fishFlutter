@@ -66,6 +66,7 @@ class myContain extends StatelessWidget {
   final EdgeInsets? m_padding;
   final BoxDecoration? m_boxDecoration;
   final Alignment? m_Alignment;
+  final BoxConstraints? m_Constraints;
 
   const myContain({
     this.m_heght,
@@ -75,6 +76,7 @@ class myContain extends StatelessWidget {
     this.m_child,
     this.m_boxDecoration,
     this.m_Alignment,
+    this.m_Constraints,
     Key? key,
   }) : super(key: key);
   @override
@@ -82,6 +84,7 @@ class myContain extends StatelessWidget {
     return Container(
       alignment: m_Alignment,
       decoration: m_boxDecoration,
+      constraints: m_Constraints,
       width: m_weight,
       height: m_heght,
       margin: m_margin,

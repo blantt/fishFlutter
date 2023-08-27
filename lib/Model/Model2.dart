@@ -17,6 +17,7 @@ List<Modal_LeaveSch2> list_Modal_LeaveSch2 = [
     ClassTypeN: '',
     Reason: '',
     ReturnReason: '',
+    MStatus: '',
     MStatusN: '',
     UserAgent: '',
     UserAgent2: '',
@@ -71,6 +72,7 @@ class Modal_LeaveSch2 {
     required this.Reason,
     required this.ReturnReason,
     required this.MStatusN,
+    required this.MStatus,
     required this.UserAgent,
     required this.UserAgent2,
     required this.UserAgentN,
@@ -92,6 +94,7 @@ class Modal_LeaveSch2 {
   String Reason;
   String ReturnReason;
   String MStatusN;
+  String MStatus;
   String UserAgent;
   String UserAgent2;
   String UserAgentN;
@@ -114,6 +117,7 @@ class Modal_LeaveSch2 {
         Reason: json["Reason"] ?? '',
         ReturnReason: json["ReturnReason"] ?? '',
         MStatusN: json["MStatusN"] ?? '',
+        MStatus: json["MStatus"] ?? '',
         UserAgent: json["UserAgent"] ?? '',
         UserAgent2: json["UserAgent2"] ?? '',
         UserAgentN: json["UserAgentN"] ?? '',
@@ -136,6 +140,7 @@ class Modal_LeaveSch2 {
         "Reason": Reason,
         "ReturnReason": ReturnReason,
         "MStatusN": MStatusN,
+        "MStatus": MStatus,
         "UserAgent": UserAgent,
         "UserAgent2": UserAgent2,
         "UserAgentN": UserAgentN,

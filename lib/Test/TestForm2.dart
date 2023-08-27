@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:blantt_love_test/Test/TestForm3.dart';
 import 'package:blantt_love_test/component/blanttColor.dart';
 
 import '../component/blanttButton.dart';
@@ -12,6 +13,9 @@ import 'package:path/path.dart' as path;
 import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'dart:async';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:blantt_love_test/Model/modalBasic.dart';
+import 'package:blantt_love_test/selectDate.dart';
 
 class doorForm2 extends StatefulWidget {
   doorForm2({Key? key}) : super(key: key);
@@ -42,26 +46,20 @@ Future<String> _getLocalSupportFile() async {
   // File('${dir.path}/str.txt');
 }
 
-/// 读取值
-// Future<void> readString() async {
-//   try {
-//     final file = await _getLocalDocumentFile();
-//     final result = await file.readAsString();
-//     print("result-----$result");
-//
-//     // final file1 = await _getLocalTemporaryFile();
-//     // final result1 = await file1.readAsString();
-//     // print("result1-----$result1");
-//     //
-//     // final file2 = await _getLocalSupportFile();
-//     // final result2 = await file2.readAsString();
-//     // print("result2-----$result2");
-//   } catch (e) {
-//     print(e);
-//   }
-// }
+classUserInfo mySharedPreferences = classUserInfo();
+void yourFunction() async {
+  // classUserInfo mySharedPreferences = classUserInfo();
+  String? sss = await mySharedPreferences.get_FullName();
+  // 現在可以使用 sss 變數了
+  if (sss != null) {
+    print('get it ' + sss);
+  } else {
+    // 當 'UserName' 鍵不存在或者其值為 null 時的處理
+  }
+}
 
 class aaa extends State<doorForm2> {
+  String _storedText = "";
   String ttt = "";
   String? StrIOFilepath = "";
   AssetImage _AssetImage = AssetImage("assets/images/date2.png");
@@ -69,13 +67,26 @@ class aaa extends State<doorForm2> {
   @override
   void initState() {
     ttt = "abc";
-    // AssetImage myAssetImage = AssetImage("assets/images/date2.png");
-    // _AssetImage = myAssetImage;
+    // classUserInfo mySharedPreferences = classUserInfo();
+    // mySharedPreferences.getname();
+    // print('new2:' + mySharedPreferences.myUserName);
+    //yourFunction();
+    _loadStoredText();
   }
 
   _testReresh() async {
     this.setState(() {
       ttt = "99999";
+    });
+  }
+
+  //TODO 取得暫時資訊
+  void _loadStoredText() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      print(prefs.getString('UserName') ?? "");
+      _storedText = prefs.getString('UserName') ?? "";
     });
   }
 
@@ -244,11 +255,50 @@ class aaa extends State<doorForm2> {
       imageWidget = Text('No Image');
     }
 
+    void _saveText() async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('UserName', 'blantt55');
+      _loadStoredText(); // Update the displayed text after saving.
+    }
+
+    void _testlink() {
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => selectDate()),
+      // );
+
+      Navigator.push(context,
+          new MaterialPageRoute(builder: (context) => new selectDate()));
+
+      //Navigator.of(context).pop();
+    }
+
+    //TODO 存暫時資訊
+    void _saveText2() async {
+      //   classUserInfo mySharedPreferences = classUserInfo();
+      mySharedPreferences.set_UserName("阿中7");
+
+      mySharedPreferences.set_islogin(true);
+      //mySharedPreferences.myUserName = "999";
+      _loadStoredText(); // Update the displayed text after saving.
+    }
+
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Form(
         child: Column(
           children: [
+            Text('Stored Text: $_storedText'),
+            myButton(
+                m_child: Text('測試router連結'),
+                m_onPressed: () {
+                  _testlink();
+                }),
+            myButton(
+                m_child: Text('暫存資訊'),
+                m_onPressed: () {
+                  _saveText2();
+                }),
             myButton(
                 m_child: Text('取得路徑'),
                 m_onPressed: () {
@@ -300,6 +350,11 @@ class aaa extends State<doorForm2> {
 
   @override
   Widget build(BuildContext context) {
+    UnderlineInputBorder tempenabledBorder;
+    tempenabledBorder = UnderlineInputBorder(
+      borderRadius: BorderRadius.circular(10.0), // 圆角半径
+      borderSide: BorderSide(color: Colors.red), // 边框颜色//<-- SEE HERE
+    );
     return Scaffold(
       appBar: AppBar(title: Text('測試單元2_3')),
       bottomNavigationBar: BottomNavigationBar(
@@ -322,43 +377,32 @@ class aaa extends State<doorForm2> {
       ),
       body: Center(
           child: Column(children: [
-        TextButton.icon(
-            label: myText(
-              m_color: Colors.blue,
-              m_text: "new",
-              m_fontsize: 16,
-            ),
-            icon: Icon(
-              Icons.add,
-              color: Colors.black,
-            ),
-            onPressed: () {}),
         Container(
-            child: TextButton.icon(
-                label: Text(
-                  'add',
-                  style: TextStyle(color: Colors.white, fontSize: 16),
+          color: Colors.grey, // 父Container的背景色
+          height: 200, // 父Container的高度
+          width: 200, // 父Container的宽度
+          child: Stack(
+            children: [
+              Positioned(
+                top: 50, // 外部子Container相对于父Container顶部的距离
+                left: 50, // 外部子Container相对于父Container左侧的距离
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  color: Colors.blue, // 外部子Container的背景色
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Container(
+                      width: 50,
+                      height: 50,
+                      color: Colors.red, // 内部Container的背景色
+                    ),
+                  ),
                 ),
-                icon: Icon(
-                  Icons.abc,
-                  color: Colors.white,
-                ),
-                onPressed: () {}),
-            decoration: new BoxDecoration(
-              color: Color.fromRGBO(100, 176, 231, 1.0),
-              // border: new Border.all(
-              //   width: 1,
-              //   color: Colors.green,
-              // ),
-              // boxShadow: [
-              //   BoxShadow(
-              //       color: MyColor.back_COLOR3,
-              //       offset: Offset(3.0, 0.0), //陰影y軸偏移量
-              //       blurRadius: 2, //陰影模糊程度
-              //       spreadRadius: 0 //陰影擴散程度
-              //       )
-              // ],
-            )),
+              ),
+            ],
+          ),
+        ),
         Expanded(
           child: sss(),
         )

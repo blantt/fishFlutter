@@ -7,6 +7,7 @@ import '../component/blanttFileControl.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'dart:typed_data';
+import 'package:blantt_love_test/Test/TestForm2.dart';
 
 void main() {
   runApp(TestFomr3());
@@ -208,6 +209,12 @@ class TestFomr3status extends State<TestFomr3> {
                       'aaa3.png', funcCall: () {
                     callevictImage('aaa3.png');
                   });
+                }),
+            myButton(
+                m_child: Text('TestNewlink'),
+                m_onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => doorForm2()));
                 }),
             myButton(
                 m_child: Text('取得文件內容'),

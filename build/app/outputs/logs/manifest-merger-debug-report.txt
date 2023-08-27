@@ -19,6 +19,7 @@ INJECTED from D:\FlutterProject\LoveTest\android\app\src\main\AndroidManifest.xm
 INJECTED from D:\FlutterProject\LoveTest\android\app\src\main\AndroidManifest.xml:1:1-36:12
 INJECTED from D:\FlutterProject\LoveTest\android\app\src\main\AndroidManifest.xml:1:1-36:12
 MERGED from D:\FlutterProject\LoveTest\android\app\src\main\AndroidManifest.xml:1:1-36:12
+MERGED from [:shared_preferences_android] D:\FlutterProject\LoveTest\build\shared_preferences_android\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-9:12
 MERGED from [:image_picker_android] D:\FlutterProject\LoveTest\build\image_picker_android\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-21:12
 MERGED from [:flutter_plugin_android_lifecycle] D:\FlutterProject\LoveTest\build\flutter_plugin_android_lifecycle\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-9:12
 MERGED from [:connectivity] D:\FlutterProject\LoveTest\build\connectivity\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-11:12
@@ -70,6 +71,8 @@ uses-sdk
 INJECTED from D:\FlutterProject\LoveTest\android\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from D:\FlutterProject\LoveTest\android\app\src\main\AndroidManifest.xml
 INJECTED from D:\FlutterProject\LoveTest\android\app\src\main\AndroidManifest.xml
+MERGED from [:shared_preferences_android] D:\FlutterProject\LoveTest\build\shared_preferences_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
+MERGED from [:shared_preferences_android] D:\FlutterProject\LoveTest\build\shared_preferences_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
 MERGED from [:image_picker_android] D:\FlutterProject\LoveTest\build\image_picker_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
 MERGED from [:image_picker_android] D:\FlutterProject\LoveTest\build\image_picker_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
 MERGED from [:flutter_plugin_android_lifecycle] D:\FlutterProject\LoveTest\build\flutter_plugin_android_lifecycle\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
