@@ -176,3 +176,40 @@ class myText extends StatelessWidget {
     );
   }
 }
+
+enum myConfirmAction { no, ACCEPT, CANCEL }
+
+class myDialog {
+  static Future<myConfirmAction?> Dialog_yesorno(
+      BuildContext context, String message) async {
+    return showDialog<myConfirmAction?>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('訊息'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(myConfirmAction.ACCEPT);
+              },
+              child: Text(
+                'YES',
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(myConfirmAction.no);
+              },
+              child: Text(
+                'NO',
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}

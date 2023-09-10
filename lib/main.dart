@@ -9,7 +9,6 @@ import 'package:blantt_love_test/dt_home.dart';
 import 'package:blantt_love_test/utils/router_test.dart';
 import 'package:blantt_love_test/Test/TestForm2.dart';
 import 'package:blantt_love_test/Model/modalBasic.dart';
-import 'package:blantt_love_test/Test/tempmain.dart';
 
 //3333
 void main() {

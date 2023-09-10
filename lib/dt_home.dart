@@ -27,25 +27,9 @@ TextEditingController Control_Login_PassWord = new TextEditingController();
 TextEditingController Control_Username = new TextEditingController();
 TextEditingController Control_Fullname = new TextEditingController();
 
+bool islogin = false;
+bool isGetUser = false;
 //TODO 取得人員資料
-void GetUserInfo() async {
-  // classUserInfo mySharedPreferences = classUserInfo();
-  String? UserName = await mySharedPreferences.get_UserName();
-  String? FullName = await mySharedPreferences.get_FullName();
-  bool? islogin = await mySharedPreferences.get_islogin();
-  // 現在可以使用 sss 變數了
-  if (UserName != null) {
-    Control_Username.text = UserName;
-  } else {
-    // 當 'UserName' 鍵不存在或者其值為 null 時的處理
-  }
-
-  if (FullName != null) {
-    Control_Fullname.text = "您好:" + FullName;
-  } else {
-    Control_Fullname.text = "您好:訪客";
-  }
-}
 
 enum btnType {
   //請假單
@@ -83,6 +67,36 @@ List<Modal_Person_basic> ListPersonBasic = [
 
 class classhome2 extends State<classhome> {
   //TODO 預計這裡取得新的 loginUser
+  void GetUserInfo() async {
+    // classUserInfo mySharedPreferences = classUserInfo();
+    String? UserName = await mySharedPreferences.get_UserName();
+    String? FullName = await mySharedPreferences.get_FullName();
+    islogin = (await mySharedPreferences.get_islogin())!;
+
+    if (UserName != null) {
+      if (UserName == '') {
+        Control_Fullname.text = "您好:訪客";
+        setState(() {});
+        return;
+      }
+    } else {
+      isGetUser = true;
+      Control_Fullname.text = "您好:訪客";
+      setState(() {});
+      return;
+    }
+    Control_Username.text = UserName;
+    Control_Fullname.text = "您好:" + FullName!;
+    if (islogin == true) {
+      print('now is login');
+    } else {
+      print('now isnot login');
+    }
+
+    isGetUser = true;
+    setState(() {});
+  }
+
   Future<String> GetNewLoginUser() async {
     //---這裡己可正確的抓到使用者的輸入的帳密,並且傳入API,得回員工資料,
     //--目前還沒做驗證部份,不過照理應是可以實現了!!
@@ -102,7 +116,7 @@ class classhome2 extends State<classhome> {
       mySharedPreferences.set_islogin(true);
 
       _loadStoredText();
-      print('測試讀取人員' + row.UserName);
+      print('測試讀取人員' + row.UserAgentN);
     }
 
     return "";
@@ -115,12 +129,7 @@ class classhome2 extends State<classhome> {
 
   void _loadStoredText() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    setState(() {
-      GetUserInfo();
-      //GetNewLoginUser();
-      print('test com in ');
-    });
+    GetUserInfo();
   }
 
   @override
@@ -157,17 +166,12 @@ class classhome2 extends State<classhome> {
         text: "well com AMC FaceBook",
       ),
     );
-
+    isGetUser = true;
+    bool bshow;
+    //bshow = mySharedPreferences.get_islogin() as bool;
+    bshow = true;
     return new Scaffold(
       body: new Column(children: [
-        // Container(
-        //   width: double.infinity,
-        //   height: 20,
-        //   child: Image.asset(
-        //     'assets/images/index_top2.jpg',
-        //     fit: BoxFit.fill,
-        //   ),
-        // ),
         Container(
           alignment: Alignment.bottomLeft,
           width: double.infinity,
@@ -181,33 +185,45 @@ class classhome2 extends State<classhome> {
               color: Colors.greenAccent),
           child: Column(
             children: [
-              Container(
-                margin: const EdgeInsets.only(left: 10, top: 25),
-                alignment: Alignment.bottomLeft,
-                width: double.infinity,
-                child: Row(children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: _test1,
-                  ),
-                  //右邊icon button
-                  Expanded(
-                      //    child: _iconbutton(context)
-                      child: Text('')),
-                  homeiconButton(context, 2),
-                  SizedBox(
-                    width: 2,
-                  ),
-                  homeiconButton(context, 1),
-                  SizedBox(
-                    width: 2,
-                  ),
-                  homeiconButton(context, 99),
-                  SizedBox(
-                    width: 5,
-                  )
-                ]),
-              ),
+              isGetUser
+                  ? Container(
+                      margin: const EdgeInsets.only(left: 10, top: 25),
+                      alignment: Alignment.bottomLeft,
+                      width: double.infinity,
+                      child: Row(children: [
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: _test1,
+                        ),
+                        //右邊icon button
+                        Expanded(
+                            //    child: _iconbutton(context)
+                            child: Text('')),
+                        Visibility(
+                          visible: islogin,
+                          child: homeiconButton(context, 2),
+                        ),
+
+                        SizedBox(
+                          width: 2,
+                        ),
+                        Visibility(
+                          visible: !islogin,
+                          child: homeiconButton(context, 1),
+                        ),
+
+                        SizedBox(
+                          width: 2,
+                        ),
+                        homeiconButton(context, 99),
+                        SizedBox(
+                          width: 5,
+                        )
+                      ]),
+                    )
+                  : Container(),
+
+              //TODO 上方的icon產出
             ],
           ),
         ),
@@ -514,10 +530,23 @@ class classhome2 extends State<classhome> {
       ),
       m_child: InkWell(
         splashColor: Colors.green,
-        onTap: () {
+        onTap: () async {
           if (itype == 1) {
             //TODO 呼叫login 畫面
             _displayDialog3(context);
+          }
+          if (itype == 2) {
+            //TODO 呼叫登出
+
+            myConfirmAction? result =
+                (await myDialog.Dialog_yesorno(context, '確定要登出?'))
+                    as myConfirmAction?;
+            if (result == myConfirmAction.ACCEPT) {
+              mySharedPreferences.set_islogin(false);
+              mySharedPreferences.set_UserName('');
+              mySharedPreferences.set_FullName('');
+              GetUserInfo();
+            } else if (result == myConfirmAction.no) {}
           }
           if (itype == 99) {
             //TODO 呼叫testmenu 畫面
