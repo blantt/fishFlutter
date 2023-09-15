@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
 import 'package:blantt_love_test/Model/modalBasic.dart';
 import 'package:blantt_love_test/myConn.dart';
+import 'package:blantt_love_test/dt_Dialog.dart';
 
 class classhome extends StatefulWidget {
   // const classhome({Key? key}) : super(key: key);
@@ -29,7 +30,6 @@ TextEditingController Control_Fullname = new TextEditingController();
 
 bool islogin = false;
 bool isGetUser = false;
-//TODO 取得人員資料
 
 enum btnType {
   //請假單
@@ -48,6 +48,7 @@ List<Modal_Person_basic> ListPersonBasic = [
     FullName: '',
     RosterN: '',
     ClassID: '',
+    ClassName: '',
     SHH: '',
     EHH: '',
     SleepHH1: '',
@@ -66,18 +67,44 @@ List<Modal_Person_basic> ListPersonBasic = [
 ];
 
 class classhome2 extends State<classhome> {
-  //TODO 預計這裡取得新的 loginUser
+  classUserInfo mySharedPreferences = classUserInfo();
+
+  //TODO 取得人員資料
   void GetUserInfo() async {
-    // classUserInfo mySharedPreferences = classUserInfo();
     String? UserName = await mySharedPreferences.get_UserName();
     String? FullName = await mySharedPreferences.get_FullName();
-    islogin = (await mySharedPreferences.get_islogin())!;
+    String? ClassID = await mySharedPreferences.get_ClassID();
+    String? ClassName = await mySharedPreferences.get_ClassName();
+    String? UserAgent = await mySharedPreferences.get_UserAgent();
+    String? UserAgent2 = await mySharedPreferences.get_UserAgent2();
+    String? UserAgentN = await mySharedPreferences.get_UserAgentN();
+    String? UserAgent2N = await mySharedPreferences.get_UserAgent2N();
+    String? UserSee = await mySharedPreferences.get_UserSee();
+    String? UserSee2 = await mySharedPreferences.get_UserSee2();
+    String? UserSeeN = await mySharedPreferences.get_UserSeeN();
+    String? UserSee2N = await mySharedPreferences.get_UserSee2N();
 
+    islogin = (await mySharedPreferences.get_islogin())!;
     if (UserName != null) {
       if (UserName == '') {
         Control_Fullname.text = "您好:訪客";
         setState(() {});
         return;
+      } else {
+        myUserBasic.UserName = UserName;
+        myUserBasic.FullName = FullName!;
+        myUserBasic.ClassID = ClassID!;
+        myUserBasic.ClassName = ClassName!;
+        myUserBasic.UserAgent = UserAgent!;
+        myUserBasic.UserAgent2 = UserAgent2!;
+        myUserBasic.UserAgentN = UserAgentN!;
+        myUserBasic.UserAgent2N = UserAgent2N!;
+        myUserBasic.UserSee = UserSee!;
+        myUserBasic.UserSee2 = UserSee2!;
+        myUserBasic.UserSeeN = UserSeeN!;
+        myUserBasic.UserSee2N = UserSee2N!;
+        Control_Username.text = myUserBasic.UserName;
+        Control_Fullname.text = "您好:" + myUserBasic.FullName;
       }
     } else {
       isGetUser = true;
@@ -85,8 +112,7 @@ class classhome2 extends State<classhome> {
       setState(() {});
       return;
     }
-    Control_Username.text = UserName;
-    Control_Fullname.text = "您好:" + FullName!;
+
     if (islogin == true) {
       print('now is login');
     } else {
@@ -97,6 +123,7 @@ class classhome2 extends State<classhome> {
     setState(() {});
   }
 
+  //TODO 預計這裡取得新的 loginUser
   Future<String> GetNewLoginUser() async {
     //---這裡己可正確的抓到使用者的輸入的帳密,並且傳入API,得回員工資料,
     //--目前還沒做驗證部份,不過照理應是可以實現了!!
@@ -113,6 +140,17 @@ class classhome2 extends State<classhome> {
       var row = ListPersonBasic[0];
       mySharedPreferences.set_UserName(row.UserName);
       mySharedPreferences.set_FullName(row.FullName);
+      mySharedPreferences.set_ClassID(row.ClassID);
+      mySharedPreferences.set_ClassName(row.ClassName);
+      mySharedPreferences.set_test(row.UserName);
+      mySharedPreferences.set_UserAgent(row.UserAgent);
+      mySharedPreferences.set_UserAgent2(row.UserAgent2);
+      mySharedPreferences.set_UserAgentN(row.UserAgentN);
+      mySharedPreferences.set_UserAgent2N(row.UserAgent2N);
+      mySharedPreferences.set_UserSee(row.UserSee);
+      mySharedPreferences.set_UserSee2(row.UserSee2);
+      mySharedPreferences.set_UserSeeN(row.UserSeeN);
+      mySharedPreferences.set_UserSee2N(row.UserSee2N);
       mySharedPreferences.set_islogin(true);
 
       _loadStoredText();
@@ -358,13 +396,6 @@ class classhome2 extends State<classhome> {
     }
 
     _displayDialog3(BuildContext context) {
-      UnderlineInputBorder tempenabledBorder;
-      tempenabledBorder = UnderlineInputBorder(
-        //borderRadius: BorderRadius.circular(20.0),
-        borderSide: BorderSide(color: Colors.red, width: 3),
-        borderRadius: BorderRadius.zero, // 边框圆角半径为0
-      );
-
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -472,43 +503,18 @@ class classhome2 extends State<classhome> {
                     top: 380,
                     left: 30,
                     //TODO 登入
-                    child: InkWell(
-                      child: myContain(
-                          m_weight: 220,
-                          m_child: Align(
-                            alignment: Alignment.topCenter,
-                            child: myContain(
-                                m_heght: 30,
-                                m_weight: 100,
-                                m_boxDecoration: BoxDecoration(
-                                  color: Colors.blue,
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  border:
-                                      Border.all(color: Colors.white, width: 2),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.black26,
-                                        offset: Offset(3.0, 3.0), //陰影y軸偏移量
-                                        blurRadius: 2, //陰影模糊程度
-                                        spreadRadius: 0 //陰影擴散程度
-                                        )
-                                  ],
-                                ),
-                                m_child: Align(
-                                  alignment: Alignment.topCenter,
-                                  child: myText(
-                                    m_text: '登入',
-                                    m_color: Colors.white,
-                                  ),
-                                )),
-                          )),
-                      onTap: () {
-                        print('我登入');
+                    child: mypopButton(
+                      m_onPressed: () {
                         GetNewLoginUser();
                         // _getNewUser();
                         // _loadStoredText();
                         Navigator.pop(context, "我登入");
                       },
+                      // m_backcolor: Colors.white,
+                      m_child: myText(
+                        m_text: '登入',
+                        m_color: Colors.white,
+                      ),
                     ),
                   ),
                 ]),
@@ -545,6 +551,7 @@ class classhome2 extends State<classhome> {
               mySharedPreferences.set_islogin(false);
               mySharedPreferences.set_UserName('');
               mySharedPreferences.set_FullName('');
+              mySharedPreferences.set_test('');
               GetUserInfo();
             } else if (result == myConfirmAction.no) {}
           }

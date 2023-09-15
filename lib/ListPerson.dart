@@ -213,10 +213,12 @@ Future<String> GetDatePersonSch() async {
     //代表有取過值了,過濾時,不要再去回調資料api了
     return "";
   }
+
   final response = await Dio().get(m_PersonSch + '/admin');
   list_Modal_PsersonSch = (response.data as List<dynamic>)
       .map((e) => Modal_PsersonSch.fromJson((e as Map<String, dynamic>)))
       .toList();
+
   list_Modal_PsersonSch_new = list_Modal_PsersonSch;
 
   return "";

@@ -20,12 +20,15 @@ import 'package:blantt_love_test/Model/modalBasic.dart';
 import 'package:blantt_love_test/testTime.dart';
 import '../component/blanttFileControl.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:blantt_love_test/dt_Dialog.dart';
 
 String _BatchID = '';
 String _UserNameN = '';
+String _UserName = '';
 en_FromType nowFromtype = en_FromType._void;
 List<Modal_basic_LeaveTime> _modal_time = [];
 List<String> ListImage = [];
+
 // isNew 判斷是不是第一次進來,因為有些事件,會重複觸發build,
 //不是第一次進來,就不用再重抓資料bind,不然會有些例外狀況..
 //感覺應該還有更好的寫法,等待進化版!!
@@ -153,7 +156,7 @@ class _Jovleave extends State<Jobleave2> {
   bool _isLoading = false;
   bool _stopLoading = false;
   String testdd = "";
-
+  classUserInfo mySharedPreferences = classUserInfo();
   int _counter = 0;
   late Stream _counterStream;
   late StreamSink _counterSink;
@@ -182,7 +185,7 @@ class _Jovleave extends State<Jobleave2> {
     testdd = "bb1";
     _counterSink = _counterStreamController.sink;
     _counterStream = _counterStreamController.stream;
-    _BindControl.FormControl_UserSeeN.text = "ddddd2";
+
     classMyFile.delFilefolder("");
     GetFileList();
     GetDateLeave2();
@@ -397,6 +400,22 @@ class _Jovleave extends State<Jobleave2> {
 
   //TODO 存檔
   Future<String> SaveAllPage() async {
+    if (_modal_time.length == 0) {
+      myDialog.Dialog_Message(context, '請至少輸入一筆時間', 0);
+      // showDialog(
+      //     context: context,
+      //     builder: (BuildContext context) {
+      //       return Expanded(
+      //         child: SimpleDialog(
+      //           title: Text('訊息'),
+      //           children: [Text('請至少輸入一筆時間')],
+      //         ),
+      //       );
+      //     });
+      _stopLoadingAnimation();
+      return '';
+    }
+
     var dio = Dio();
     for (int i = 0; i <= _modal_time.length - 1; i++) {
       // 在此处执行循环体中的操作
@@ -417,6 +436,7 @@ class _Jovleave extends State<Jobleave2> {
       itemtest2["UserAgent2"] = _BindControl.UserAgent2;
       itemtest2["UserSee"] = _BindControl.UserSee;
       itemtest2["UserSee2"] = _BindControl.UserSee2;
+      itemtest2["UserName"] = _UserName;
 
       Map<String, dynamic> requestData = {
         'detail': _modal_time,
@@ -429,9 +449,9 @@ class _Jovleave extends State<Jobleave2> {
       );
 
       if (response.statusCode == 200) {
-        print('回傳:' + response.data);
+        print('Q回傳:' + response.data);
         if (response.data != "0") {
-          print('error:' + response.data);
+          print('saveerror:' + response.data);
         }
         _stopLoadingAnimation();
         return response.data;
@@ -485,43 +505,76 @@ class _Jovleave extends State<Jobleave2> {
 
 //TODO 取得表頭
   Future<String> GetDateLeave2() async {
-    final response = await Dio().get(m_url_LeaveSch + '/' + _BatchID);
-    String sss = "";
-
-    if (response.statusCode == HttpStatus.ok) {
+    if (_BatchID == '') {
+      print('是新增');
       setState(() {
         _isdataload = true;
       });
-
-      print(_BatchID + ',有取到表頭明細');
-      list_Modal_LeaveSch2 = (response.data as List<dynamic>)
-          .map((e) => Modal_LeaveSch2.fromJson((e as Map<String, dynamic>)))
-          .toList();
-
-      var row = list_Modal_LeaveSch2[0];
-      _UserNameN = row.UserNameN;
+      _UserNameN = 'blantt';
       //TODO 取得bind數據
-      _BindControl.ControllerMStatusN.text = row.MStatusN;
-      _BindControl.MStatus = row.MStatus;
-      getNowFromType(row.MStatus);
-
-      _BindControl.ControllerClassTypeN.text = row.ClassTypeN;
-      _BindControl.ControllerLeaveTypeN.text = row.LeaveTypeN;
-      _BindControl.LeaveType = row.LeaveType;
+      _BindControl.ControllerMStatusN.text = '新增';
+      _BindControl.MStatus = "0";
+      getNowFromType('0');
       _BindControl.emailController.text = _BatchID;
-      _BindControl.ControllerUserNameN.text = _UserNameN;
 
-      _BindControl.UserAgent = row.UserAgent;
-      _BindControl.UserAgent2 = row.UserAgent2;
-      _BindControl.FormControl_UserAgentN.text = row.UserAgentN;
-      _BindControl.FormControl_UserAgent2N.text = row.UserAgent2N;
+      _BindControl.ControllerClassTypeN.text = myUserBasic.ClassName;
+      //  _BindControl.ControllerLeaveTypeN.text = row.LeaveTypeN;
+      _BindControl.LeaveType = myUserBasic.ClassID;
+      _UserName = myUserBasic.UserName;
+      _BindControl.ControllerUserNameN.text = myUserBasic.FullName;
 
-      _BindControl.UserSee = row.UserSee;
-      _BindControl.UserSee2 = row.UserSee2;
-      _BindControl.FormControl_UserSeeN.text = row.UserSeeN;
+      //
+      _BindControl.UserAgent = myUserBasic.UserAgent;
+      _BindControl.UserAgent2 = myUserBasic.UserAgent2;
+      _BindControl.FormControl_UserAgentN.text = myUserBasic.UserAgentN;
+      _BindControl.FormControl_UserAgent2N.text = myUserBasic.UserAgent2N;
+      //
+      _BindControl.UserSee = myUserBasic.UserSee;
+      _BindControl.UserSee2 = myUserBasic.UserSee2;
+      _BindControl.FormControl_UserSeeN.text = myUserBasic.UserSeeN;
 
-      _BindControl.FormControl_UserSee2N.text = row.UserSee2N;
-      _BindControl.FormControl_Reason.text = row.Reason;
+      _BindControl.FormControl_UserSee2N.text = myUserBasic.UserSee2N;
+      _BindControl.FormControl_Reason.text = '';
+    }
+    {
+      final response = await Dio().get(m_url_LeaveSch + '/' + _BatchID);
+      String sss = "";
+
+      if (response.statusCode == HttpStatus.ok) {
+        setState(() {
+          _isdataload = true;
+        });
+
+        print(_BatchID + ',有取到表頭明細');
+        list_Modal_LeaveSch2 = (response.data as List<dynamic>)
+            .map((e) => Modal_LeaveSch2.fromJson((e as Map<String, dynamic>)))
+            .toList();
+
+        var row = list_Modal_LeaveSch2[0];
+        _UserNameN = row.UserNameN;
+        //TODO 取得bind數據
+        _BindControl.ControllerMStatusN.text = row.MStatusN;
+        _BindControl.MStatus = row.MStatus;
+        getNowFromType(row.MStatus);
+        _UserName = row.UserName;
+        _BindControl.ControllerClassTypeN.text = row.ClassTypeN;
+        _BindControl.ControllerLeaveTypeN.text = row.LeaveTypeN;
+        _BindControl.LeaveType = row.LeaveType;
+        _BindControl.emailController.text = _BatchID;
+        _BindControl.ControllerUserNameN.text = _UserNameN;
+
+        _BindControl.UserAgent = row.UserAgent;
+        _BindControl.UserAgent2 = row.UserAgent2;
+        _BindControl.FormControl_UserAgentN.text = row.UserAgentN;
+        _BindControl.FormControl_UserAgent2N.text = row.UserAgent2N;
+
+        _BindControl.UserSee = row.UserSee;
+        _BindControl.UserSee2 = row.UserSee2;
+        _BindControl.FormControl_UserSeeN.text = row.UserSeeN;
+
+        _BindControl.FormControl_UserSee2N.text = row.UserSee2N;
+        _BindControl.FormControl_Reason.text = row.Reason;
+      }
     }
 
     return "";
@@ -671,7 +724,10 @@ class _Jovleave extends State<Jobleave2> {
                     Icons.add,
                     color: Colors.white,
                   ),
-                  onPressed: () {}),
+                  onPressed: () {
+                    //TODO--新增時段
+                    _poptime_add(context, '', '');
+                  }),
             )),
         Expanded(
             child: tempContainer(
@@ -948,24 +1004,27 @@ class _Jovleave extends State<Jobleave2> {
   }
 
   Future<String> GetDateLeaveDetail() async {
-    final response = await Dio().get(m_LeaveDetail + '/' + _BatchID);
-    String sss = "";
+    if (_BatchID == '') {
+    } else {
+      final response = await Dio().get(m_LeaveDetail + '/' + _BatchID);
+      String sss = "";
 
-    list_Modal_LeaveSch2 = (response.data as List<dynamic>)
-        .map((e) => Modal_LeaveSch2.fromJson((e as Map<String, dynamic>)))
-        .toList();
-
-    if (response.statusCode == HttpStatus.ok) {
-      print(_BatchID + '有取到時間明細');
-      _modal_time = (response.data as List<dynamic>)
-          .map((e) =>
-              Modal_basic_LeaveTime.fromJson((e as Map<String, dynamic>)))
+      list_Modal_LeaveSch2 = (response.data as List<dynamic>)
+          .map((e) => Modal_LeaveSch2.fromJson((e as Map<String, dynamic>)))
           .toList();
 
-      for (int i = 0; i <= _modal_time.length - 1; i++) {
-        // 在此处执行循环体中的操作
-        _modal_time[i].STime = _modal_time[i].STime2;
-        _modal_time[i].ETime = _modal_time[i].ETime2;
+      if (response.statusCode == HttpStatus.ok) {
+        print(_BatchID + '有取到時間明細');
+        _modal_time = (response.data as List<dynamic>)
+            .map((e) =>
+                Modal_basic_LeaveTime.fromJson((e as Map<String, dynamic>)))
+            .toList();
+
+        for (int i = 0; i <= _modal_time.length - 1; i++) {
+          // 在此处执行循环体中的操作
+          _modal_time[i].STime = _modal_time[i].STime2;
+          _modal_time[i].ETime = _modal_time[i].ETime2;
+        }
       }
     }
 
@@ -1325,6 +1384,34 @@ class _Jovleave extends State<Jobleave2> {
     _templist = _tempValue.split('@');
     this.setState(() {
       editTimeList(key, _templist[0], _templist[1]);
+    });
+  }
+
+  Future<void> _poptime_add(
+      BuildContext context, String key, String name2) async {
+    // Navigator.push returns a Future that completes after calling
+    // Navigator.pop on the Selection Screen.
+    // Navigator.pop on the Selection Screen.
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => doorSelectTime(name1: key, name2: name2)),
+    );
+    var _templist = [];
+    String _tempValue = "";
+    _tempValue = result.toString();
+    _templist = _tempValue.split('@');
+
+    Modal_basic_LeaveTime dd = Modal_basic_LeaveTime(
+        BatchID: _BatchID,
+        STime: _templist[0],
+        ETime: _templist[1],
+        STime2: _templist[0],
+        ETime2: _templist[1],
+        DetailClassID: '');
+
+    this.setState(() {
+      AddTimeList(dd);
     });
   }
 

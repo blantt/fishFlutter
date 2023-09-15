@@ -25,6 +25,10 @@ List<Modal_LeaveSch2> list_Modal_LeaveSch2 = [
     UserSee2: '',
     UserSeeN: '',
     UserSee2N: '',
+    SendTime: '',
+    ApproveTime: '',
+    SendTimeN: '',
+    ApproveTimeN: '',
   )
 ];
 
@@ -78,6 +82,10 @@ class Modal_LeaveSch2 {
     required this.UserSee2,
     required this.UserSeeN,
     required this.UserSee2N,
+    required this.SendTime,
+    required this.ApproveTime,
+    required this.SendTimeN,
+    required this.ApproveTimeN,
   });
 
   String BatchID;
@@ -99,7 +107,10 @@ class Modal_LeaveSch2 {
   String UserSee2;
   String UserSeeN;
   String UserSee2N;
-
+  String SendTime;
+  String ApproveTime;
+  String SendTimeN;
+  String ApproveTimeN;
   factory Modal_LeaveSch2.fromJson(Map<String, dynamic> json) =>
       Modal_LeaveSch2(
         BatchID: json["BatchID"] ?? '',
@@ -121,6 +132,10 @@ class Modal_LeaveSch2 {
         UserSee2: json["UserSee2"] ?? '',
         UserSeeN: json["UserSeeN"] ?? '',
         UserSee2N: json["UserSee2N"] ?? '',
+        SendTime: json["SendTime"] ?? '',
+        ApproveTime: json["ApproveTime"] ?? '',
+        SendTimeN: json["SendTimeN"] ?? '',
+        ApproveTimeN: json["ApproveTimeN"] ?? '',
       );
 
   Map<String, dynamic> toJson() => {
@@ -143,5 +158,9 @@ class Modal_LeaveSch2 {
         "UserSee2": UserSee2,
         "UserSeeN": UserSeeN,
         "UserSee2N": UserSee2N,
+        "SendTime": SendTime,
+        "ApproveTime": ApproveTime,
+        "SendTime": SendTimeN,
+        "ApproveTime": ApproveTimeN,
       };
 }

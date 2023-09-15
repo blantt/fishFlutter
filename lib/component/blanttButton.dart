@@ -120,6 +120,54 @@ class myIconButton extends StatelessWidget {
   }
 }
 
+class mypopButton extends StatelessWidget {
+  final Color? m_backcolor;
+  final Color? m_fontcolor;
+  final double? m_with;
+  final double? m_height;
+  final Function? m_onPressed;
+  final Widget m_child;
+  const mypopButton({
+    required this.m_child,
+    this.m_onPressed,
+    this.m_with = 100,
+    this.m_height = 40,
+    this.m_backcolor = Colors.blue,
+    this.m_fontcolor = Colors.white,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+        onTap: () {
+          m_onPressed!();
+        },
+        child: myContain(
+          m_heght: m_height,
+          m_Alignment: Alignment.center,
+          m_boxDecoration: new BoxDecoration(),
+          m_child: myContain(
+              m_heght: m_height,
+              m_weight: m_with,
+              m_boxDecoration: BoxDecoration(
+                color: m_backcolor,
+                borderRadius: BorderRadius.circular(20.0),
+                border: Border.all(color: Colors.white, width: 2),
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black26,
+                      offset: Offset(3.0, 3.0), //陰影y軸偏移量
+                      blurRadius: 2, //陰影模糊程度
+                      spreadRadius: 0 //陰影擴散程度
+                      )
+                ],
+              ),
+              m_child: Align(alignment: Alignment.center, child: m_child)),
+        ));
+  }
+}
+
 class myButton extends StatelessWidget {
   final Color m_color;
   final Widget m_child;
@@ -173,43 +221,6 @@ class myText extends StatelessWidget {
         fontSize: m_fontsize,
         letterSpacing: m_letterSpacing,
       ),
-    );
-  }
-}
-
-enum myConfirmAction { no, ACCEPT, CANCEL }
-
-class myDialog {
-  static Future<myConfirmAction?> Dialog_yesorno(
-      BuildContext context, String message) async {
-    return showDialog<myConfirmAction?>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('訊息'),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(myConfirmAction.ACCEPT);
-              },
-              child: Text(
-                'YES',
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(myConfirmAction.no);
-              },
-              child: Text(
-                'NO',
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
-          ],
-        );
-      },
     );
   }
 }

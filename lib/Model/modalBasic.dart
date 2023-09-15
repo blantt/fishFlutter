@@ -1,6 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+Modal_Person_basic myUserBasic = Modal_Person_basic(
+    UserName: '',
+    FullName: '',
+    RosterN: '',
+    ClassID: '',
+    ClassName: '',
+    SHH: '',
+    EHH: '',
+    SleepHH1: '',
+    SleepHH2: '',
+    UserAgent: '',
+    UserAgentN: '',
+    UserAgent2: '',
+    UserAgent2N: '',
+    UserSee: '',
+    UserSeeN: '',
+    UserSee2: '',
+    UserSee2N: '',
+    UserBoss: '',
+    UserBossN: '');
+
 class classUserInfo {
   SharedPreferences? _prefs; // 使用可空類型來表示可能為 null 的情況
 
@@ -11,7 +32,27 @@ class classUserInfo {
 
   // 初始化 SharedPreferences
   void _initPrefs() async {
-    _prefs = await SharedPreferences.getInstance();
+    try {
+      _prefs = await SharedPreferences.getInstance();
+    } catch (e) {
+      // 在這裡處理異常，你可以記錄錯誤信息或者執行其他適當的處理
+      print('初始化SharedPreferences時出現異常: $e');
+    }
+
+    String tt;
+  }
+
+  void ccc() async {
+    String? sss = _prefs?.getString('UserName');
+  }
+
+  void set_test(String value) async {
+    await _prefs?.setString('UserName', value);
+  }
+
+  Future<String?> get_test() async {
+    String? sss = _prefs?.getString('UserName');
+    return sss;
   }
 
   void set_UserName(String value) async {
@@ -40,6 +81,96 @@ class classUserInfo {
     bool? sss = _prefs?.getBool('islogin');
     return sss;
   }
+
+  void set_ClassID(String value) async {
+    await _prefs?.setString('ClassID', value);
+  }
+
+  Future<String?> get_ClassID() async {
+    String? sss = _prefs?.getString('ClassID');
+    return sss;
+  }
+
+  void set_ClassName(String value) async {
+    await _prefs?.setString('ClassName', value);
+  }
+
+  Future<String?> get_ClassName() async {
+    String? sss = _prefs?.getString('ClassName');
+    return sss;
+  }
+
+  void set_UserAgent(String value) async {
+    await _prefs?.setString('UserAgent', value);
+  }
+
+  Future<String?> get_UserAgent() async {
+    String? sss = _prefs?.getString('UserAgent');
+    return sss;
+  }
+
+  void set_UserAgent2(String value) async {
+    await _prefs?.setString('UserAgent2', value);
+  }
+
+  Future<String?> get_UserAgent2() async {
+    String? sss = _prefs?.getString('UserAgent2');
+    return sss;
+  }
+
+  void set_UserAgentN(String value) async {
+    await _prefs?.setString('UserAgentN', value);
+  }
+
+  Future<String?> get_UserAgentN() async {
+    String? sss = _prefs?.getString('UserAgentN');
+    return sss;
+  }
+
+  void set_UserAgent2N(String value) async {
+    await _prefs?.setString('UserAgent2N', value);
+  }
+
+  Future<String?> get_UserAgent2N() async {
+    String? sss = _prefs?.getString('UserAgent2N');
+    return sss;
+  }
+
+  void set_UserSee(String value) async {
+    await _prefs?.setString('UserSee', value);
+  }
+
+  void set_UserSeeN(String value) async {
+    await _prefs?.setString('UserSeeN', value);
+  }
+
+  Future<String?> get_UserSee() async {
+    String? sss = _prefs?.getString('UserSee');
+    return sss;
+  }
+
+  Future<String?> get_UserSeeN() async {
+    String? sss = _prefs?.getString('UserSeeN');
+    return sss;
+  }
+
+  void set_UserSee2(String value) async {
+    await _prefs?.setString('UserSee2', value);
+  }
+
+  Future<String?> get_UserSee2() async {
+    String? sss = _prefs?.getString('UserSee2');
+    return sss;
+  }
+
+  void set_UserSee2N(String value) async {
+    await _prefs?.setString('UserSee2N', value);
+  }
+
+  Future<String?> get_UserSee2N() async {
+    String? sss = _prefs?.getString('UserSee2N');
+    return sss;
+  }
 }
 
 class Modal_Person_basic {
@@ -48,6 +179,7 @@ class Modal_Person_basic {
     required this.FullName,
     required this.RosterN,
     required this.ClassID,
+    required this.ClassName,
     required this.SHH,
     required this.EHH,
     required this.SleepHH1,
@@ -67,6 +199,7 @@ class Modal_Person_basic {
   String FullName;
   String RosterN;
   String ClassID;
+  String ClassName;
   String SHH;
   String EHH;
   String SleepHH1;
@@ -88,6 +221,7 @@ class Modal_Person_basic {
         FullName: json["FullName"] ?? '',
         RosterN: json["RosterN"] ?? '',
         ClassID: json["ClassID"] ?? '',
+        ClassName: json["ClassName"] ?? '',
         SHH: json["SHH"] ?? '',
         EHH: json["EHH"] ?? '',
         SleepHH1: json["SleepHH1"] ?? '',
@@ -108,6 +242,7 @@ class Modal_Person_basic {
         "FullName": FullName,
         "RosterN": RosterN,
         "ClassID": ClassID,
+        "ClassName": ClassName,
         "SHH": SHH,
         "EHH": EHH,
         "SleepHH1": SleepHH1,

@@ -1,3 +1,4 @@
+import 'package:blantt_love_test/component/blanttButton.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:blantt_love_test/testView.dart';
@@ -36,14 +37,18 @@ class ListViewSch extends StatefulWidget {
   _MyHomePageState2 createState() => _MyHomePageState2();
 }
 
+//TODO 取值
 Future<String> GetDateLeaveSch() async {
-  final response = await Dio().get(m_url_LeaveSch + '/all');
+  print('listview開始取值' + DateTime.now().second.toString());
+  final response = await Dio().get(SelectAmcJobLeave_appEasy + '/all');
   String sss = "";
   //if (response.statusCode == HttpStatus.ok) {
+
+  print('listview_1完成取值' + DateTime.now().second.toString());
   _modal_list = (response.data as List<dynamic>)
       .map((e) => Modal_LeaveSch2.fromJson((e as Map<String, dynamic>)))
       .toList();
-
+  print('listview_2完成取值' + DateTime.now().second.toString());
   return "";
 }
 
@@ -94,7 +99,7 @@ Widget buildCell(
 }
 
 Widget _listCard_title(BuildContext context, String BatchID, String LeaveTypeN,
-    String UserNameN, String MStatusN) {
+    String UserNameN, String MStatusN, String SendTime, String ApproveTime) {
   return Column(children: <Widget>[
     Container(
         padding: EdgeInsets.fromLTRB(8, 4, 8, 4),
@@ -128,12 +133,13 @@ Widget _listCard_title(BuildContext context, String BatchID, String LeaveTypeN,
             // Expanded(child: FlutterLogo()),
           ]),
         ])),
-    _listCard_row(context, BatchID, LeaveTypeN, UserNameN, MStatusN)
+    _listCard_row(context, BatchID, LeaveTypeN, UserNameN, MStatusN, SendTime,
+        ApproveTime)
   ]);
 }
 
 Widget _listCard_row(BuildContext context, String BatchID, String LeaveTypeN,
-    String UserNameN, String MStatusN) {
+    String UserNameN, String MStatusN, String SendTime, String ApproveTime) {
   return Column(children: <Widget>[
     InkWell(
       child: Container(
@@ -176,9 +182,10 @@ Widget _listCard_row(BuildContext context, String BatchID, String LeaveTypeN,
             // Expanded(child: FlutterLogo()),
           ]),
           Row(children: <Widget>[
-            buildCell(1, 30, 95, '2022/01/01', 1),
-            buildCell(1, 30, 95, '2022/03/01', 1),
-            Expanded(child: buildCell(1, 30, 100, '2022/01/01~2022/05/05', 0)),
+            //TODO 時間欄位
+            buildCell(1, 30, 95, SendTime, 1),
+            buildCell(1, 30, 95, ApproveTime, 1),
+            Expanded(child: buildCell(1, 30, 100, '', 0)),
             // Expanded(child: FlutterLogo()),
           ]),
         ]),
@@ -231,11 +238,23 @@ Widget buildLivtView_LeaveSch(BuildContext context) {
                 final user = _modal_list[index];
                 var row = _modal_list[index];
                 if (index == 0) {
-                  return _listCard_title(context, row.BatchID, row.LeaveTypeN,
-                      row.UserNameN, row.MStatusN);
+                  return _listCard_title(
+                      context,
+                      row.BatchID,
+                      row.LeaveTypeN,
+                      row.UserNameN,
+                      row.MStatusN,
+                      row.SendTimeN,
+                      row.ApproveTimeN);
                 } else {
-                  return _listCard_row(context, row.BatchID, row.LeaveTypeN,
-                      row.UserNameN, row.MStatusN);
+                  return _listCard_row(
+                      context,
+                      row.BatchID,
+                      row.LeaveTypeN,
+                      row.UserNameN,
+                      row.MStatusN,
+                      row.SendTimeN,
+                      row.ApproveTimeN);
                 }
               });
         }
@@ -253,16 +272,35 @@ class _MyHomePageState2 extends State<ListViewSch> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          //leading: Icon(Icons.arrow_back),
-          backgroundColor: Color.fromRGBO(56, 163, 210, 1.0),
-          title: Text(
-            "請假單",
-            style: TextStyle(
-                fontWeight: FontWeight.w400,
-                // color: Colors.black54,
-                fontSize: 18),
-          ),
-        ),
+            //leading: Icon(Icons.arrow_back),
+            backgroundColor: Color.fromRGBO(56, 163, 210, 1.0),
+            title: Row(
+              children: [
+                Text(
+                  "請假單",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      // color: Colors.black54,
+                      fontSize: 18),
+                ),
+                Expanded(child: Text('')),
+                SizedBox(
+                  width: 35,
+                ),
+                Align(
+                    alignment: Alignment.centerRight,
+                    child: myButton(
+                      m_child: myText(
+                        m_text: '新增',
+                        m_color: Colors.blueAccent,
+                        m_fontsize: 16,
+                      ),
+                      m_onPressed: () {
+                        RouterUtil_test.toJobleaveForm(context, '');
+                      },
+                    ))
+              ],
+            )),
         body: buildLivtView_LeaveSch(context));
   }
 }

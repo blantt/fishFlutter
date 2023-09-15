@@ -276,7 +276,7 @@ class aaa extends State<doorForm2> {
     //TODO 存暫時資訊
     void _saveText2() async {
       //   classUserInfo mySharedPreferences = classUserInfo();
-      mySharedPreferences.set_UserName("阿中7");
+      //mySharedPreferences.set_UserName("阿中7");
 
       mySharedPreferences.set_islogin(true);
       //mySharedPreferences.myUserName = "999";

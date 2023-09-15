@@ -3,6 +3,7 @@ import 'package:blantt_love_test/textForm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:blantt_love_test/component/blanttButton.dart';
 
 class classDialog extends StatelessWidget {
   const classDialog({Key? key}) : super(key: key);
@@ -40,6 +41,15 @@ Widget _menu(BuildContext context) {
 
           print(value);
         });
+      },
+    ),
+    OutlinedButton(
+      child: Text(
+        'test',
+        style: TextStyle(color: Colors.deepOrange),
+      ),
+      onPressed: () {
+        myDialog.Dialog_Message(context, 'test', 0);
       },
     ),
     OutlinedButton(
@@ -161,8 +171,6 @@ _displayDialog2(BuildContext context) {
       }).then((value) => debugPrint(value));
 }
 
-ttt(BuildContext context) {}
-
 _showDialog(BuildContext context) {
   showDialog(
     context: context,
@@ -243,4 +251,179 @@ _displayDialog(BuildContext context) {
       );
     },
   );
+}
+
+class HorizontalLinePainter extends CustomPainter {
+  final Color? m_textcolor;
+  const HorizontalLinePainter({
+    this.m_textcolor = Colors.blue,
+    Key? key,
+  });
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Paint paint = Paint()
+      ..color = this.m_textcolor! // 线的颜色
+      ..strokeCap = StrokeCap.round // 线帽的样式
+      ..strokeWidth = 2.0; // 线的宽度
+
+    final double startY = size.height / 2;
+    final double endX = size.width;
+
+    canvas.drawLine(
+      Offset(0, startY),
+      Offset(endX, startY),
+      paint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return false;
+  }
+}
+
+enum myConfirmAction { no, ACCEPT, CANCEL }
+
+class myDialog {
+  static Future Dialog_Message(
+      BuildContext context, String message, int itype) async {
+    Color mcolor = Colors.blueAccent;
+    String mtitle = 'Message';
+    if (itype == 1) {
+      //--error
+      mcolor = Colors.red;
+      mtitle = 'Error';
+    }
+
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30), // 调整这个值以改变圆角的大小
+            ),
+            // title: Text('Dialog Title'),
+            contentPadding: EdgeInsets.zero,
+            content: myContain(
+                m_heght: 180,
+                m_weight: 250,
+                m_padding: EdgeInsets.all(15),
+                m_boxDecoration: new BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                m_child: Column(
+                  children: [
+                    myText(
+                      m_text: mtitle,
+                      m_color: mcolor,
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    CustomPaint(
+                      painter: HorizontalLinePainter(m_textcolor: mcolor),
+                      size: Size(
+                          MediaQuery.of(context).size.width, 1), // 设置横线的宽度和高度
+                    ),
+                    Expanded(
+                        child: myContain(
+                      m_Alignment: Alignment.center,
+                      m_child: myText(
+                        m_text: message,
+                      ),
+                    )),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        mypopButton(
+                          m_onPressed: () {
+                            Navigator.of(context).pop(myConfirmAction.no);
+                          },
+                          m_backcolor: Colors.white,
+                          m_child: myText(
+                            m_text: 'close',
+                            m_color: Colors.black45,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                )),
+          );
+        });
+  }
+
+  static Future<myConfirmAction?> Dialog_yesorno(
+      BuildContext context, String message) async {
+    return showDialog<myConfirmAction?>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30), // 调整这个值以改变圆角的大小
+            ),
+            // title: Text('Dialog Title'),
+            contentPadding: EdgeInsets.zero,
+            content: myContain(
+                m_heght: 180,
+                m_weight: 250,
+                m_padding: EdgeInsets.all(15),
+                m_boxDecoration: new BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                m_child: Column(
+                  children: [
+                    myText(
+                      m_text: 'Message',
+                      m_color: Colors.blueAccent,
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    CustomPaint(
+                      painter: HorizontalLinePainter(),
+                      size: Size(
+                          MediaQuery.of(context).size.width, 1), // 设置横线的宽度和高度
+                    ),
+                    Expanded(
+                        child: myContain(
+                      m_Alignment: Alignment.center,
+                      m_child: myText(
+                        m_text: message,
+                      ),
+                    )),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        mypopButton(
+                          m_onPressed: () {
+                            Navigator.of(context).pop(myConfirmAction.ACCEPT);
+                          },
+                          m_child: myText(
+                            m_text: '是',
+                            m_color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        mypopButton(
+                          m_onPressed: () {
+                            Navigator.of(context).pop(myConfirmAction.no);
+                          },
+                          m_backcolor: Colors.white,
+                          m_child: myText(
+                            m_text: '否',
+                            m_color: Colors.black45,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                )),
+          );
+        });
+  }
 }

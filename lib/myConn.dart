@@ -52,6 +52,8 @@ String m_url_ClocjClass =
 //請假單查詢 ,/all 是查全部
 String m_url_LeaveSch =
     "http://clockappservice.english4u.com.tw/api/SelectAmcJobLeave";
+String SelectAmcJobLeave_appEasy =
+    "http://clockappservice.english4u.com.tw/api/SelectAmcJobLeave_appEasy";
 
 //人員查詢 ,/admin 是查全部
 String m_PersonSch = "http://clockappservice.english4u.com.tw/api/funcPerson";
