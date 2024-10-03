@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'TryMenu.dart';
-import 'package:blantt_love_test/utils/router_test.dart';
+import 'package:blantt_love_test/utils/dt_router.dart';
 import 'package:blantt_love_test/component/blanttColor.dart';
 import 'package:blantt_love_test/Model/modalBasic.dart';
 import 'main.dart';
@@ -69,8 +69,15 @@ List<Modal_Person_basic> ListPersonBasic = [
 class classhome2 extends State<classhome> {
   classUserInfo mySharedPreferences = classUserInfo();
 
+  void ClearUserInfo() {
+    isGetUser = false;
+    setState(() {});
+  }
+
   //TODO 取得人員資料
   void GetUserInfo() async {
+    print('開始取得人員資料');
+
     String? UserName = await mySharedPreferences.get_UserName();
     String? FullName = await mySharedPreferences.get_FullName();
     String? ClassID = await mySharedPreferences.get_ClassID();
@@ -88,6 +95,7 @@ class classhome2 extends State<classhome> {
     if (UserName != null) {
       if (UserName == '') {
         Control_Fullname.text = "您好:訪客";
+        isGetUser = true;
         setState(() {});
         return;
       } else {
@@ -177,10 +185,10 @@ class classhome2 extends State<classhome> {
 
   @override
   Widget build(BuildContext context) {
-    //TODO 目前想把 _homemenu2 內容都移到State裡,這樣登入時去更新畫面
     return _homemenu2(context);
   }
 
+  //TODO 目前body在這裡
   Widget _homemenu2(BuildContext context) {
     List spans = [];
 
@@ -204,101 +212,117 @@ class classhome2 extends State<classhome> {
         text: "well com AMC FaceBook",
       ),
     );
-    isGetUser = true;
-    bool bshow;
-    //bshow = mySharedPreferences.get_islogin() as bool;
-    bshow = true;
+    //  isGetUser = true;
+
     return new Scaffold(
-      body: new Column(children: [
-        Container(
-          alignment: Alignment.bottomLeft,
-          width: double.infinity,
-          height: 500,
-          decoration: new BoxDecoration(
-              image: DecorationImage(
-                // image: AssetImage("assets/images/index_top1.jpg"),
-                image: AssetImage("assets/images/index_top1_new.png"),
-                fit: BoxFit.fill,
+      body: !isGetUser
+          ? Center(
+              child: MyLoadingWidget(
+                m_Strload: '',
+                // m_btnStopShow: true,
               ),
-              color: Colors.greenAccent),
-          child: Column(
-            children: [
-              isGetUser
-                  ? Container(
-                      margin: const EdgeInsets.only(left: 10, top: 25),
-                      alignment: Alignment.bottomLeft,
-                      width: double.infinity,
-                      child: Row(children: [
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: _test1,
-                        ),
-                        //右邊icon button
-                        Expanded(
-                            //    child: _iconbutton(context)
-                            child: Text('')),
-                        Visibility(
-                          visible: islogin,
-                          child: homeiconButton(context, 2),
-                        ),
+            )
+          : Column(children: [
+              Container(
+                alignment: Alignment.bottomLeft,
+                width: double.infinity,
+                height: 500,
+                decoration: new BoxDecoration(
+                    image: DecorationImage(
+                      // image: AssetImage("assets/images/index_top1.jpg"),
+                      image: AssetImage("assets/images/index_top1_new.png"),
+                      fit: BoxFit.fill,
+                    ),
+                    color: Colors.greenAccent),
+                child: Column(
+                  children: [
+                    isGetUser
+                        ? Container(
+                            margin: const EdgeInsets.only(left: 10, top: 25),
+                            alignment: Alignment.bottomLeft,
+                            width: double.infinity,
+                            child: Row(children: [
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: _test1,
+                              ),
+                              //右邊icon button
+                              Expanded(
+                                  //    child: _iconbutton(context)
+                                  child: Text('')),
+                              Visibility(
+                                visible: islogin,
+                                child: homeiconButton(context, 2),
+                              ),
 
-                        SizedBox(
-                          width: 2,
-                        ),
-                        Visibility(
-                          visible: !islogin,
-                          child: homeiconButton(context, 1),
-                        ),
+                              SizedBox(
+                                width: 2,
+                              ),
+                              Visibility(
+                                visible: !islogin,
+                                child: homeiconButton(context, 1),
+                              ),
 
-                        SizedBox(
-                          width: 2,
-                        ),
-                        homeiconButton(context, 99),
-                        SizedBox(
-                          width: 5,
-                        )
-                      ]),
-                    )
-                  : Container(),
+                              SizedBox(
+                                width: 2,
+                              ),
+                              homeiconButton(context, 99),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              SizedBox(
+                                width: 2,
+                              ),
+                              // homeiconButton(context, 98),
+                              // SizedBox(
+                              //   width: 5,
+                              // )
+                            ]),
+                          )
+                        : Container(),
 
-              //TODO 上方的icon產出
-            ],
-          ),
-        ),
-        Container(
-            child: Column(children: [
-          Container(
-              child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              tempIconButton(
-                  myitype: 0,
-                  mytext: '請假單',
-                  my_onPressed: () {
-                    RouterUtil_test.toJobLeaveList(context);
-                  }),
-              //tempicontest(),
-              SizedBox(
-                width: 30,
+                    //TODO 上方的icon產出
+                  ],
+                ),
               ),
-              tempIconButton(myitype: 0, mytext: '加班單', my_onPressed: () {}),
-            ],
-          )),
-          Container(
-              child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            //TODO testicon
-            children: [
-              tempIconButton(myitype: 0, mytext: '補休單', my_onPressed: () {}),
-              //tempicontest(),
-              SizedBox(
-                width: 30,
-              ),
-              tempIconButton(myitype: 0, mytext: '公出單', my_onPressed: () {}),
-            ],
-          )),
-        ])),
-      ]),
+              //TODO 下方的button產出
+              Container(
+                  child: Column(children: [
+                Container(
+                    child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    tempIconButton(
+                        myitype: 0,
+                        mytext: '請假單',
+                        my_onPressed: () {
+                          RouterUtil_test.toJobLeaveList(context);
+                        }),
+                    //tempicontest(),
+                    SizedBox(
+                      width: 30,
+                    ),
+                    tempIconButton(
+                        myitype: 0, mytext: '加班單', my_onPressed: () {}),
+                  ],
+                )),
+                Container(
+                    child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  //TODO testicon
+                  children: [
+                    tempIconButton(
+                        myitype: 0, mytext: '補休單', my_onPressed: () {}),
+                    //tempicontest(),
+                    SizedBox(
+                      width: 30,
+                    ),
+                    tempIconButton(
+                        myitype: 0, mytext: '公出單', my_onPressed: () {}),
+                  ],
+                )),
+              ])),
+            ]),
     );
   }
 
@@ -394,7 +418,13 @@ class classhome2 extends State<classhome> {
       );
       sss = "test2";
     }
-
+    if (itype == 98) {
+      ccc = Icon(
+        Icons.accessibility_new,
+        color: Color.fromRGBO(129, 70, 68, 1.0),
+      );
+      sss = "設定";
+    }
     _displayDialog3(BuildContext context) {
       showDialog(
         context: context,
@@ -505,6 +535,7 @@ class classhome2 extends State<classhome> {
                     //TODO 登入
                     child: mypopButton(
                       m_onPressed: () {
+                        ClearUserInfo();
                         GetNewLoginUser();
                         // _getNewUser();
                         // _loadStoredText();
@@ -559,6 +590,12 @@ class classhome2 extends State<classhome> {
             //TODO 呼叫testmenu 畫面
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => TryMenu()));
+          }
+
+          if (itype == 98) {
+            //TODO 呼叫設定 畫面
+
+            RouterUtil_test.mySetting(context);
           }
         },
         child: Column(

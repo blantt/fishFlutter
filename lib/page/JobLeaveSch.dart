@@ -6,7 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:blantt_love_test/myConn.dart';
 import 'package:blantt_love_test/routesPage.dart';
 import 'Model/Model1.dart';
-import 'package:blantt_love_test/utils/router_test.dart';
+import 'package:blantt_love_test/utils/dt_router.dart';
 
 //我喜歡這種表單樣式,先紀錄起來  lll
 //https://www.kindacode.com/article/adding-borders-to-cards-in-flutter/
@@ -40,9 +40,8 @@ class ListViewSch extends StatefulWidget {
 //TODO 取值
 Future<String> GetDateLeaveSch() async {
   print('listview開始取值' + DateTime.now().second.toString());
-  final response = await Dio().get(SelectAmcJobLeave_appEasy + '/all');
+  final response = await Dio().get(GetSelectAmcJobLeave_appEasy() + '/all');
   String sss = "";
-  //if (response.statusCode == HttpStatus.ok) {
 
   print('listview_1完成取值' + DateTime.now().second.toString());
   _modal_list = (response.data as List<dynamic>)

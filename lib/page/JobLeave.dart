@@ -3,14 +3,10 @@ import 'dart:ffi';
 import 'package:blantt_love_test/utils/router_test.dart';
 import 'package:blantt_love_test/component/blanttButton.dart';
 import 'package:blantt_love_test/component/blanttColor.dart';
-import 'package:blantt_love_test/dt_home.dart';
-import 'package:blantt_love_test/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
-import 'ListView.dart';
 import 'package:blantt_love_test/myConn.dart';
 import 'dart:io';
 import 'Model/Model2.dart';
@@ -21,6 +17,7 @@ import 'package:blantt_love_test/testTime.dart';
 import '../component/blanttFileControl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:blantt_love_test/dt_Dialog.dart';
+import 'package:blantt_love_test/popSelectFile.dart';
 
 String _BatchID = '';
 String _UserNameN = '';
@@ -34,16 +31,9 @@ List<String> ListImage = [];
 //感覺應該還有更好的寫法,等待進化版!!
 bool isNew = true;
 
-enum buttonType { _home, _save, _del, _send, _approve }
+enum buttonType { _home, _save, _del, _send, _approve, _test }
 
-enum en_FromType {
-  _add,
-  _edit,
-  _return,
-  _send,
-  _app,
-  _void,
-}
+enum en_FromType { _add, _edit, _return, _send, _app, _void }
 
 enum filedType {
   _batchid,
@@ -155,7 +145,10 @@ class _Jovleave extends State<Jobleave2> {
   bool _isdataload = false;
   bool _isLoading = false;
   bool _stopLoading = false;
+  bool _isallIsload = false; //目前測試,想當作判定確定所有的api都呼叫完成,
+  bool _isFileload = false;
   String testdd = "";
+  String _SelectFilePath = "";
   classUserInfo mySharedPreferences = classUserInfo();
   int _counter = 0;
   late Stream _counterStream;
@@ -187,12 +180,19 @@ class _Jovleave extends State<Jobleave2> {
     _counterStream = _counterStreamController.stream;
 
     classMyFile.delFilefolder("");
-    GetFileList();
+    // GetFileList();
+    GetfileListnew();
     GetDateLeave2();
     SetTimeList();
 
     super.initState();
     print('in initState');
+  }
+
+  void checkStates() {
+    if (_isdataload == true && _isFileload == true) {
+      _isallIsload = true;
+    }
   }
 
   @override
@@ -210,6 +210,8 @@ class _Jovleave extends State<Jobleave2> {
 
   @override
   Widget build(BuildContext context) {
+    print('測試目前檔案路徑:' + _SelectFilePath);
+
     return Scaffold(
       appBar: AppBar(
           backgroundColor: MyColor.back_COLOR1, // 設定背景色為藍色
@@ -266,10 +268,9 @@ class _Jovleave extends State<Jobleave2> {
             ],
           )),
       body: Stack(children: <Widget>[
-        // JobStreamNew(context),
-        _isdataload
+        _isallIsload
             ? _myorm(context)
-            : !_isdataload
+            : !_isallIsload
                 ? CircularProgressIndicator() // Show a loading indicator
                 : Container(),
         _isLoading
@@ -286,7 +287,7 @@ class _Jovleave extends State<Jobleave2> {
       //     children: buildRowChildren(),
       //   ),
       // )
-      bottomNavigationBar: _isdataload
+      bottomNavigationBar: _isallIsload
           ? BottomAppBar(
               child: Row(
                 //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -345,7 +346,13 @@ class _Jovleave extends State<Jobleave2> {
         my_onPressed: () {},
       ));
     }
-
+    children.add(tempBottomButton(
+      myitype: buttonType._test,
+      my_onPressed: () {
+        //TODO Test事件
+        _popMyimage(context, 1);
+      },
+    ));
     return children;
   }
 
@@ -361,9 +368,6 @@ class _Jovleave extends State<Jobleave2> {
       if (result != null) {}
     });
   }
-
-  //TODO 下方巡覽列事件
-  void _onTap2(int index) {}
 
   void _onTap(int index) {
     _selectedIndex = index;
@@ -402,16 +406,7 @@ class _Jovleave extends State<Jobleave2> {
   Future<String> SaveAllPage() async {
     if (_modal_time.length == 0) {
       myDialog.Dialog_Message(context, '請至少輸入一筆時間', 0);
-      // showDialog(
-      //     context: context,
-      //     builder: (BuildContext context) {
-      //       return Expanded(
-      //         child: SimpleDialog(
-      //           title: Text('訊息'),
-      //           children: [Text('請至少輸入一筆時間')],
-      //         ),
-      //       );
-      //     });
+
       _stopLoadingAnimation();
       return '';
     }
@@ -503,13 +498,51 @@ class _Jovleave extends State<Jobleave2> {
     return '';
   }
 
+  //TODO 取得附件List(new)
+  Future<String> GetfileListnew() async {
+    final response = await Dio().get(GetGetAmcJobLeaveImage() + '/' + _BatchID);
+    String sss = "";
+
+    if (response.statusCode == HttpStatus.ok) {
+      print(_BatchID + ',有取到圖檔明細new');
+      // print('file:' + response.data);
+      var _templist = [];
+
+      _templist = response.data.split('/');
+      for (int i = 0; i <= _templist.length - 1; i++) {
+        // 在此处执行循环体中的操作
+        String url;
+        url = 'https://editor.4kids.com.tw/Portal/imageClock/' +
+            _BatchID +
+            '/' +
+            _templist[i];
+        //---測試,如用網址用ip,目前是收不到檔案的
+
+        print('filename:' + _templist[i]);
+        classMyFile.setimage(url, _templist[i], funcCall: () {
+          callevictImage(_templist[i]);
+        });
+      }
+    }
+
+    setState(() {
+      _isFileload = true;
+      checkStates();
+    });
+
+    // Future.delayed(Duration(seconds: 5), () {
+    //   // 在这里写下您想要在等待2秒后执行的代码
+    //
+    // });
+
+    return "";
+  }
+
 //TODO 取得表頭
   Future<String> GetDateLeave2() async {
     if (_BatchID == '') {
       print('是新增');
-      setState(() {
-        _isdataload = true;
-      });
+
       _UserNameN = 'blantt';
       //TODO 取得bind數據
       _BindControl.ControllerMStatusN.text = '新增';
@@ -541,10 +574,6 @@ class _Jovleave extends State<Jobleave2> {
       String sss = "";
 
       if (response.statusCode == HttpStatus.ok) {
-        setState(() {
-          _isdataload = true;
-        });
-
         print(_BatchID + ',有取到表頭明細');
         list_Modal_LeaveSch2 = (response.data as List<dynamic>)
             .map((e) => Modal_LeaveSch2.fromJson((e as Map<String, dynamic>)))
@@ -576,7 +605,10 @@ class _Jovleave extends State<Jobleave2> {
         _BindControl.FormControl_Reason.text = row.Reason;
       }
     }
-
+    setState(() {
+      _isdataload = true;
+      checkStates();
+    });
     return "";
   }
 
@@ -606,6 +638,9 @@ class _Jovleave extends State<Jobleave2> {
   //TODO 附件control
   Widget SetFileList() {
     ListImage = classMyFile.getFileList2();
+
+    //print('附件大小' + ListImage.length.toString());
+
     return myContain(
       m_heght: 50,
       m_child: ListView.builder(
@@ -623,10 +658,10 @@ class _Jovleave extends State<Jobleave2> {
                 color: Colors.black,
               ),
             ),
-
             m_child: GestureDetector(
               onTap: () {
-                String ddd = _popMyimage(context, index);
+                //String ddd = _popMyimage(context, index);
+                _popSelectFile(context, index);
               },
               child: Image.file(
                 File(ListImage[index]),
@@ -634,12 +669,6 @@ class _Jovleave extends State<Jobleave2> {
                 width: 80,
               ),
             ),
-
-            // m_child: Image.file(
-            //   File(ListImage[index]),
-            //   height: 80,
-            //   width: 80,
-            // ),
           );
 
           return Padding(
@@ -970,6 +999,13 @@ class _Jovleave extends State<Jobleave2> {
   //TODO myform2
   Widget _myorm(BuildContext context) {
     print(_BatchID + '開始進來讀取form表頭');
+
+    if (_isallIsload == true) {
+      print('_isallIsload=true');
+    } else {
+      print('_isallIsload=false');
+    }
+
     return SingleChildScrollView(
       child: Column(children: <Widget>[
         from1(context),
@@ -983,12 +1019,14 @@ class _Jovleave extends State<Jobleave2> {
     });
   }
 
-  //TODO 取得附件list
+  //TODO 取得圖檔附件list
   //取得陰件list
   void GetFileList() {
     String url;
     url =
         'https://editor.4kids.com.tw/Portal/imageClock/A202303170002/0316.jpg';
+
+    //url = 'http://192.168.100.131:678/imageClock/A202309220001/1122.png';
     classMyFile.setimage(url, 'aaa3.png', funcCall: () {
       callevictImage('aaa3.png');
     });
@@ -1006,7 +1044,7 @@ class _Jovleave extends State<Jobleave2> {
   Future<String> GetDateLeaveDetail() async {
     if (_BatchID == '') {
     } else {
-      final response = await Dio().get(m_LeaveDetail + '/' + _BatchID);
+      final response = await Dio().get(GetLeaveDetail() + '/' + _BatchID);
       String sss = "";
 
       list_Modal_LeaveSch2 = (response.data as List<dynamic>)
@@ -1052,61 +1090,6 @@ class _Jovleave extends State<Jobleave2> {
         .ETime = Chanedate2;
     _modal_time[_modal_time.indexWhere((element) => element.STime == key)]
         .STime = Chanedate1;
-  }
-
-  //TODO lsaveStream
-  Widget JobStreamNew(BuildContext context) {
-    print('kkkk');
-    GetDateLeave();
-    return StreamBuilder<int>(
-      stream: _counterStreamController.stream,
-      builder: (
-        BuildContext context,
-        AsyncSnapshot<int> snapshot,
-      ) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return new Center(child: CircularProgressIndicator());
-        } else if (snapshot.connectionState == ConnectionState.active ||
-            snapshot.connectionState == ConnectionState.done) {
-          if (snapshot.hasError) {
-            return const Text('Error');
-          } else if (snapshot.hasData) {
-            var icount = list_Modal_LeaveSch2.length;
-            if (icount <= 0) {
-            } else {
-              print('取得表頭');
-
-              var row = list_Modal_LeaveSch2[icount - 1];
-              _UserNameN = row.UserNameN;
-              // 请求成功，显示数据
-              _BindControl.ControllerClassTypeN.text = row.ClassTypeN;
-              _BindControl.ControllerLeaveTypeN.text = row.LeaveTypeN;
-              _BindControl.LeaveType = row.LeaveType;
-              _BindControl.emailController.text = _BatchID;
-              _BindControl.ControllerUserNameN.text = _UserNameN;
-
-              _BindControl.UserAgent = row.UserAgent;
-              _BindControl.UserAgent2 = row.UserAgent2;
-              _BindControl.FormControl_UserAgentN.text = row.UserAgentN;
-              _BindControl.FormControl_UserAgent2N.text = row.UserAgent2N;
-
-              _BindControl.UserSee = row.UserSee;
-              _BindControl.UserSee2 = row.UserSee2;
-              _BindControl.FormControl_UserSeeN.text = row.UserSeeN;
-
-              _BindControl.FormControl_UserSee2N.text = row.UserSee2N;
-              _BindControl.FormControl_Reason.text = row.Reason;
-            }
-            isNew = false;
-            return _myorm(context);
-          } else {
-            return const Text('Empty data');
-          }
-        } else {
-          return Text('State: ${snapshot.connectionState}');
-        }
-      },
-    );
   }
 
   //TODO 自設formfield
@@ -1369,6 +1352,51 @@ class _Jovleave extends State<Jobleave2> {
     }
   }
 
+  //TODO pop選擇圖檔
+  Future<void> _popSelectFile(BuildContext context, int index) async {
+    Widget myob;
+    File? myfile;
+    Image? myimage;
+    String fileName = "";
+
+    // 在使用之前进行空值检查
+    if (index == -1) {
+      //新增時沒有點案,給個空的
+      myob = myContain(
+        m_heght: 150,
+        m_weight: 150,
+      );
+    } else {
+      // 使用Image Widget
+      myfile = File(ListImage[index]);
+      _SelectFilePath = ListImage[index];
+      //--這個方式是用file路徑聯結
+      myimage = Image.file(
+        File(_SelectFilePath),
+        height: 150,
+        width: 150,
+      );
+
+      fileName = myfile.path.split('/').last;
+      myob = myimage;
+    }
+
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => popSelectFile(SelectFile: _SelectFilePath)),
+    );
+    print('原本的路徑:' + ListImage[index]);
+    print('回傳的路徑:' + result);
+
+    this.setState(() {
+      classMyFile.delFilefolder(ListImage[index]); //目前這
+      // 一行並沒有起作用?!
+      classMyFile.Copyimage(result, 'ddddd');
+      ListImage[index] = result;
+    });
+  }
+
   Future<void> _poptime(BuildContext context, String key, String name2) async {
     // Navigator.push returns a Future that completes after calling
     // Navigator.pop on the Selection Screen.
@@ -1426,7 +1454,7 @@ class _Jovleave extends State<Jobleave2> {
     }
   }
 
-  //TODO 選擇圖片視窗
+  //TODO 選擇圖片視窗 OLD
   _popMyimage(BuildContext context, int index) {
     Widget myob;
 
@@ -1445,12 +1473,14 @@ class _Jovleave extends State<Jobleave2> {
     } else {
       // 使用Image Widget
       myfile = File(ListImage[index]);
-
+      _SelectFilePath = ListImage[index];
+      //--這個方式是用file路徑聯結
       myimage = Image.file(
-        myfile,
+        File(_SelectFilePath),
         height: 150,
         width: 150,
       );
+
       fileName = myfile.path.split('/').last;
       myob = myimage;
     }
@@ -1488,7 +1518,9 @@ class _Jovleave extends State<Jobleave2> {
                             m_text: '取消',
                             m_color: Colors.black,
                           ),
-                          m_onPressed: () {},
+                          m_onPressed: () {
+                            Navigator.of(context).pop();
+                          },
                         ),
                       ],
                     ),
@@ -1507,7 +1539,7 @@ class _Jovleave extends State<Jobleave2> {
                   onPressed: () {
                     if (myfile != null) {
                       List<int> fileBytes = myfile.readAsBytesSync();
-                      uploadFile("ddd", "bbbb", fileBytes);
+                      uploadFile("ddd", fileName, fileBytes);
                     }
                   },
                   child: Text(
@@ -1529,6 +1561,7 @@ class _Jovleave extends State<Jobleave2> {
 //    List<int> fileBytes;
     // 创建FormData对象
     FormData formData = FormData.fromMap({
+      'batchid': _BatchID,
       'filename': filename,
       'filebyte': MultipartFile.fromBytes(fileBytes, filename: filename),
     });
@@ -1565,8 +1598,11 @@ class _Jovleave extends State<Jobleave2> {
 
       classMyFile.delFilefolder(oldfilename);
       classMyFile.Copyimage(pickedFile.path, fileName);
+
+      print('這是完整的文件名嗎 ??：' + filePath);
+
       this.setState(() {
-        SetFileList();
+        _SelectFilePath = filePath;
       });
     }
   }
@@ -1654,7 +1690,10 @@ class tempBottomButton extends StatelessWidget {
       myicon = Icon(Icons.access_alarm);
       myText = "簽核";
     }
-
+    if (myitype == buttonType._test) {
+      myicon = Icon(Icons.add_box);
+      myText = "test";
+    }
     return Visibility(
         // visible: isshow,
         child: myContain(
