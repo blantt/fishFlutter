@@ -1,4 +1,0 @@
-#Wed May 24 16:03:56 CST 2023
-base.0=D\:\\FlutterProject\\LoveTest\\build\\app\\intermediates\\dex\\release\\minifyReleaseWithR8\\classes.dex
-renamed.0=classes.dex
-path.0=classes.dex
