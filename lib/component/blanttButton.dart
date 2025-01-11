@@ -163,7 +163,7 @@ class mypopButton extends StatelessWidget {
                   BoxShadow(
                       color: Colors.black26,
                       offset: Offset(3.0, 3.0), //陰影y軸偏移量
-                      blurRadius: 2, //陰影模糊程度
+                      blurRadius: 2, //陰影模糊程度2
                       spreadRadius: 0 //陰影擴散程度
                       )
                 ],

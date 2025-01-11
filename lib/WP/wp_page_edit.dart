@@ -88,7 +88,7 @@ class _wpEditState extends State<class_wpedit> {
   Widget build(BuildContext context) {
     getvalue = widget.value;
     return Scaffold(
-      appBar: AppBar(title: Text('wpedit')),
+      appBar: AppBar(title: Text('wpedit1')),
       body: isGetUser
           ? _buildList(context)
           : !isGetUser
