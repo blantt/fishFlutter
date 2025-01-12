@@ -20,7 +20,7 @@ String myid = '0';
 String mytitle = 't';
 bool isGetUser = false;
 bool bAdd = false;
-bool bSch =false;
+bool bSch = false;
 //參收參數參考 htt
 
 //list_Modal_PsersonSch_new 是用來判斷是否己經有抓過資料庫,給list值了,
@@ -58,19 +58,18 @@ class _wpEditState extends State<class_wpedit> {
       bAdd = true;
     }
 
-    if (this.pagetype=='sch'){
-      bSch=true;
+    if (this.pagetype == 'sch') {
+      bSch = true;
     } else {
-      bSch=false;
-
+      bSch = false;
     }
-    
+
     isGetUser = false;
 
     //這個states應該只會進來一次,所以在這裡做初始值
     print('get in:' + value);
     print('get pagetype:' + pagetype);
-      print('get pagetype:' + bSch.toString());
+    print('get pagetype:' + bSch.toString());
     myid = value;
     if (bAdd == false) {
       getwpapi2();
@@ -82,7 +81,7 @@ class _wpEditState extends State<class_wpedit> {
     list_Modal_wp.clear();
     super.initState();
   }
-     
+
   String getvalue = "";
   @override
   Widget build(BuildContext context) {
@@ -145,69 +144,57 @@ class _wpEditState extends State<class_wpedit> {
     return children;
   }
 
-
-
   Widget _buildList(BuildContext context) {
-    
-    return Form(
-      child: Column(
-        children: [
-          SizedBox(
-            height: 10,
-          ),
-          Row(
+    return SingleChildScrollView(
+        padding: EdgeInsets.all(16.0),
+        child: Form(
+          child: Column(
             children: [
-              Expanded(
-                  child: myContain(
-                m_weight: 150,
-                m_child: TextFormField(
-                  controller: Controller_title,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'title',
-                  ),
-                ),
-              )),
-            ],
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Row(
-            children: [
-              (bSch == true)
-                  ? Expanded(child: myContain(m_child: HtmlRenderer()))
-                  : Container(),
-              (bSch == false)
-                  ? Expanded(
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Expanded(
                       child: myContain(
-                      m_child: TextFormField(
-                        controller: Controller_content,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: '內文',
-                        ),
-                        maxLines: 3,
+                    m_weight: 150,
+                    m_child: TextFormField(
+                      controller: Controller_title,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'title',
                       ),
-                    ))
-                  : Container(),
-
-              // Expanded(
-              //     child: myContain(
-              //   m_child: TextFormField(
-              //     controller: Controller_content,
-              //     decoration: const InputDecoration(
-              //       border: OutlineInputBorder(),
-              //       labelText: '內文',
-              //     ),
-              //     maxLines: 3,
-              //   ),
-              // )),
+                    ),
+                  )),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  (bSch == true)
+                      ? Expanded(child: myContain(m_child: HtmlRenderer()))
+                      : Container(),
+                  (bSch == false)
+                      ? Expanded(
+                          child: myContain(
+                          m_child: TextFormField(
+                            controller: Controller_content,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: '內文',
+                            ),
+                            maxLines: 3,
+                          ),
+                        ))
+                      : Container(),
+                ],
+              ),
             ],
           ),
-        ],
-      ),
-    );
+        ));
+ 
   }
 
   String htmlchange(oldstr) {

@@ -53,7 +53,7 @@ class _PageState2 extends State<TryMenu> {
                 style: TextStyle(color: Colors.deepOrange),
               ),
               onPressed: () {
-                RouterUtil_test.callpage(context, en_runterType.testWordpress);
+                RouterUtil_test.callpage(context, en_runterType.linkWrodpressTest);
               },
             ),
             OutlinedButton(

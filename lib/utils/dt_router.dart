@@ -22,7 +22,7 @@ import 'package:blantt_love_test/dt_Setting.dart';
 import 'package:blantt_love_test/Test/testWordpress.dart';
 import 'package:blantt_love_test/WP/wp_page_sch.dart';
 
-enum en_runterType { jobLeaveSch, jobLeave, testWordpress, wp_sch }
+enum en_runterType { jobLeaveSch, jobLeave, linkWrodpressTest, wp_sch }
 
 class RouterUtil_test {
   static void callpage(BuildContext context, en_runterType stype) {
@@ -33,7 +33,7 @@ class RouterUtil_test {
       );
     }
 
-    if (stype == en_runterType.testWordpress) {
+    if (stype == en_runterType.linkWrodpressTest) {
       //wordpress 測試入口
       Navigator.push(
         context,
