@@ -84,8 +84,8 @@ class _wpSrcState extends State<class_wpSrc> {
       //代表有取過值了,過濾時,不要再去回調資料api了
       return "已取值";
     }
-
-    String url = 'http://10.0.2.2:80/fish2/wp-json/wp/v2/note';
+//getapi url
+    String url = m_url_wpBasic+'/wp-json/wp/v2/note';
     final response = await Dio().get(url);
     String sss = "";
 
@@ -143,7 +143,7 @@ class _wpSrcState extends State<class_wpSrc> {
                       );
                     },
                   ),
- myButton(
+                  myButton(
                     m_child: myText(
                       m_text: 'edit',
                       m_color: Color.fromARGB(255, 23, 100, 232),
@@ -162,17 +162,29 @@ class _wpSrcState extends State<class_wpSrc> {
                   SizedBox(
                     width: 5,
                   ),
-                  Text(row.title),
-                  // SizedBox(
-                  //   width: 60,
-                  // ),
-                  // Text(row.content),
+                  Text(_subStr(row.title)),
                 ],
               ),
             )),
           );
         });
   }
+
+  //-----------------
+
+  String _subStr(String text) {
+    final int maxChars = 12;
+
+    String displayText;
+    if (text.length > maxChars) {
+      displayText = text.substring(0, maxChars) + '..';
+    } else {
+      displayText = text;
+    }
+    return displayText;
+  }
+
+  //----------------
 
   Widget _body(BuildContext context) {
     return FutureBuilder<String>(

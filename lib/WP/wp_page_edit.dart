@@ -217,7 +217,7 @@ class _wpEditState extends State<class_wpedit> {
 
 //add
   Future<String> apiadd() async {
-    String url = 'http://10.0.2.2:80/fish2/wp-json/myplugin/v1/add';
+    String url = m_url_wpBasic+'/wp-json/myplugin/v1/add';
     // final response = await Dio().post(url);
     // String sss = "";
     var data = {
@@ -245,7 +245,7 @@ class _wpEditState extends State<class_wpedit> {
 
   //編輯
   Future<String> apiEdit() async {
-    String url = 'http://10.0.2.2:80/fish2/wp-json/myplugin/v1/edit';
+    String url = m_url_wpBasic+'/wp-json/myplugin/v1/edit';
     // final response = await Dio().post(url);
     // String sss = "";
     var data = {
@@ -274,7 +274,7 @@ class _wpEditState extends State<class_wpedit> {
 
   //del
   Future<String> apiDel() async {
-    String url = 'http://10.0.2.2:80/fish2/wp-json/myplugin/v1/del/' + myid;
+    String url = m_url_wpBasic+'/wp-json/myplugin/v1/del/' + myid;
     final response = await Dio().post(url);
 
     String sss = "";
@@ -302,7 +302,7 @@ class _wpEditState extends State<class_wpedit> {
 //get
   Future<String> getwpapi2() async {
     //String url = 'http://127.0.0.1:8000/godlove/wp-json/wp/v2/note/';
-    String url = 'http://10.0.2.2:80/fish2/wp-json/wp/v2/note/' + myid;
+    String url = m_url_wpBasic+'/wp-json/wp/v2/note/' + myid;
     final response = await Dio().get(url);
     String sss = "";
     // await Future.delayed(Duration(seconds: 5));
@@ -340,6 +340,7 @@ class _wpEditState extends State<class_wpedit> {
 }
 
 class HtmlRenderer extends StatelessWidget {
+  //HtmlRenderer
   late String htmlData = """
     <h1>標題</h1>
     <p>這是一段使用 <strong>HTML</strong> 撰寫的文字。</p>

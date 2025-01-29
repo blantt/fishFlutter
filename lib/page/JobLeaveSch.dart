@@ -136,7 +136,7 @@ Widget _listCard_title(BuildContext context, String BatchID, String LeaveTypeN,
         ApproveTime)
   ]);
 }
-
+//_listCard_row  建立表身row
 Widget _listCard_row(BuildContext context, String BatchID, String LeaveTypeN,
     String UserNameN, String MStatusN, String SendTime, String ApproveTime) {
   return Column(children: <Widget>[

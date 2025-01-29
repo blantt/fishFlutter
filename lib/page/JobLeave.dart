@@ -970,6 +970,8 @@ class _Jovleave extends State<Jobleave2> {
     return Text('預計這裡放置圖片');
   }
 
+ 
+
   //TODO myform2
   Widget _myorm(BuildContext context) {
     print(_BatchID + '開始進來讀取form表頭');
@@ -979,6 +981,8 @@ class _Jovleave extends State<Jobleave2> {
     } else {
       print('_isallIsload=false');
     }
+
+    
 
     return SingleChildScrollView(
       child: Column(children: <Widget>[

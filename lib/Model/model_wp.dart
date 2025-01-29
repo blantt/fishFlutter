@@ -1,3 +1,7 @@
+
+String m_url_wpBasic =
+    "https://wordpress-1399006-5191588.cloudwaysapps.com";
+    //本地端http://10.0.2.2:80/fish2
 class Modal_wp {
   Modal_wp({
     required this.id,
