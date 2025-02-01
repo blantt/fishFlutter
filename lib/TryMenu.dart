@@ -128,6 +128,24 @@ class _PageState2 extends State<TryMenu> {
                 RouterUtil_test.totestform(context);
               },
             ),
+             OutlinedButton(
+              child: Text(
+                '測試摪單2',
+                style: TextStyle(color: Colors.deepOrange),
+              ),
+              onPressed: () {
+                RouterUtil_test.toTestForm2(context);
+              },
+            ),
+             OutlinedButton(
+              child: Text(
+                '測試表BasicForm',
+                style: TextStyle(color: Colors.deepOrange),
+              ),
+              onPressed: () {
+                RouterUtil_test.totestBasic(context);
+              },
+            ),
             OutlinedButton(
               child: Text(
                 'listview簳例1',
@@ -157,15 +175,7 @@ class _PageState2 extends State<TryMenu> {
                 // RouterUtil_test.toTestForm3(context);
               },
             ),
-            OutlinedButton(
-              child: Text(
-                '測試摪單2',
-                style: TextStyle(color: Colors.deepOrange),
-              ),
-              onPressed: () {
-                RouterUtil_test.toTestForm2(context);
-              },
-            ),
+           
             OutlinedButton(
               child: Text(
                 'test 人員選單',

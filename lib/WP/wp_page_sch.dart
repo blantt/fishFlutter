@@ -85,12 +85,13 @@ class _wpSrcState extends State<class_wpSrc> {
       return "已取值";
     }
 //getapi url
-    String url = m_url_wpBasic+'/wp-json/wp/v2/note';
+    String url = m_url_wpBasic  + '/wp-json/wp/v2/note';
+
     final response = await Dio().get(url);
     String sss = "";
-
     if (response.statusCode == HttpStatus.ok) {
-      List<dynamic> posts = response.data;
+      //List<dynamic> posts = response.data;
+      List<dynamic> posts = response.data is List ? response.data : [];
       for (var post in posts) {
         // 提取文章的 ID、標題和內容
         int id = post['id'];

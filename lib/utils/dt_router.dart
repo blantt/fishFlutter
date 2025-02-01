@@ -17,6 +17,7 @@ import 'package:blantt_love_test/pop/popTime.dart';
 import 'package:blantt_love_test/Test/TestForm2.dart';
 import 'package:blantt_love_test/Test/TestForm3.dart';
 import 'package:blantt_love_test/Test/TestForm4.dart';
+import 'package:blantt_love_test/Test/TestBasic.dart'; 
 import 'package:blantt_love_test/main.dart';
 import 'package:blantt_love_test/dt_Setting.dart';
 import 'package:blantt_love_test/Test/testWordpress.dart';
@@ -73,6 +74,13 @@ class RouterUtil_test {
     );
   }
 
+  static totestBasic(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => TestBasic()),
+    );
+  }
+ 
   static toPersonSch(BuildContext context, String _value) {
     //人員POP選單
     Navigator.push(

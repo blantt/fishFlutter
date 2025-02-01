@@ -28,35 +28,47 @@ class FishListView extends StatefulWidget {
 }
 
 class _FishListViewState extends State<FishListView> {
-  late Future<List<dynamic>> _dataFuture;
+  List<dynamic>? _data; // 存放資料
+  bool _isLoading = true; // 是否正在載入
 
   @override
   void initState() {
     super.initState();
-    _dataFuture = widget.funcCallData();
+    _fetchData();
+  }
+
+  Future<void> _fetchData() async {
+    print('beginfetchData');
+    try {
+      List<dynamic> fetchedData = await widget.funcCallData();
+    print('bb1');
+      setState(() {
+        _data = fetchedData;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      print("資料加載失敗: $e");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<dynamic>>(
-      future: _dataFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text("發生錯誤"));
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(child: Text("沒有數據"));
-        }
+    print('bb2');
+    if (_isLoading) {
+      return Center(child: CircularProgressIndicator()); // 讀取中
+    }
+    if (_data == null || _data!.isEmpty) {
+      return Center(child: Text("沒有數據")); // 無數據
+    }
 
-        return ScrollablePositionedList.builder(
-          itemCount: snapshot.data!.length,
-          itemBuilder: (context, index) {
-            return widget.itemBuilder(context, snapshot.data![index]);
-          },
-        );
+    return ScrollablePositionedList.builder(
+      itemCount: _data!.length,
+      itemBuilder: (context, index) {
+        return widget.itemBuilder(context, _data![index]);
       },
     );
   }
 }
-
