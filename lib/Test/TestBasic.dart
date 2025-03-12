@@ -32,7 +32,7 @@ class _TestBasicState extends State<TestBasic> {
  
   FishListView mylistview=FishListView(
   funcCallData: fetchDataFromAPI, // 這是你的資料獲取函數
-  itemBuilder: (context, row) {
+  myitemBuilder: (context, row) {
      String title = row['title']['rendered'];
     return Card(
       child: ListTile(

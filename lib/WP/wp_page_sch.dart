@@ -11,7 +11,7 @@ import 'package:blantt_love_test/routesPage.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:blantt_love_test/utils/dt_router.dart';
 import 'package:blantt_love_test/WP/wp_page_edit.dart';
-
+import '../component/blanttList.dart';
 //參收參33數參考 https://fightwennote.blogspot.com/2020/04/flutter-widget.html?m=0
 //https://github.com/yogitakumar/navigation
 void main() {
@@ -40,16 +40,19 @@ class class_wpSrc extends StatefulWidget {
 final ItemScrollController itemScrollController = ItemScrollController();
 
 class _wpSrcState extends State<class_wpSrc> {
+
+
+ // final GlobalKey<FishListViewState> _listViewKey2 = GlobalKey<FishListViewState>();
   // @override
   void initState() {
     //這個states應該只會進來一次,所以在這裡做初始值
-    print('schinit');
-
+    print('schinit2');
+    //_listViewKey2.currentState?.reloadData();
     list_Modal_wp.clear();
     GetDatePersonSch();
     super.initState();
   }
-
+   
   String getvalue = "";
   @override
   Widget build(BuildContext context) {
@@ -57,7 +60,7 @@ class _wpSrcState extends State<class_wpSrc> {
     return Scaffold(
       appBar: AppBar(
         title: myButton(
-          m_child: Text('新增'),
+          m_child: Text('新增3'),
           m_onPressed: () {
             Navigator.push(
               context,
@@ -71,11 +74,15 @@ class _wpSrcState extends State<class_wpSrc> {
         ),
         backgroundColor: Color.fromRGBO(56, 163, 210, 1.0),
       ),
-      body: isGetUser
-          ? _buildList(context)
-          : !isGetUser
-              ? CircularProgressIndicator() // Show a loading indicator
-              : Container(),
+      //TODO now body
+      body: mylistview5,
+      //body: mylistview,
+      //--舊版
+      // body: isGetUser
+      //     ? _buildList(context)
+      //     : !isGetUser
+      //         ? CircularProgressIndicator() // Show a loading indicator
+      //         : Container(),
     );
   }
 
@@ -109,8 +116,9 @@ class _wpSrcState extends State<class_wpSrc> {
     return "";
   }
 
-  //TODO _buildList
+
   Widget _buildList(BuildContext context) {
+      //TODO _buildList(old)
     var itemCount = list_Modal_wp.length;
     if (itemCount == 0) {
       itemCount = 1;
@@ -173,18 +181,6 @@ class _wpSrcState extends State<class_wpSrc> {
 
   //-----------------
 
-  String _subStr(String text) {
-    final int maxChars = 12;
-
-    String displayText;
-    if (text.length > maxChars) {
-      displayText = text.substring(0, maxChars) + '..';
-    } else {
-      displayText = text;
-    }
-    return displayText;
-  }
-
   //----------------
 
   Widget _body(BuildContext context) {
@@ -213,3 +209,87 @@ class _wpSrcState extends State<class_wpSrc> {
     );
   }
 }
+
+FishListView mylistview5=FishListView(
+  //TODO fishlistview
+  funcCallData: fetchDataFromAPI, // 這是你的資料獲取函數
+  myitemBuilder: (context, row) {
+     int id = row['id'];
+     String content = row['content']['rendered'];
+     String title = row['title']['rendered'];
+    return Card(
+            child: ListTile(
+                title: Container(
+              child: Row(
+                children: [
+                  myButton(
+                    m_child: myText(
+                      m_text: '查詢2',
+                      m_color: Color.fromARGB(255, 23, 100, 232),
+                    ),
+                    m_onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => class_wpedit(
+                                  value: id.toString(),
+                                  pagetype: 'sch',
+                                )),
+                      );
+                    },
+                  ),
+                  myButton(
+                    m_child: myText(
+                      m_text: 'edit',
+                      m_color: Color.fromARGB(255, 23, 100, 232),
+                    ),
+                    m_onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => class_wpedit(
+                                  value: row.id.toString(),
+                                  pagetype: 'edit',
+                                )),
+                      );
+                    },
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Text("a"+_subStr(title)),
+                 
+                ],
+              ),
+            )),
+          );
+  },
+);
+
+Future<List<dynamic>> fetchDataFromAPI() async {
+  String url = m_url_wpBasic_old + '/wp-json/wp/v2/note';
+   final response = await Dio().get(url);
+    String sss = "";
+    if (response.statusCode == HttpStatus.ok) {
+       print('getdata');
+       return response.data is List ? response.data : [];
+    }
+    else {
+      throw Exception('Failed to load data');
+
+    }
+ 
+}
+
+ 
+  String _subStr(String text) {
+    final int maxChars = 12;
+
+    String displayText;
+    if (text.length > maxChars) {
+      displayText = text.substring(0, maxChars) + '..';
+    } else {
+      displayText = text;
+    }
+    return displayText;
+  }

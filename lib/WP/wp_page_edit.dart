@@ -53,6 +53,7 @@ class _wpEditState extends State<class_wpedit> {
   _wpEditState({required this.value, required this.pagetype});
   // @override
   void initState() {
+    print('剛進來');
     bAdd = false;
     if (value == '') {
       bAdd = true;
@@ -303,6 +304,7 @@ class _wpEditState extends State<class_wpedit> {
   Future<String> getwpapi2() async {
     //String url = 'http://127.0.0.1:8000/godlove/wp-json/wp/v2/note/';
     String url = m_url_wpBasic+'/wp-json/wp/v2/note/' + myid;
+    print('my api...'+url);
     final response = await Dio().get(url);
     String sss = "";
     // await Future.delayed(Duration(seconds: 5));
