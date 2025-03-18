@@ -1,16 +1,16 @@
-import 'package:blantt_love_test/component/blanttButton.dart';
+import 'package:lovetest2/component/blanttButton.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import '../TryMenu.dart';
-import 'package:blantt_love_test/utils/dt_router.dart';
-import 'package:blantt_love_test/component/blanttColor.dart';
-import 'package:blantt_love_test/Model/modalBasic.dart';
+import 'package:lovetest2/utils/dt_router.dart';
+import 'package:lovetest2/component/blanttColor.dart';
+import 'package:lovetest2/Model/modalBasic.dart';
 import '../main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
-import 'package:blantt_love_test/myConn.dart';
-import 'package:blantt_love_test/dt_Dialog.dart';
+import 'package:lovetest2/myConn.dart';
+import 'package:lovetest2/dt_Dialog.dart';
 // import 'package:blantt_love_test/page/JobLeave.dart';
 
 
@@ -352,10 +352,7 @@ class classhome2 extends State<classhome> {
 
     return ElevatedButton(
         style: ElevatedButton.styleFrom(
-          minimumSize: Size(140, 40),
-          onPrimary: Colors.white,
-          primary: Color.fromRGBO(8, 93, 185, 1.0),
-          onSurface: Colors.grey,
+          foregroundColor: Colors.white, minimumSize: Size(140, 40), disabledForegroundColor: Colors.grey.withOpacity(0.38), disabledBackgroundColor: Colors.grey.withOpacity(0.12), backgroundColor: Color.fromRGBO(8, 93, 185, 1.0),
           //side: BorderSide(color: Colors.black, width: 1),
           elevation: 10,
         ),

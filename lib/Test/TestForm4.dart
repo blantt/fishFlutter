@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 import 'dart:convert';
 import 'dart:io';
 import '../Model/Model2.dart';
-import 'package:blantt_love_test/myConn.dart';
+import 'package:lovetest2/myConn.dart';
 
 List<Modal_LeaveSch2> _modal_list = [];
 

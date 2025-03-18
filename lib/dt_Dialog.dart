@@ -1,9 +1,9 @@
 import 'dart:io';
-import 'package:blantt_love_test/textForm.dart';
+import 'package:lovetest2/textForm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:blantt_love_test/component/blanttButton.dart';
+import 'package:lovetest2/component/blanttButton.dart';
 
 class classDialog extends StatelessWidget {
   const classDialog({Key? key}) : super(key: key);

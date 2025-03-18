@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'TryMenu.dart';
 import 'page/JobLeaveSch.dart';
-import 'package:blantt_love_test/selectDate.dart';
-import 'package:blantt_love_test/page/JobLeave.dart';
+import 'package:lovetest2/selectDate.dart';
+import 'package:lovetest2/page/JobLeave.dart';
 
 const page1 = "/testButton";
 const page2 = "/selectDate";

@@ -59,22 +59,47 @@ ThemeData _buildShrineTheme() {
   final ThemeData base = ThemeData.light();
   return base.copyWith(
     colorScheme: _shrineColorScheme,
-    toggleableActiveColor: shrinePink400,
-    accentColor: shrineBrown900,
     primaryColor: shrinePink100,
-    buttonColor: shrinePink100,
     scaffoldBackgroundColor: shrineBackgroundWhite,
     cardColor: shrineBackgroundWhite,
-    textSelectionColor: shrinePink100,
-    errorColor: shrineErrorRed,
+ 
+
+    // ⚠️ `accentColor` 已移除，改用 colorScheme.secondary
+    // accentColor: shrineBrown900,  // ❌ 錯誤
+    // ✅ 用 colorScheme 替代
+    secondaryHeaderColor: _shrineColorScheme.secondary,
+
+    // ⚠️ `toggleableActiveColor` 已移除，改用 colorScheme.secondary
+    // toggleableActiveColor: shrinePink400,  // ❌ 錯誤
+    // ✅ 用 colorScheme.secondary
+    unselectedWidgetColor: _shrineColorScheme.secondary,
+
+    // ⚠️ `buttonColor` 被移除，應該用 textButtonTheme
+    // buttonColor: shrinePink100,  // ❌ 錯誤
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(foregroundColor: shrinePink100),
+    ),
+
+    // ⚠️ `textSelectionColor` 被移除，改用 textSelectionTheme
+    // textSelectionColor: shrinePink100,  // ❌ 錯誤
+    textSelectionTheme: TextSelectionThemeData(
+      cursorColor: shrinePink100,
+      selectionColor: shrinePink100,
+      selectionHandleColor: shrinePink400,
+    ),
+
     buttonTheme: const ButtonThemeData(
       colorScheme: _shrineColorScheme,
       textTheme: ButtonTextTheme.normal,
     ),
+
     primaryIconTheme: _customIconTheme(base.iconTheme),
     textTheme: _buildShrineTextTheme(base.textTheme),
     primaryTextTheme: _buildShrineTextTheme(base.primaryTextTheme),
-    accentTextTheme: _buildShrineTextTheme(base.accentTextTheme),
+
+    // ⚠️ `accentTextTheme` 被移除，直接刪除這行
+    // accentTextTheme: _buildShrineTextTheme(base.accentTextTheme),  // ❌ 錯誤
+
     iconTheme: _customIconTheme(base.iconTheme),
   );
 }
@@ -86,12 +111,14 @@ IconThemeData _customIconTheme(IconThemeData original) {
 TextTheme _buildShrineTextTheme(TextTheme base) {
   return base
       .copyWith(
-        caption: base.caption?.copyWith(
+        bodySmall: base.bodySmall?.copyWith(
+          // ⚠️ `caption` → `bodySmall`
           fontWeight: FontWeight.w400,
           fontSize: 14,
           letterSpacing: defaultLetterSpacing,
         ),
-        button: base.button?.copyWith(
+        labelLarge: base.labelLarge?.copyWith(
+          // ⚠️ `button` → `labelLarge`
           fontWeight: FontWeight.w500,
           fontSize: 14,
           letterSpacing: defaultLetterSpacing,
@@ -106,9 +133,9 @@ TextTheme _buildShrineTextTheme(TextTheme base) {
 
 const ColorScheme _shrineColorScheme = ColorScheme(
   primary: shrinePink400,
-  primaryVariant: shrineBrown900,
+  primaryContainer: shrineBrown900, // ⚠️ `primaryVariant` → `primaryContainer`
   secondary: shrinePink50,
-  secondaryVariant: shrineBrown900,
+  secondaryContainer: shrineBrown900, // ⚠️ `secondaryVariant` → `secondaryContainer`
   surface: shrineSurfaceWhite,
   background: shrineBackgroundWhite,
   error: shrineErrorRed,
@@ -119,6 +146,7 @@ const ColorScheme _shrineColorScheme = ColorScheme(
   onError: shrineSurfaceWhite,
   brightness: Brightness.light,
 );
+
 
 const Color shrinePink50 = Color(0xFFFEEAE6);
 const Color shrinePink100 = Color(0xFFFEDBD0);

@@ -1,6 +1,6 @@
-import 'package:blantt_love_test/Test/TestForm3.dart';
+import 'package:lovetest2/Test/TestForm3.dart';
 import 'package:flutter/material.dart';
-import 'package:blantt_love_test/utils/dt_router.dart';
+import 'package:lovetest2/utils/dt_router.dart';
 
 void main() {
   runApp(MyTryMenu());

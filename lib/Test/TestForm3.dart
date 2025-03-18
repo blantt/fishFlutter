@@ -7,7 +7,7 @@ import '../component/blanttFileControl.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'dart:typed_data';
-import 'package:blantt_love_test/Test/TestForm2.dart';
+import 'package:lovetest2/Test/TestForm2.dart';
 
 void main() {
   runApp(TestFomr3());

@@ -80,25 +80,45 @@ class _MyHomePageState extends State<MyHomePage> {
 ThemeData _buildShrineTheme() {
   final ThemeData base = ThemeData.light();
   return base.copyWith(
-    colorScheme: _shrineColorScheme,
-    toggleableActiveColor: shrinePink400,
-    accentColor: shrineBrown900,
-    primaryColor: shrinePink100,
-    buttonColor: shrinePink100,
+    colorScheme: _shrineColorScheme.copyWith(
+      secondary: shrineBrown900, // 取代 accentColor
+      error: shrineErrorRed,
+    ),
+    primaryColor: shrinePink100, // Flutter 3.0 仍然保留
     scaffoldBackgroundColor: shrineBackgroundWhite,
     cardColor: shrineBackgroundWhite,
-    textSelectionColor: shrinePink100,
-    errorColor: shrineErrorRed,
-    buttonTheme: const ButtonThemeData(
-      colorScheme: _shrineColorScheme,
-      textTheme: ButtonTextTheme.normal,
+    textSelectionTheme: TextSelectionThemeData(
+      selectionColor: shrinePink100, // 取代 textSelectionColor
     ),
-    primaryIconTheme: _customIconTheme(base.iconTheme),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: shrinePink100, // 取代 buttonColor
+      ),
+    ),
+    iconTheme: _customIconTheme(base.iconTheme),
     textTheme: _buildShrineTextTheme(base.textTheme),
     primaryTextTheme: _buildShrineTextTheme(base.primaryTextTheme),
-    accentTextTheme: _buildShrineTextTheme(base.accentTextTheme),
-    iconTheme: _customIconTheme(base.iconTheme),
   );
+  // return base.copyWith(
+  //   colorScheme: _shrineColorScheme,
+  //   toggleableActiveColor: shrinePink400,
+  //   accentColor: shrineBrown900,
+  //   primaryColor: shrinePink100,
+  //   buttonColor: shrinePink100,
+  //   scaffoldBackgroundColor: shrineBackgroundWhite,
+  //   cardColor: shrineBackgroundWhite,
+  //   textSelectionColor: shrinePink100,
+  //   errorColor: shrineErrorRed,
+  //   buttonTheme: const ButtonThemeData(
+  //     colorScheme: _shrineColorScheme,
+  //     textTheme: ButtonTextTheme.normal,
+  //   ),
+  //   primaryIconTheme: _customIconTheme(base.iconTheme),
+  //   textTheme: _buildShrineTextTheme(base.textTheme),
+  //   primaryTextTheme: _buildShrineTextTheme(base.primaryTextTheme),
+  //   accentTextTheme: _buildShrineTextTheme(base.accentTextTheme),
+  //   iconTheme: _customIconTheme(base.iconTheme),
+  // );
 }
 
 IconThemeData _customIconTheme(IconThemeData original) {
@@ -108,12 +128,12 @@ IconThemeData _customIconTheme(IconThemeData original) {
 TextTheme _buildShrineTextTheme(TextTheme base) {
   return base
       .copyWith(
-        caption: base.caption?.copyWith(
+        bodySmall: base.bodySmall?.copyWith(
           fontWeight: FontWeight.w400,
           fontSize: 14,
           letterSpacing: defaultLetterSpacing,
         ),
-        button: base.button?.copyWith(
+        labelLarge: base.labelLarge?.copyWith(
           fontWeight: FontWeight.w500,
           fontSize: 14,
           letterSpacing: defaultLetterSpacing,
@@ -128,9 +148,9 @@ TextTheme _buildShrineTextTheme(TextTheme base) {
 
 const ColorScheme _shrineColorScheme = ColorScheme(
   primary: shrinePink400,
-  primaryVariant: shrineBrown900,
+  primaryContainer: shrineBrown900, // 修正 primaryVariant
   secondary: shrinePink50,
-  secondaryVariant: shrineBrown900,
+  secondaryContainer: shrineBrown900, // 修正 secondaryVariant
   surface: shrineSurfaceWhite,
   background: shrineBackgroundWhite,
   error: shrineErrorRed,
@@ -141,7 +161,6 @@ const ColorScheme _shrineColorScheme = ColorScheme(
   onError: shrineSurfaceWhite,
   brightness: Brightness.light,
 );
-
 const Color shrinePink50 = Color(0xFFFEEAE6);
 const Color shrinePink100 = Color(0xFFFEDBD0);
 const Color shrinePink300 = Color(0xFFFBB8AC);

@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:blantt_love_test/TryMenu.dart';
+import 'package:lovetest2/TryMenu.dart';
 
 class barview extends StatelessWidget {
   @override

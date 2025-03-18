@@ -1,16 +1,16 @@
-import 'package:blantt_love_test/component/blanttButton.dart';
-import 'package:blantt_love_test/page/JobLeave.dart';
+import 'package:lovetest2/component/blanttButton.dart';
+import 'package:lovetest2/page/JobLeave.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:blantt_love_test/myConn.dart';
-import 'package:blantt_love_test/Model/model_wp.dart';
-import 'package:blantt_love_test/routesPage.dart';
+import 'package:lovetest2/myConn.dart';
+import 'package:lovetest2/Model/model_wp.dart';
+import 'package:lovetest2/routesPage.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:blantt_love_test/dt_Dialog.dart';
-import 'package:blantt_love_test/utils/dt_router.dart';
+import 'package:lovetest2/dt_Dialog.dart';
+import 'package:lovetest2/utils/dt_router.dart';
 import 'package:flutter_html/flutter_html.dart';
 
 TextEditingController Controller_title = new TextEditingController();
@@ -357,13 +357,13 @@ class HtmlRenderer extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Html(
         data: htmlData,
-        onLinkTap: (url, _, __, ___) {
-          print("點擊的鏈接是: $url");
-          // 這裡可以加入點擊鏈接後的行為，例如打開瀏覽器
-        },
-        onImageTap: (src, _, __, ___) {
-          print("點擊的圖片來源是: $src");
-        },
+        // onLinkTap: (url, _, __, ___) {
+        //   print("點擊的鏈接是: $url");
+        //   // 這裡可以加入點擊鏈接後的行為，例如打開瀏覽器
+        // },
+        // onImageTap: (src, _, __, ___) {
+        //   print("點擊的圖片來源是: $src");
+        // },
       ),
     );
   }

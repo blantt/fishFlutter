@@ -1,12 +1,12 @@
-import 'package:blantt_love_test/component/blanttButton.dart';
+import 'package:lovetest2/component/blanttButton.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:blantt_love_test/testView.dart';
+import 'package:lovetest2/testView.dart';
 import 'package:dio/dio.dart';
-import 'package:blantt_love_test/myConn.dart';
-import 'package:blantt_love_test/routesPage.dart';
+import 'package:lovetest2/myConn.dart';
+import 'package:lovetest2/routesPage.dart';
 import '../Model/Model1.dart';
-import 'package:blantt_love_test/utils/dt_router.dart';
+import 'package:lovetest2/utils/dt_router.dart';
 
 //我喜歡這種表單樣式,先紀錄起來  lll
 //https://www.kindacode.com/article/adding-borders-to-cards-in-flutter/

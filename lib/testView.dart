@@ -241,7 +241,7 @@ class _testview2 extends State<testview> {
   Widget _buildNumberTextField2() {
     return TextField(
       keyboardType: TextInputType.number,
-      style: Theme.of(context).textTheme.headline4,
+      style: Theme.of(context).textTheme.headlineMedium,
       decoration: InputDecoration(
         icon: const Icon(Icons.attach_money),
         labelText: 'Enter an integer:',

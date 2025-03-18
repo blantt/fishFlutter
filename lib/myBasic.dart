@@ -1,4 +1,4 @@
-import 'package:blantt_love_test/Model/modalBasic.dart';
-import 'package:blantt_love_test/utils/dt_router.dart';
-import 'package:blantt_love_test/component/blanttColor.dart';
-import 'package:blantt_love_test/component/blanttButton.dart';
+import 'package:lovetest2/Model/modalBasic.dart';
+import 'package:lovetest2/utils/dt_router.dart';
+import 'package:lovetest2/component/blanttColor.dart';
+import 'package:lovetest2/component/blanttButton.dart';

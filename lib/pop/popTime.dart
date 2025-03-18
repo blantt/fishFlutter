@@ -19,7 +19,6 @@ class doorSelectTime2 extends State<doorSelectTime> {
 
     print(widget.name1);
     if (widget.name1 != '') {
-
       _date = DateTime.parse(widget.name1);
       _date2 = DateTime.parse(widget.name2);
     }
@@ -323,13 +322,15 @@ class KBigButton extends StatelessWidget {
       padding: EdgeInsets.all(0),
       width: MediaQuery.of(context).size.width - 20,
       height: 48,
-      child: RaisedButton(
+      child: ElevatedButton(
         onPressed: () {},
-        child: Text(this.text),
-        textColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.white, // ⚠️ `textColor` → `foregroundColor`
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          ),
         ),
+        child: Text(this.text),
       ),
     );
   }

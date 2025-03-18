@@ -215,13 +215,15 @@ class KBigButton extends StatelessWidget {
       padding: EdgeInsets.all(0),
       width: MediaQuery.of(context).size.width - 20,
       height: 48,
-      child: RaisedButton(
+      child: ElevatedButton(
         onPressed: () {},
-        child: Text(this.text),
-        textColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.white, // ⚠️ `textColor` → `foregroundColor`
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          ),
         ),
+        child: Text(this.text),
       ),
     );
   }

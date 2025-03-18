@@ -1,21 +1,21 @@
 import 'dart:async';
-import 'package:blantt_love_test/component/blanttButton.dart';
-import 'package:blantt_love_test/component/blanttColor.dart';
-import 'package:blantt_love_test/utils/dt_router.dart';
+import 'package:lovetest2/component/blanttButton.dart';
+import 'package:lovetest2/component/blanttColor.dart';
+import 'package:lovetest2/utils/dt_router.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'package:blantt_love_test/myConn.dart';
+import 'package:lovetest2/myConn.dart';
 import 'dart:io';
 import '../Model/Model2.dart';
 import '../pop/popPerson.dart';
-import 'package:blantt_love_test/pop/pop_LeaveType.dart';
-import 'package:blantt_love_test/Model/modalBasic.dart';
-import 'package:blantt_love_test/pop/popTime.dart';
+import 'package:lovetest2/pop/pop_LeaveType.dart';
+import 'package:lovetest2/Model/modalBasic.dart';
+import 'package:lovetest2/pop/popTime.dart';
 import '../../component/blanttFileControl.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:blantt_love_test/dt_Dialog.dart';
-import 'package:blantt_love_test/pop/popSelectFile.dart';
+import 'package:lovetest2/dt_Dialog.dart';
+import 'package:lovetest2/pop/popSelectFile.dart';
 
 String _BatchID = '';
 String _UserNameN = '';
@@ -802,7 +802,7 @@ class _Jovleave extends State<Jobleave2> {
             width: 35.0,
             child: TextButton(
               style: ElevatedButton.styleFrom(
-                primary: Color.fromRGBO(87, 180, 156, 1.0),
+                backgroundColor: Color.fromRGBO(87, 180, 156, 1.0),
                 //side: BorderSide(width: 1.0, color: Colors.blueAccent),
               ),
               child: Icon(
@@ -1611,7 +1611,7 @@ class tempIconButton extends StatelessWidget {
       width: 40,
       child: TextButton(
         style: ElevatedButton.styleFrom(
-          primary: my_Backcolor,
+          backgroundColor: my_Backcolor,
 
           //side: BorderSide(width: 1.0, color: Colors.blueAccent),
         ),

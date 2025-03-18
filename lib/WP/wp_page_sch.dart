@@ -1,16 +1,16 @@
-import 'package:blantt_love_test/component/blanttButton.dart';
-import 'package:blantt_love_test/page/JobLeave.dart';
+import 'package:lovetest2/component/blanttButton.dart';
+import 'package:lovetest2/page/JobLeave.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:blantt_love_test/myConn.dart';
-import 'package:blantt_love_test/Model/model_wp.dart';
-import 'package:blantt_love_test/routesPage.dart';
+import 'package:lovetest2/myConn.dart';
+import 'package:lovetest2/Model/model_wp.dart';
+import 'package:lovetest2/routesPage.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:blantt_love_test/utils/dt_router.dart';
-import 'package:blantt_love_test/WP/wp_page_edit.dart';
+import 'package:lovetest2/utils/dt_router.dart';
+import 'package:lovetest2/WP/wp_page_edit.dart';
 import '../component/blanttList.dart';
 //參收參33數參考 https://fightwennote.blogspot.com/2020/04/flutter-widget.html?m=0
 //https://github.com/yogitakumar/navigation
@@ -209,9 +209,8 @@ class _wpSrcState extends State<class_wpSrc> {
     );
   }
 }
-
-FishListView mylistview5=FishListView(
-  //TODO fishlistview
+//TODO fishlistview
+FishListView mylistview5=FishListView( 
   funcCallData: fetchDataFromAPI, // 這是你的資料獲取函數
   myitemBuilder: (context, row) {
      int id = row['id'];
@@ -267,7 +266,7 @@ FishListView mylistview5=FishListView(
 );
 
 Future<List<dynamic>> fetchDataFromAPI() async {
-  String url = m_url_wpBasic_old + '/wp-json/wp/v2/note';
+  String url = m_url_wpBasic + '/wp-json/wp/v2/note';
    final response = await Dio().get(url);
     String sss = "";
     if (response.statusCode == HttpStatus.ok) {

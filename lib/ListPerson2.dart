@@ -4,12 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'dart:io';
-import 'package:blantt_love_test/testView.dart';
+import 'package:lovetest2/testView.dart';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:blantt_love_test/myConn.dart';
-import 'package:blantt_love_test/routesPage.dart';
+import 'package:lovetest2/myConn.dart';
+import 'package:lovetest2/routesPage.dart';
 import 'Model/Model1.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'load/loading_screen.dart';

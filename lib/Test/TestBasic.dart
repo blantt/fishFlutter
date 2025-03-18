@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 import 'package:dio/dio.dart';
-import 'package:blantt_love_test/Test/TestForm3.dart';
-import 'package:blantt_love_test/component/blanttColor.dart';
-import 'package:blantt_love_test/Model/model_wp.dart';
+import 'package:lovetest2/Test/TestForm3.dart';
+import 'package:lovetest2/component/blanttColor.dart';
+import 'package:lovetest2/Model/model_wp.dart';
 import '../component/blanttButton.dart';
 import 'package:flutter/material.dart';
 import '../component/blanttList.dart';
@@ -15,8 +15,8 @@ import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:blantt_love_test/Model/modalBasic.dart';
-import 'package:blantt_love_test/selectDate.dart';
+import 'package:lovetest2/Model/modalBasic.dart';
+import 'package:lovetest2/selectDate.dart';
 
 
 class TestBasic extends StatefulWidget {

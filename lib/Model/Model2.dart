@@ -1,4 +1,4 @@
-import 'package:blantt_love_test/Model/modalBasic.dart';
+import 'modalBasic.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';

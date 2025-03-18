@@ -1,8 +1,8 @@
-import 'package:blantt_love_test/Test/TestForm3.dart';
-import 'package:blantt_love_test/component/blanttButton.dart';
+import 'package:lovetest2/Test/TestForm3.dart';
+import 'package:lovetest2/component/blanttButton.dart';
 import 'package:flutter/material.dart';
-import 'package:blantt_love_test/utils/dt_router.dart';
-import 'package:blantt_love_test/Model/modalBasic.dart';
+import 'package:lovetest2/utils/dt_router.dart';
+import 'package:lovetest2/Model/modalBasic.dart';
 import 'main.dart';
 
 void main() {

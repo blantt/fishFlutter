@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:blantt_love_test/mytext.dart';
-import 'package:blantt_love_test/textForm.dart';
-import 'package:blantt_love_test/testView.dart';
-import 'package:blantt_love_test/textFormField.dart';
-import 'package:blantt_love_test/TryMenu.dart';
-import 'package:blantt_love_test/BarView.dart';
-import 'package:blantt_love_test/page/dt_home.dart';
-import 'package:blantt_love_test/utils/dt_router.dart';
-import 'package:blantt_love_test/Test/TestForm2.dart';
-import 'package:blantt_love_test/Model/modalBasic.dart';
+import 'package:lovetest2/mytext.dart';
+import 'package:lovetest2/textForm.dart';
+import 'package:lovetest2/testView.dart';
+import 'package:lovetest2/textFormField.dart';
+import 'package:lovetest2/TryMenu.dart';
+import 'package:lovetest2/BarView.dart';
+import 'package:lovetest2/page/dt_home.dart';
+import 'package:lovetest2/utils/dt_router.dart';
+import 'package:lovetest2/Test/TestForm2.dart';
+import 'package:lovetest2/Model/modalBasic.dart';
 
-//3333
+ 
 void main() {
   runApp(MyApp3());
 }
@@ -36,9 +36,7 @@ class MyApp2 extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      //home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      //home: const TextExample(),
-      //home: const TextExample2(),
+
       home: classhome(),
       //home: testview()
     );
@@ -125,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Text(
               '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
         ),

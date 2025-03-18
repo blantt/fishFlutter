@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'package:blantt_love_test/myConn.dart';
+import 'package:lovetest2/myConn.dart';
 import 'Model/Model1.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 

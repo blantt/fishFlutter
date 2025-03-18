@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:blantt_love_test/component/blanttButton.dart';
-import 'package:blantt_love_test/utils/dt_router.dart';
+import 'package:lovetest2/component/blanttButton.dart';
+import 'package:lovetest2/utils/dt_router.dart';
 import 'package:dio/dio.dart';
 import 'dart:async';
 import 'dart:io';

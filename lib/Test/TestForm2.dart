@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
-import 'package:blantt_love_test/Test/TestForm3.dart';
-import 'package:blantt_love_test/component/blanttColor.dart';
+import 'package:lovetest2/Test/TestForm3.dart';
+import 'package:lovetest2/component/blanttColor.dart';
 
 import '../component/blanttButton.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +14,8 @@ import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:blantt_love_test/Model/modalBasic.dart';
-import 'package:blantt_love_test/selectDate.dart';
+import 'package:lovetest2/Model/modalBasic.dart';
+import 'package:lovetest2/selectDate.dart';
 
 class doorForm2 extends StatefulWidget {
   doorForm2({Key? key}) : super(key: key);
@@ -134,7 +134,7 @@ class aaa extends State<doorForm2> {
       width: 40.0,
       child: TextButton(
         style: ElevatedButton.styleFrom(
-          primary: Colors.amber,
+          backgroundColor: Colors.amber,
           //side: BorderSide(width: 1.0, color: Colors.blueAccent),
         ),
         child: Icon(Icons.person),

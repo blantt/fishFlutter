@@ -1,4 +1,4 @@
-import 'package:blantt_love_test/Model/user.dart';
+import 'package:lovetest2/Model/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -119,39 +119,40 @@ class _HomePageState extends State<HomePage_list> {
             ? ListView.builder(
                 itemCount: _foundedUsers.length,
                 itemBuilder: (context, index) {
-                  return Slidable(
-                    actionPane: SlidableDrawerActionPane(),
-                    actionExtentRatio: 0.25,
-                    child: userComponent(user: _foundedUsers[index]),
-                    actions: <Widget>[
-                      new IconSlideAction(
-                        caption: 'Archive',
-                        color: Colors.transparent,
-                        icon: Icons.archive,
-                        onTap: () => print("archive"),
-                      ),
-                      new IconSlideAction(
-                        caption: 'Share',
-                        color: Colors.transparent,
-                        icon: Icons.share,
-                        onTap: () => print('Share'),
-                      ),
-                    ],
-                    secondaryActions: <Widget>[
-                      new IconSlideAction(
-                        caption: 'More',
-                        color: Colors.transparent,
-                        icon: Icons.more_horiz,
-                        onTap: () => print('More'),
-                      ),
-                      new IconSlideAction(
-                        caption: 'Delete',
-                        color: Colors.transparent,
-                        icon: Icons.delete,
-                        onTap: () => print('Delete'),
-                      ),
-                    ],
-                  );
+                  return Text('test222');
+                  // return Slidable(
+                  //   actionPane: SlidableDrawerActionPane(),
+                  //   actionExtentRatio: 0.25,
+                  //   child: userComponent(user: _foundedUsers[index]),
+                  //   actions: <Widget>[
+                  //     new IconSlideAction(
+                  //       caption: 'Archive',
+                  //       color: Colors.transparent,
+                  //       icon: Icons.archive,
+                  //       onTap: () => print("archive"),
+                  //     ),
+                  //     new IconSlideAction(
+                  //       caption: 'Share',
+                  //       color: Colors.transparent,
+                  //       icon: Icons.share,
+                  //       onTap: () => print('Share'),
+                  //     ),
+                  //   ],
+                  //   secondaryActions: <Widget>[
+                  //     new IconSlideAction(
+                  //       caption: 'More',
+                  //       color: Colors.transparent,
+                  //       icon: Icons.more_horiz,
+                  //       onTap: () => print('More'),
+                  //     ),
+                  //     new IconSlideAction(
+                  //       caption: 'Delete',
+                  //       color: Colors.transparent,
+                  //       icon: Icons.delete,
+                  //       onTap: () => print('Delete'),
+                  //     ),
+                  //   ],
+                  // );
                 })
             : Center(
                 child: Text(

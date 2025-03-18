@@ -18,13 +18,13 @@ class BScreen extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Text(value),
-            RaisedButton(
-              onPressed: () {
-                // The Yep button returns "Yep!" as the result.
-                Navigator.pop(context, '我是 B 畫面來的資料!');
-              },
-              child: Text("回傳資料給 A 畫面"),
-            ),
+            // RaisedButton(
+            //   onPressed: () {
+            //     // The Yep button returns "Yep!" as the result.
+            //     Navigator.pop(context, '我是 B 畫面來的資料!');
+            //   },
+            //   child: Text("回傳資料給 A 畫面"),
+            // ),
           ],
         ),
       ),

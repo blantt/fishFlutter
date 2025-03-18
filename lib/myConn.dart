@@ -1,4 +1,4 @@
-import 'package:blantt_love_test/Model/modalBasic.dart';
+import 'package:lovetest2/Model/modalBasic.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'dart:convert';
