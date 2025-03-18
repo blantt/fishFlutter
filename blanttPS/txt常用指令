@@ -1,0 +1,8 @@
+flutter常用指令============
+flutter doctor 檢查有無異常問題
+flutter clean
+flutter pub get
+flutter –version 查詢目前flutter 版本
+flutter pub upgrade 確保套件相容
+flutter upgrade 升級版本(升級前務必要備份)
+flutter downgrade 回到升級前上一個版本
