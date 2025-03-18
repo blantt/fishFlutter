@@ -1,0 +1,30 @@
+
+# Flutter 升級檢查清單00
+
+## 1️⃣ 升級檢查清單2
+- ✅ **Flutter SDK 版本檢查**  
+- ✅ **Dart SDK 版本檢查**  
+- ✅ **pubspec.yaml 環境版本檢查**  
+- ✅ **第三方套件版本比對**  
+    - 使用 `flutter pub outdated` 檢查哪些套件需要更新  
+- ✅ **android/build.gradle、gradle-wrapper 版本檢查**  
+- ✅ **iOS Podfile / Xcode 版本檢查**  
+- ✅ **是否有 .gradle 改為 .gradle.kts**  
+- ✅ **web / macos / linux 支援檢查**（若有）  
+
+## 2️⃣ 新舊專案 檔案結構對照表
+
+| 檔案/資料夾                          | 舊專案 | 新專案 | 差異或建議                    |
+|-------------------------------------|--------|--------|-------------------------------|
+| android/app/build.gradle            | ✅      | ❌      | Flutter 3 預設改 .gradle.kts |
+| android/app/build.gradle.kts        | ❌      | ✅      | 建議升級後改用                |
+| android/gradle/wrapper/...          | ✅      | ✅      | 檢查 gradle 版本               |
+| pubspec.yaml                        | ✅      | ✅      | environment: sdk 需更新       |
+| ios/Podfile                         | ✅      | ✅      | iOS 最低版本更新               |
+
+## 3️⃣ 備註或版本記錄
+- **升級日期**：2024/03/17  
+- **升級前 Flutter 版本**：2.10  
+- **升級後 Flutter 版本**：3.16  
+- **備註**：若 `flutter build apk` 出錯，優先比對 `build.gradle` 差異
+

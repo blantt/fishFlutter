@@ -60,7 +60,7 @@ class Modal_PsersonSch {
       };
 }
 
-//Modal_LeaveSch 假單查詢
+//Modal_LeaveSch 假單查詢2
 class Modal_LeaveSch2 {
   Modal_LeaveSch2({
     required this.BatchID,
